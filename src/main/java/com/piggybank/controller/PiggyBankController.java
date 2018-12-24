@@ -4,18 +4,19 @@ import com.piggybank.model.Expense;
 import com.piggybank.model.ExpenseType;
 import com.piggybank.repository.ExpenseQuery;
 import com.piggybank.repository.ExpenseRepository;
-import org.apache.logging.log4j.util.Strings;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller("api/v1/expenses")
+@CrossOrigin
 public class PiggyBankController {
 
     private static final DateTimeFormatter YYYY_MM_DD = DateTimeFormatter.ofPattern("yyyyMMdd");

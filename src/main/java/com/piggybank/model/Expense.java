@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.auto.value.AutoValue;
-
 import java.time.LocalDate;
+import javax.annotation.Nullable;
 
 @AutoValue
 @JsonDeserialize(builder = Expense.Builder.class)
@@ -18,6 +18,7 @@ public abstract class Expense {
     @JsonProperty("type")
     public abstract ExpenseType type();
 
+    @Nullable
     @JsonProperty("description")
     public abstract String description();
 
@@ -39,6 +40,7 @@ public abstract class Expense {
         public abstract Builder setType(ExpenseType type);
 
         @JsonProperty("description")
+        @Nullable
         public abstract Builder setDescription(String description);
 
         @JsonProperty("date")

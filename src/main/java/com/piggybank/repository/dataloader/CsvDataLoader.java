@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 class CsvDataLoader implements DataLoader {
 
   public List<Expense> load() {
-    final Reader reader = new InputStreamReader(getClass().getResourceAsStream("/expenses.csv"));
+    final Reader reader = getReader();
     try {
       return CSVParser.parse(reader, CSVFormat.DEFAULT
           .withHeader(CsvHeader.class)
@@ -34,15 +34,28 @@ class CsvDataLoader implements DataLoader {
     }
   }
 
+  private Reader getReader() {
+    try {
+      return new InputStreamReader(getClass().getResourceAsStream("/expenses.csv"));
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   private Function<CSVRecord, Expense> getCsvRecordExpenseFunction() {
     return record -> {
-      final String expenseCategory = getStringValue(record, CsvHeader.CATEGORY);
+      final String expenseCategory = getStringValue(record, CsvHeader.TYPE);
+      final String amount = getStringValue(record, CsvHeader.AMOUNT);
+      final String description = getStringValue(record, CsvHeader.DESCRIPTION);
+      final LocalDate date = LocalDate
+          .parse(getStringValue(record, CsvHeader.DATE), DateTimeFormatter
+              .ofPattern("yyyyMMdd"));
+
       return Expense.newBuilder()
           .setType(ExpenseType.valueOf(expenseCategory))
-          .setAmount(Double.parseDouble(record.get(CsvHeader.VALUE).trim()))
-          .setDate(LocalDate.parse(record.get(CsvHeader.DATE).trim(), DateTimeFormatter
-              .ofPattern("yyyyMMdd")))
-          .setDescription(record.get(CsvHeader.SHORT_DESC).trim())
+          .setAmount(Double.parseDouble(amount))
+          .setDate(date)
+          .setDescription(description)
           .build();
     };
   }
@@ -52,6 +65,6 @@ class CsvDataLoader implements DataLoader {
   }
 
   enum CsvHeader {
-    CATEGORY, VALUE, DATE, SHORT_DESC
+    TYPE, AMOUNT, DATE, DESCRIPTION
   }
 }
