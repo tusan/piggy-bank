@@ -1,6 +1,6 @@
 # piggy-bank
 
-A java application, working as backend for the piggy-bank-frontend app.
+A java application, used as backend for the piggy-bank-frontend app.
 Since this is a simple test application, i'd prefer to not use a database. A simple CSV it's working great for now.
 
 To work with the application, choose your preferred ide and import project as "gradle project".
