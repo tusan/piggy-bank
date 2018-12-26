@@ -1,4 +1,4 @@
-package com.piggybank.repository.dataloader;
+package com.piggybank.repository.csv.dataloader;
 
 import com.piggybank.model.Expense;
 import java.util.List;

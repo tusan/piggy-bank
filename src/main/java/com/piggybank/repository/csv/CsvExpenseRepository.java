@@ -1,8 +1,10 @@
-package com.piggybank.repository;
+package com.piggybank.repository.csv;
 
 import com.piggybank.model.Expense;
 import com.piggybank.model.ExpenseType;
-import com.piggybank.repository.dataloader.DataLoader;
+import com.piggybank.repository.ExpenseQuery;
+import com.piggybank.repository.ExpenseRepository;
+import com.piggybank.repository.csv.dataloader.DataLoader;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Function;

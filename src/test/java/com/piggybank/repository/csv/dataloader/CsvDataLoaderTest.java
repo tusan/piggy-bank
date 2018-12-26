@@ -1,6 +1,6 @@
-package com.piggybank.repository.dataloader;
+package com.piggybank.repository.csv.dataloader;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import com.piggybank.model.Expense;
 import com.piggybank.model.ExpenseType;

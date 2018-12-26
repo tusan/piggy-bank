@@ -30,7 +30,7 @@ public class PiggyBankController {
     @GetMapping
     public ResponseEntity<List<Expense>> expenses(
             @RequestParam(value = "date-start", required = false) String dateStart,
-            @RequestParam(value = "date-start", required = false) String dateEnd,
+        @RequestParam(value = "date-end", required = false) String dateEnd,
             @RequestParam(value = "category", required = false, defaultValue = "ALL") ExpenseType category) {
 
         LocalDate startDate = Strings.isBlank(dateStart)

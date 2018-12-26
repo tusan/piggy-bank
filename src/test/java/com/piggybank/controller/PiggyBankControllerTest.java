@@ -1,20 +1,30 @@
 package com.piggybank.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.piggybank.model.ExpenseType;
+import com.piggybank.repository.ExpenseQuery;
+import com.piggybank.repository.ExpenseRepository;
+import java.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @RunWith(MockitoJUnitRunner.class)
 public class PiggyBankControllerTest {
-    @Mock
+
+    @InjectMocks
     private PiggyBankController sut;
+
+    @Mock
+    private ExpenseRepository expenseRepository;
 
     private MockMvc mockMvc;
 
@@ -31,5 +41,11 @@ public class PiggyBankControllerTest {
                 .param("category", "MOTO"))
                 .andExpect(status().isOk())
                 .andReturn();
+
+        Mockito.verify(expenseRepository).find(ExpenseQuery.builder()
+            .setCategory(ExpenseType.MOTO)
+            .setDateStart(LocalDate.of(2018, 11, 07))
+            .setDateEnd(LocalDate.of(2018, 12, 07))
+            .build());
     }
 }

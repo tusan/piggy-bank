@@ -2,17 +2,16 @@ package com.piggybank.repository;
 
 import com.google.auto.value.AutoValue;
 import com.piggybank.model.ExpenseType;
-
 import java.time.LocalDate;
 
 @AutoValue
 public abstract class ExpenseQuery {
 
-    abstract LocalDate dateStart();
+    public abstract LocalDate dateStart();
 
-    abstract LocalDate dateEnd();
+    public abstract LocalDate dateEnd();
 
-    abstract ExpenseType category();
+    public abstract ExpenseType category();
 
     public static Builder builder() {
         return new AutoValue_ExpenseQuery.Builder();

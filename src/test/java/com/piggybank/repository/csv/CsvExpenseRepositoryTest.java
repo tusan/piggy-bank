@@ -1,10 +1,11 @@
-package com.piggybank.repository;
+package com.piggybank.repository.csv;
 
 import static org.junit.Assert.assertEquals;
 
 import com.piggybank.model.Expense;
 import com.piggybank.model.ExpenseType;
-import com.piggybank.repository.dataloader.DataLoader;
+import com.piggybank.repository.ExpenseQuery;
+import com.piggybank.repository.csv.dataloader.DataLoader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
