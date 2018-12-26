@@ -45,7 +45,7 @@ public class CsvExpenseRepository implements ExpenseRepository {
 
   private Function<List<Expense>, List<Expense>> filterByDateEnd(LocalDate date) {
     return (expenses) -> expenses.stream()
-        .filter(expense -> expense.date().isBefore(date))
+        .filter(expense -> expense.date().isEqual(date) || expense.date().isBefore(date))
         .collect(Collectors.toList());
   }
 }

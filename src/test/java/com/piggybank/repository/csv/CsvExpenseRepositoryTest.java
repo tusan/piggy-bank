@@ -9,7 +9,6 @@ import com.piggybank.repository.csv.dataloader.DataLoader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -35,15 +34,13 @@ public class CsvExpenseRepositoryTest {
     Mockito.when(dataLoader.load()).thenReturn(Arrays.asList(
         Expense.newBuilder()
             .setType(ExpenseType.MOTO)
-            .setDate(LocalDate.parse("20180226", DateTimeFormatter
-                .ofPattern("yyyyMMdd")))
+            .setDate(LocalDate.of(2018, Month.FEBRUARY, 26))
             .setDescription("Tagliando")
             .setAmount(200)
             .build(),
         Expense.newBuilder()
             .setType(ExpenseType.CASA)
-            .setDate(LocalDate.parse("20180101",DateTimeFormatter
-                .ofPattern("yyyyMMdd")))
+            .setDate(LocalDate.of(2018, Month.JANUARY, 01))
             .setDescription("Affitto")
             .setAmount(400)
             .build()));
@@ -83,6 +80,22 @@ public class CsvExpenseRepositoryTest {
 
   @Test
   public void shouldFilterByEndDate() {
+    List<Expense> expected = Collections.singletonList(Expense.newBuilder()
+        .setDate(LocalDate.of(2018, Month.JANUARY, 1))
+        .setDescription("Affitto")
+        .setType(ExpenseType.CASA)
+        .setAmount(400)
+        .build());
+
+    List<Expense> result = sut.find(baseQueryBuilder()
+        .setDateEnd(LocalDate.of(2018, Month.JANUARY, 1))
+        .build());
+
+    assertEquals(expected, result);
+  }
+
+  @Test
+  public void shouldFilterByEndDateIncludingDateFilter() {
     List<Expense> expected = Collections.singletonList(Expense.newBuilder()
         .setDate(LocalDate.of(2018, Month.JANUARY, 1))
         .setDescription("Affitto")
