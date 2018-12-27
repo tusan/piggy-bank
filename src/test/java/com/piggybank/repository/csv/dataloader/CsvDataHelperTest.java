@@ -26,9 +26,7 @@ public class CsvDataHelperTest {
   @After
   public void tearDown() {
     try {
-      if (Files.exists(TEST_FILE)) {
-        Files.delete(TEST_FILE);
-      }
+      Files.deleteIfExists(TEST_FILE);
     } catch (final IOException e) {
       e.printStackTrace();
     }
@@ -65,6 +63,28 @@ public class CsvDataHelperTest {
 
   @Test
   public void shouldSaveAnEntryToCsv() {
+    final Expense expenseToWrite = Expense.newBuilder()
+      .setDate(LocalDate.of(2018, Month.JANUARY, 1))
+      .setDescription("test saved description")
+      .setType(ExpenseType.CASA)
+      .setAmount(400)
+      .build();
+
+    sut.save(expenseToWrite);
+
+    final List<Expense> result = sut.load();
+
+    assertTrue(result.toString(), result.contains(expenseToWrite));
+  }
+
+  @Test
+  public void shouldInitializeCsvFileIfNotExists() {
+    try {
+      Files.deleteIfExists(TEST_FILE);
+    } catch (final IOException e) {
+      e.printStackTrace();
+    }
+
     final Expense expenseToWrite = Expense.newBuilder()
       .setDate(LocalDate.of(2018, Month.JANUARY, 1))
       .setDescription("test saved description")

@@ -53,14 +53,19 @@ class CsvDataHelper implements DataLoader {
 
   @Override
   public void save(final Expense expense) {
+    final Path csvFilePath = getCsvFilePath();
     try {
-      final BufferedWriter writer = Files.newBufferedWriter(getCsvFilePath(),
+      final BufferedWriter writer = Files.newBufferedWriter(csvFilePath,
         StandardOpenOption.APPEND,
         StandardOpenOption.CREATE);
 
       final CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
         .withHeader(CsvHeader.class)
         .withFirstRecordAsHeader());
+
+      if (Files.size(csvFilePath) == 0) {
+        csvPrinter.printRecord("DATE", "AMOUNT", "TYPE", "DESCRIPTION");
+      }
 
       csvPrinter
         .printRecord(expense.date().format(DateTimeFormatter
