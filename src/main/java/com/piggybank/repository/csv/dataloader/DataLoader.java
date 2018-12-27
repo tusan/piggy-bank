@@ -5,4 +5,6 @@ import java.util.List;
 
 public interface DataLoader {
   List<Expense> load();
+
+  void save(Expense expense);
 }

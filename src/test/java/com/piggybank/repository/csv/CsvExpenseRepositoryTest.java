@@ -40,38 +40,22 @@ public class CsvExpenseRepositoryTest {
             .build(),
         Expense.newBuilder()
             .setType(ExpenseType.CASA)
-            .setDate(LocalDate.of(2018, Month.JANUARY, 01))
+          .setDate(LocalDate.of(2018, Month.JANUARY, 1))
             .setDescription("Affitto")
             .setAmount(400)
             .build()));
   }
 
   @Test
-  public void shouldFilterByCategory() {
-    List<Expense> expected = Collections.singletonList(Expense.newBuilder()
-        .setDate(LocalDate.of(2018, Month.FEBRUARY, 26))
-        .setDescription("Tagliando")
-        .setType(ExpenseType.MOTO)
-        .setAmount(200)
-        .build());
-
-    List<Expense> result = sut.find(baseQueryBuilder()
-        .setCategory(ExpenseType.MOTO)
-        .build());
-
-    assertEquals(expected, result);
-  }
-
-  @Test
   public void shouldFilterByStartDate() {
-    List<Expense> expected = Collections.singletonList(Expense.newBuilder()
+    final List<Expense> expected = Collections.singletonList(Expense.newBuilder()
         .setDate(LocalDate.of(2018, Month.FEBRUARY, 26))
         .setDescription("Tagliando")
         .setType(ExpenseType.MOTO)
         .setAmount(200)
         .build());
 
-    List<Expense> result = sut.find(baseQueryBuilder()
+    final List<Expense> result = sut.find(baseQueryBuilder()
         .setDateStart(LocalDate.of(2018, Month.JANUARY, 2))
         .build());
 
@@ -80,14 +64,14 @@ public class CsvExpenseRepositoryTest {
 
   @Test
   public void shouldFilterByEndDate() {
-    List<Expense> expected = Collections.singletonList(Expense.newBuilder()
+    final List<Expense> expected = Collections.singletonList(Expense.newBuilder()
         .setDate(LocalDate.of(2018, Month.JANUARY, 1))
         .setDescription("Affitto")
         .setType(ExpenseType.CASA)
         .setAmount(400)
         .build());
 
-    List<Expense> result = sut.find(baseQueryBuilder()
+    final List<Expense> result = sut.find(baseQueryBuilder()
         .setDateEnd(LocalDate.of(2018, Month.JANUARY, 1))
         .build());
 
@@ -96,14 +80,14 @@ public class CsvExpenseRepositoryTest {
 
   @Test
   public void shouldFilterByEndDateIncludingDateFilter() {
-    List<Expense> expected = Collections.singletonList(Expense.newBuilder()
+    final List<Expense> expected = Collections.singletonList(Expense.newBuilder()
         .setDate(LocalDate.of(2018, Month.JANUARY, 1))
         .setDescription("Affitto")
         .setType(ExpenseType.CASA)
         .setAmount(400)
         .build());
 
-    List<Expense> result = sut.find(baseQueryBuilder()
+    final List<Expense> result = sut.find(baseQueryBuilder()
         .setDateEnd(LocalDate.of(2018, Month.FEBRUARY, 25))
         .build());
 
@@ -112,7 +96,6 @@ public class CsvExpenseRepositoryTest {
 
   private ExpenseQuery.Builder baseQueryBuilder() {
     return ExpenseQuery.builder()
-        .setCategory(ExpenseType.ALL)
         .setDateEnd(LocalDate.now())
         .setDateStart(LocalDateTime.MIN.toLocalDate());
   }

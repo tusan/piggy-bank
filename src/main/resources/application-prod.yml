@@ -1,0 +1,3 @@
+expenses:
+  storage:
+    file: /data/expenses.csv

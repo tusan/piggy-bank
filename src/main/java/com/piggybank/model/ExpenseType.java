@@ -11,6 +11,5 @@ public enum ExpenseType {
     BOLLETTE,
     PRELIEVO,
     PRANZO,
-    CONTO,
-    ALL
+    CONTO
 }

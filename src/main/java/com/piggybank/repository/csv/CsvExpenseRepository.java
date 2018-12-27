@@ -1,7 +1,6 @@
 package com.piggybank.repository.csv;
 
 import com.piggybank.model.Expense;
-import com.piggybank.model.ExpenseType;
 import com.piggybank.repository.ExpenseQuery;
 import com.piggybank.repository.ExpenseRepository;
 import com.piggybank.repository.csv.dataloader.DataLoader;
@@ -16,34 +15,29 @@ public class CsvExpenseRepository implements ExpenseRepository {
 
   private final DataLoader dataLoader;
 
-  public CsvExpenseRepository(DataLoader dataLoader) {
+  public CsvExpenseRepository(final DataLoader dataLoader) {
     this.dataLoader = dataLoader;
   }
 
   @Override
-  public List<Expense> find(ExpenseQuery query) {
-    return filterByCategory(query.category())
-        .andThen(filterByDateStart(query.dateStart()))
+  public List<Expense> find(final ExpenseQuery query) {
+    return filterByDateStart(query.dateStart())
         .andThen(filterByDateEnd(query.dateEnd()))
         .apply(dataLoader.load());
   }
 
-  private Function<List<Expense>, List<Expense>> filterByCategory(ExpenseType category) {
-    if (category == ExpenseType.ALL) {
-      return expenses -> expenses;
-    }
-    return (expenses) -> expenses.stream()
-        .filter(expense -> expense.type() == category)
-        .collect(Collectors.toList());
+  @Override
+  public void save(final Expense expense) {
+    dataLoader.save(expense);
   }
 
-  private Function<List<Expense>, List<Expense>> filterByDateStart(LocalDate date) {
+  private Function<List<Expense>, List<Expense>> filterByDateStart(final LocalDate date) {
     return (expenses) -> expenses.stream()
         .filter(expense -> expense.date().isAfter(date))
         .collect(Collectors.toList());
   }
 
-  private Function<List<Expense>, List<Expense>> filterByDateEnd(LocalDate date) {
+  private Function<List<Expense>, List<Expense>> filterByDateEnd(final LocalDate date) {
     return (expenses) -> expenses.stream()
         .filter(expense -> expense.date().isEqual(date) || expense.date().isBefore(date))
         .collect(Collectors.toList());

@@ -22,7 +22,7 @@ public class ExpenseTest {
 
     @Test
     public void shouldBuildAnExpense() throws Exception {
-        String initialJson = " {\n" +
+      final String initialJson = " {\n" +
                 "        \"type\" : \"MOTO\",\n" +
                 "        \"date\" : \"20181127\",\n" +
                 "        \"amount\" : \"24.5\",\n" +
@@ -40,7 +40,7 @@ public class ExpenseTest {
 
     @Test
     public void shouldBuildAnExpenseWithoutDescription() throws Exception {
-        String initialJson = " {\n" +
+      final String initialJson = " {\n" +
             "        \"type\" : \"MOTO\",\n" +
             "        \"date\" : \"20181127\",\n" +
             "        \"amount\" : \"24.5\"" +
@@ -55,7 +55,7 @@ public class ExpenseTest {
 
     @Test
     public void shouldBuildAListOfExpenses() throws Exception {
-        String initialJson = "[\n" +
+      final String initialJson = "[\n" +
                 "    {\n" +
                 "        \"type\" : \"MOTO\",\n" +
                 "        \"date\" : \"20181127\",\n" +
@@ -70,7 +70,7 @@ public class ExpenseTest {
                 "    }\n" +
                 "]";
 
-        List<Expense> expected = Arrays.asList(
+      final List<Expense> expected = Arrays.asList(
                 Expense.newBuilder()
                         .setDate(LocalDate.of(2018, Month.NOVEMBER, 27))
                         .setDescription("Benzina")

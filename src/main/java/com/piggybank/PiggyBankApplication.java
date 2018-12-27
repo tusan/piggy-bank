@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class PiggyBankApplication {
 
-    public static void main(String[] args) {
+  public static void main(final String[] args) {
         SpringApplication.run(PiggyBankApplication.class, args);
     }
 }
