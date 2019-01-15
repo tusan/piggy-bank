@@ -1,21 +1,17 @@
 package com.piggybank.controller;
 
-import com.piggybank.model.Expense;
+import com.piggybank.dto.Expense;
 import com.piggybank.repository.ExpenseQuery;
 import com.piggybank.repository.ExpenseRepository;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Controller("api/v1/expenses")
 @CrossOrigin
@@ -31,15 +27,15 @@ public class PiggyBankController {
 
     @GetMapping
     public ResponseEntity<List<Expense>> expenses(
-      @RequestParam(value = "date-start", required = false) final String dateStart,
-      @RequestParam(value = "date-end", required = false) final String dateEnd) {
+            @RequestParam(value = "date-start", required = false) final String dateStart,
+            @RequestParam(value = "date-end", required = false) final String dateEnd) {
 
         final LocalDate startDate = Strings.isBlank(dateStart)
-                ? LocalDateTime.MIN.toLocalDate()
+                ? null
                 : LocalDate.parse(dateStart, YYYY_MM_DD);
 
         final LocalDate endDate = Strings.isBlank(dateEnd)
-                ? LocalDate.now()
+                ? null
                 : LocalDate.parse(dateEnd, YYYY_MM_DD);
 
         final List<Expense> result = expenseRepository.find(ExpenseQuery.builder()

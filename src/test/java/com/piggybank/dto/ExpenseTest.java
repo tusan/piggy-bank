@@ -1,15 +1,16 @@
-package com.piggybank.model;
+package com.piggybank.dto;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 public class ExpenseTest {
     private ObjectMapper mapper;
@@ -22,7 +23,7 @@ public class ExpenseTest {
 
     @Test
     public void shouldBuildAnExpense() throws Exception {
-      final String initialJson = " {\n" +
+        final String initialJson = " {\n" +
                 "        \"type\" : \"MOTO\",\n" +
                 "        \"date\" : \"20181127\",\n" +
                 "        \"amount\" : \"24.5\",\n" +
@@ -40,22 +41,22 @@ public class ExpenseTest {
 
     @Test
     public void shouldBuildAnExpenseWithoutDescription() throws Exception {
-      final String initialJson = " {\n" +
-            "        \"type\" : \"MOTO\",\n" +
-            "        \"date\" : \"20181127\",\n" +
-            "        \"amount\" : \"24.5\"" +
-            "    }";
+        final String initialJson = " {\n" +
+                "        \"type\" : \"MOTO\",\n" +
+                "        \"date\" : \"20181127\",\n" +
+                "        \"amount\" : \"24.5\"" +
+                "    }";
 
         Assert.assertEquals(Expense.newBuilder()
-            .setDate(LocalDate.of(2018, Month.NOVEMBER, 27))
-            .setType(ExpenseType.MOTO)
-            .setAmount(24.5)
-            .build(), mapper.readValue(initialJson, Expense.class));
+                .setDate(LocalDate.of(2018, Month.NOVEMBER, 27))
+                .setType(ExpenseType.MOTO)
+                .setAmount(24.5)
+                .build(), mapper.readValue(initialJson, Expense.class));
     }
 
     @Test
     public void shouldBuildAListOfExpenses() throws Exception {
-      final String initialJson = "[\n" +
+        final String initialJson = "[\n" +
                 "    {\n" +
                 "        \"type\" : \"MOTO\",\n" +
                 "        \"date\" : \"20181127\",\n" +
@@ -70,7 +71,7 @@ public class ExpenseTest {
                 "    }\n" +
                 "]";
 
-      final List<Expense> expected = Arrays.asList(
+        final List<Expense> expected = Arrays.asList(
                 Expense.newBuilder()
                         .setDate(LocalDate.of(2018, Month.NOVEMBER, 27))
                         .setDescription("Benzina")

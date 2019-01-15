@@ -1,10 +1,11 @@
 package com.piggybank.repository.csv.dataloader;
 
-import com.piggybank.model.Expense;
+import com.piggybank.dto.Expense;
+
 import java.util.List;
 
 public interface DataLoader {
-  List<Expense> load();
+    List<Expense> load();
 
-  void save(Expense expense);
+    void save(Expense expense);
 }

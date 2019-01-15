@@ -1,4 +1,4 @@
-package com.piggybank.model;
+package com.piggybank.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;

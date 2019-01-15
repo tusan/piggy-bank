@@ -1,6 +1,7 @@
 package com.piggybank.repository;
 
-import com.piggybank.model.Expense;
+import com.piggybank.dto.Expense;
+
 import java.util.List;
 
 public interface ExpenseRepository {

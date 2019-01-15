@@ -1,19 +1,22 @@
 package com.piggybank.repository;
 
 import com.google.auto.value.AutoValue;
+
+import javax.annotation.Nullable;
 import java.time.LocalDate;
 
 @AutoValue
 public abstract class ExpenseQuery {
 
-    public abstract LocalDate dateStart();
-
-    public abstract LocalDate dateEnd();
-
     public static Builder builder() {
         return new AutoValue_ExpenseQuery.Builder();
     }
 
+    @Nullable
+    public abstract LocalDate dateStart();
+
+    @Nullable
+    public abstract LocalDate dateEnd();
 
     @AutoValue.Builder
     public abstract static class Builder {
