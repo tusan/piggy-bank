@@ -10,7 +10,6 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 )
 @SpringBootApplication
 public class PiggyBankApplication {
-
     public static void main(final String[] args) {
         SpringApplication.run(PiggyBankApplication.class, args);
     }
