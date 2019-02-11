@@ -21,7 +21,7 @@ public class PostgresExpensesRepository implements ExpenseRepository {
     public List<Expense> find(ExpenseQuery query) {
         return execQuery(query)
                 .stream()
-                .map(exp -> convertToDtoExpense(exp))
+                .map(this::convertToDtoExpense)
                 .collect(Collectors.toList());
     }
 
