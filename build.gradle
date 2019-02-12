@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
 plugins {
     id 'java'
     id 'net.ltgt.apt-idea' version '0.19'
@@ -17,7 +19,7 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+        mavenBom(SpringBootPlugin.BOM_COORDINATES)
     }
 }
 
