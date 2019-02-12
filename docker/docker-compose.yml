@@ -6,5 +6,6 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: password
+      POSTGRES_DB: piggy_bank
     ports:
     - 5432:5432
