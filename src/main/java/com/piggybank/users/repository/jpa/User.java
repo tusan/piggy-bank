@@ -2,7 +2,9 @@ package com.piggybank.users.repository.jpa;
 
 import com.google.common.base.MoreObjects;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity

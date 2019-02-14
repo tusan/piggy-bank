@@ -32,14 +32,6 @@ public class TokenBasedAuthenticationService implements UserAuthenticationServic
                 .map(this::convertEntityToDto);
     }
 
-    private User convertEntityToDto(com.piggybank.users.repository.jpa.User user) {
-        return User.newBuilder()
-                .setPassword(user.getPassword())
-                .setUsername(user.getUsername())
-                .setToken(user.getToken())
-                .build();
-    }
-
     @Override
     public Optional<User> authenticateByToken(String token) {
         return userRepository.findByToken(token)
@@ -61,5 +53,13 @@ public class TokenBasedAuthenticationService implements UserAuthenticationServic
         newUser.setUsername(user.username());
         newUser.setPassword(passwordEncoder.encode(user.password()));
         userRepository.save(newUser);
+    }
+
+    private User convertEntityToDto(com.piggybank.users.repository.jpa.User user) {
+        return User.newBuilder()
+                .setPassword(user.getPassword())
+                .setUsername(user.getUsername())
+                .setToken(user.getToken())
+                .build();
     }
 }

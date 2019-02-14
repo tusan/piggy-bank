@@ -87,7 +87,7 @@ public class UserControllerTest {
                 "    \"password\": \"password\"\n" +
                 "}";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isCreated());

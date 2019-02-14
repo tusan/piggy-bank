@@ -69,7 +69,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-     Filter restAuthenticationFilter() throws Exception {
+    Filter restAuthenticationFilter() throws Exception {
         SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler();
         successHandler.setRedirectStrategy((request, response, url) -> {
         });
@@ -82,7 +82,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-     FilterRegistrationBean disableAutoRegistration() {
+    FilterRegistrationBean disableAutoRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean(new TokenAuthenticationFilter(PROTECTED_URLS));
         registration.setEnabled(false);
         return registration;
