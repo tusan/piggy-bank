@@ -34,7 +34,6 @@ public class UserRepositoryImplTest {
     @Before
     public void setUp() {
         Mockito.when(tokenGenerator.newToken()).thenReturn("token");
-        Mockito.when(userRepository.findByUsername(ArgumentMatchers.any(String.class))).thenReturn(Optional.empty());
     }
 
     @Test
