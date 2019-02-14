@@ -25,13 +25,11 @@ public class JpaUserRepositoryTest {
     @Before
     public void setUp() {
         final User user1 = new User();
-        user1.setId(1L);
         user1.setPassword("password1");
         user1.setToken("token1");
         user1.setUsername("username1");
 
         final User user2 = new User();
-        user2.setId(2L);
         user2.setPassword("password2");
         user2.setToken("token2");
         user2.setUsername("username2");
@@ -43,7 +41,6 @@ public class JpaUserRepositoryTest {
     @Test
     public void shouldReturnCorrectUserWhenPassingUsername() {
         final User expected = new User();
-        expected.setId(1L);
         expected.setPassword("password1");
         expected.setToken("token1");
         expected.setUsername("username1");

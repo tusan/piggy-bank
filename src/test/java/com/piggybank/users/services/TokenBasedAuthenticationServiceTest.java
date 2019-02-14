@@ -1,8 +1,8 @@
-package com.piggybank.users.repository.jpa;
+package com.piggybank.users.services;
 
 import com.piggybank.users.dto.User;
 import com.piggybank.users.repository.TokenGenerator;
-import com.piggybank.users.repository.UserRepositoryImpl;
+import com.piggybank.users.repository.jpa.JpaUserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +18,9 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserRepositoryImplTest {
+public class TokenBasedAuthenticationServiceTest {
     @InjectMocks
-    private UserRepositoryImpl sut;
+    private TokenBasedAuthenticationService sut;
 
     @Mock
     private JpaUserRepository userRepository;
@@ -49,8 +49,9 @@ public class UserRepositoryImplTest {
                 .setUsername("username")
                 .setPassword("password")
                 .setToken("token")
-                .setId(1L)
                 .build(), user.get());
+
+        Mockito.verify(userRepository).save(testUser());
     }
 
     @Test
@@ -90,9 +91,55 @@ public class UserRepositoryImplTest {
         Mockito.verify(userRepository).save(expectedUser);
     }
 
+    @Test
+    public void shouldReturnTheUserIfFoundByToken() {
+        Mockito.when(userRepository.findByToken(ArgumentMatchers.anyString())).thenReturn(Optional.of(testUser()));
+
+        Optional<User> user = sut.authenticateByToken("token");
+
+        assertTrue(user.isPresent());
+
+        assertEquals(User.newBuilder()
+                .setUsername("username")
+                .setPassword("password")
+                .setToken("token")
+                .build(), user.get());
+    }
+
+    @Test
+    public void shouldReturnEmptyIfNoUserFoundByToken() {
+        Mockito.when(userRepository.findByToken(ArgumentMatchers.anyString())).thenReturn(Optional.empty());
+
+        Optional<User> user = sut.authenticateByToken("token");
+
+        assertFalse(user.isPresent());
+    }
+
+    @Test
+    public void shouldRemoveSessionFromUserWhenLoggingOut() {
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString())).thenReturn(Optional.of(testUser()));
+
+        com.piggybank.users.repository.jpa.User expectedUser = new com.piggybank.users.repository.jpa.User();
+        expectedUser.setUsername("username");
+        expectedUser.setPassword("password");
+
+        sut.logout("username");
+
+        Mockito.verify(userRepository).save(expectedUser);
+    }
+
+    @Test
+    public void shouldDoNothingWhenLoggingOutButUserIsMissing() {
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString())).thenReturn(Optional.empty());
+
+        sut.logout("username");
+
+        Mockito.verify(userRepository).findByUsername("username");
+        Mockito.verify(userRepository, Mockito.never()).save(ArgumentMatchers.any());
+    }
+
     private com.piggybank.users.repository.jpa.User testUser() {
         com.piggybank.users.repository.jpa.User expectedUser = new com.piggybank.users.repository.jpa.User();
-        expectedUser.setId(1L);
         expectedUser.setUsername("username");
         expectedUser.setPassword("password");
         expectedUser.setToken("token");

@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:postgresql://127.0.0.1:5432/piggy_bank
-    username: jpa
+    username: postgres
     password: password
   jpa:
     properties:
@@ -9,3 +9,4 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+    generate-ddl: true
