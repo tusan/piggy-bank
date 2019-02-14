@@ -52,17 +52,4 @@ public class JpaUserRepositoryTest {
         assertTrue(user.isPresent());
         assertEquals(expected, user.get());
     }
-
-    @Test
-    public void shouldReturnCorrectUserWhenPassingToken() {
-        final User expected = new User();
-        expected.setId(2L);
-        expected.setPassword("password2");
-        expected.setToken("token2");
-        expected.setUsername("username2");
-
-        Optional<User> user = sut.findByToken("token2");
-        assertTrue(user.isPresent());
-        assertEquals(expected, user.get());
-    }
 }
