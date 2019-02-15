@@ -33,7 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(PUBLIC_URLS);
 
-    private TokenAuthenticationProvider authenticationProvider;
+    private final TokenAuthenticationProvider authenticationProvider;
 
     public SecurityConfiguration(TokenAuthenticationProvider authenticationProvider) {
         this.authenticationProvider = authenticationProvider;
@@ -69,9 +69,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    Filter restAuthenticationFilter() throws Exception {
+    FilterRegistrationBean disableAutoRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean<>(new TokenAuthenticationFilter(PROTECTED_URLS));
+        registration.setEnabled(false);
+        return registration;
+    }
+
+    private Filter restAuthenticationFilter() throws Exception {
         SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler();
         successHandler.setRedirectStrategy((request, response, url) -> {
+            //DO NOTHING
         });
 
         TokenAuthenticationFilter filter = new TokenAuthenticationFilter(PROTECTED_URLS);
@@ -81,10 +88,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
-    @Bean
-    FilterRegistrationBean disableAutoRegistration() {
-        FilterRegistrationBean registration = new FilterRegistrationBean(new TokenAuthenticationFilter(PROTECTED_URLS));
-        registration.setEnabled(false);
-        return registration;
-    }
 }

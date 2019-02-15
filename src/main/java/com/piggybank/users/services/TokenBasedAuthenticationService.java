@@ -14,14 +14,16 @@ public class TokenBasedAuthenticationService implements UserAuthenticationServic
     private final PasswordEncoder passwordEncoder;
     private final TokenGenerator tokenGenerator;
 
-    public TokenBasedAuthenticationService(JpaUserRepository userRepository, PasswordEncoder passwordEncoder, TokenGenerator tokenGenerator) {
+    public TokenBasedAuthenticationService(final JpaUserRepository userRepository,
+                                           final PasswordEncoder passwordEncoder,
+                                           final TokenGenerator tokenGenerator) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenGenerator = tokenGenerator;
     }
 
     @Override
-    public Optional<User> login(String username, String password) {
+    public Optional<User> login(final String username, final String password) {
         return userRepository.findByUsername(username)
                 .filter(user -> passwordEncoder.matches(password, user.getPassword()))
                 .map(user -> {
@@ -33,13 +35,13 @@ public class TokenBasedAuthenticationService implements UserAuthenticationServic
     }
 
     @Override
-    public Optional<User> authenticateByToken(String token) {
+    public Optional<User> authenticateByToken(final String token) {
         return userRepository.findByToken(token)
                 .map(this::convertEntityToDto);
     }
 
     @Override
-    public void logout(String username) {
+    public void logout(final String username) {
         userRepository.findByUsername(username)
                 .ifPresent(user -> {
                     user.setToken(null);
@@ -48,14 +50,14 @@ public class TokenBasedAuthenticationService implements UserAuthenticationServic
     }
 
     @Override
-    public void register(User user) {
+    public void register(final User user) {
         com.piggybank.users.repository.jpa.User newUser = new com.piggybank.users.repository.jpa.User();
         newUser.setUsername(user.username());
         newUser.setPassword(passwordEncoder.encode(user.password()));
         userRepository.save(newUser);
     }
 
-    private User convertEntityToDto(com.piggybank.users.repository.jpa.User user) {
+    private User convertEntityToDto(final com.piggybank.users.repository.jpa.User user) {
         return User.newBuilder()
                 .setPassword(user.getPassword())
                 .setUsername(user.getUsername())

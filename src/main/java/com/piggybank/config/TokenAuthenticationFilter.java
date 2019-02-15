@@ -10,18 +10,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+class TokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer";
 
-    TokenAuthenticationFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
+    TokenAuthenticationFilter(final RequestMatcher requiresAuthenticationRequestMatcher) {
         super(requiresAuthenticationRequestMatcher);
     }
 
     @Override
     public Authentication attemptAuthentication(
-            HttpServletRequest request,
-            HttpServletResponse response) {
+            final HttpServletRequest request,
+            final HttpServletResponse response) {
 
         String token = Optional.ofNullable(request.getHeader(AUTHORIZATION))
                 .map(v -> v.replace(BEARER, "").trim())

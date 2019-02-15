@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 class UserController {
 
-    private UserAuthenticationService userAuthenticationService;
+    private final UserAuthenticationService userAuthenticationService;
 
     public UserController(UserAuthenticationService userAuthenticationService) {
         this.userAuthenticationService = userAuthenticationService;
     }
 
     @PostMapping("login")
-    public ResponseEntity<Void> login(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<Void> login(@RequestParam final String username, @RequestParam final String password) {
         return userAuthenticationService.login(username, password)
                 .map(user -> {
                     HttpHeaders headers = new HttpHeaders();
@@ -31,7 +31,7 @@ class UserController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<Void> register(@RequestBody User user) {
+    public ResponseEntity<Void> register(@RequestBody final User user) {
         userAuthenticationService.register(user);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

@@ -13,14 +13,14 @@ import java.util.Optional;
 
 @Component
 class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
-    private UserAuthenticationService userAuthenticationService;
+    private final UserAuthenticationService userAuthenticationService;
 
-    public TokenAuthenticationProvider(UserAuthenticationService userAuthenticationService) {
+    public TokenAuthenticationProvider(final UserAuthenticationService userAuthenticationService) {
         this.userAuthenticationService = userAuthenticationService;
     }
 
     @Override
-    protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+    protected UserDetails retrieveUser(final String username, final UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
         return Optional
                 .ofNullable(authentication.getCredentials())
                 .flatMap(token -> userAuthenticationService.authenticateByToken(String.valueOf(token))
@@ -33,7 +33,7 @@ class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticationProvi
     }
 
     @Override
-    protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+    protected void additionalAuthenticationChecks(final UserDetails userDetails, final UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
 
     }
 }
