@@ -2,6 +2,7 @@ package com.piggybank.users.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.piggybank.model.JpaUserRepository;
 import com.piggybank.users.dto.User;
 import com.piggybank.users.services.UserAuthenticationService;
 import org.junit.Assert;
@@ -15,6 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -31,6 +33,12 @@ public class UserControllerTest {
 
     @Mock
     private UserAuthenticationService userAuthenticationService;
+
+    @Mock
+    private JpaUserRepository userRepository;
+
+    @Mock
+    private  PasswordEncoder passwordEncoder;
 
     private MockMvc mockMvc;
 
@@ -87,15 +95,17 @@ public class UserControllerTest {
                 "    \"password\": \"password\"\n" +
                 "}";
 
+        Mockito.when(passwordEncoder.encode(ArgumentMatchers.anyString())).thenReturn("encoded_password");
+
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
-        Mockito.verify(userAuthenticationService).register(User
-                .newBuilder()
-                .setUsername("username")
-                .setPassword("password")
-                .build());
+        com.piggybank.model.User expectedUser = new com.piggybank.model.User();
+        expectedUser.setUsername("username");
+        expectedUser.setPassword("encoded_password");
+
+        Mockito.verify(userRepository).save(expectedUser);
     }
 }

@@ -48,14 +48,6 @@ public class TokenBasedAuthenticationService implements UserAuthenticationServic
                 });
     }
 
-    @Override
-    public void register(final User user) {
-        com.piggybank.model.User newUser = new com.piggybank.model.User();
-        newUser.setUsername(user.username());
-        newUser.setPassword(passwordEncoder.encode(user.password()));
-        userRepository.save(newUser);
-    }
-
     private User convertEntityToDto(final com.piggybank.model.User user) {
         return User.newBuilder()
                 .setPassword(user.getPassword())

@@ -73,24 +73,6 @@ public class TokenBasedAuthenticationServiceTest {
     }
 
     @Test
-    public void shouldSaveTheGivenUserInRepository() {
-        Mockito.when(passwordEncoder.encode(ArgumentMatchers.anyString())).thenReturn("encoded_password");
-
-        com.piggybank.model.User expectedUser = new com.piggybank.model.User();
-        expectedUser.setUsername("username");
-        expectedUser.setPassword("encoded_password");
-
-        User user = User.newBuilder()
-                .setUsername("username")
-                .setPassword("password")
-                .build();
-
-        sut.register(user);
-
-        Mockito.verify(userRepository).save(expectedUser);
-    }
-
-    @Test
     public void shouldReturnTheUserIfFoundByToken() {
         Mockito.when(userRepository.findByToken(ArgumentMatchers.anyString())).thenReturn(Optional.of(testUser()));
 

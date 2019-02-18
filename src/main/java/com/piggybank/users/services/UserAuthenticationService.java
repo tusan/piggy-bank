@@ -10,6 +10,4 @@ public interface UserAuthenticationService {
     Optional<User> authenticateByToken(String token);
 
     void logout(String username);
-
-    void register(User user);
 }
