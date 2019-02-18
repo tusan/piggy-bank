@@ -1,4 +1,4 @@
-package com.piggybank.expenses.repository.jpa;
+package com.piggybank.model;
 
 import com.piggybank.expenses.dto.ExpenseType;
 
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-class Expense {
+public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -19,7 +19,7 @@ class Expense {
     private LocalDate date;
     private double amount;
 
-    Expense() {
+    public Expense() {
     }
 
     public void setId(Long id) {

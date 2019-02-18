@@ -1,10 +1,12 @@
-package com.piggybank.users.repository.jpa;
+package com.piggybank.model;
 
 import com.google.common.base.MoreObjects;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -14,6 +16,9 @@ public class User {
     private String username;
     private String password;
     private String token;
+
+    @OneToMany
+    private List<Expense> expenses;
 
     public User() {
     }
@@ -42,19 +47,12 @@ public class User {
         this.token = token;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(username, user.username) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(token, user.token);
+    public List<Expense> getExpenses() {
+        return expenses;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(username, password, token);
+    public void setExpenses(List<Expense> expenses) {
+        this.expenses = expenses;
     }
 
     @Override
@@ -63,6 +61,24 @@ public class User {
                 .add("username", username)
                 .add("password", password)
                 .add("token", token)
+                .add("expenses", expenses)
                 .toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(username, user.username) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(token, user.token) &&
+                Objects.equals(expenses, user.expenses);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, password, token, expenses);
+    }
+
 }

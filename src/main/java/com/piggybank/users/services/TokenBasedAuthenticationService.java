@@ -1,8 +1,7 @@
 package com.piggybank.users.services;
 
+import com.piggybank.model.JpaUserRepository;
 import com.piggybank.users.dto.User;
-import com.piggybank.users.repository.TokenGenerator;
-import com.piggybank.users.repository.jpa.JpaUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
@@ -51,13 +50,13 @@ public class TokenBasedAuthenticationService implements UserAuthenticationServic
 
     @Override
     public void register(final User user) {
-        com.piggybank.users.repository.jpa.User newUser = new com.piggybank.users.repository.jpa.User();
+        com.piggybank.model.User newUser = new com.piggybank.model.User();
         newUser.setUsername(user.username());
         newUser.setPassword(passwordEncoder.encode(user.password()));
         userRepository.save(newUser);
     }
 
-    private User convertEntityToDto(final com.piggybank.users.repository.jpa.User user) {
+    private User convertEntityToDto(final com.piggybank.model.User user) {
         return User.newBuilder()
                 .setPassword(user.getPassword())
                 .setUsername(user.getUsername())

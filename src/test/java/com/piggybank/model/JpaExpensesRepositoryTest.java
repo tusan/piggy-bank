@@ -1,4 +1,4 @@
-package com.piggybank.expenses.repository.jpa;
+package com.piggybank.model;
 
 import com.piggybank.expenses.dto.ExpenseType;
 import org.hamcrest.Matchers;

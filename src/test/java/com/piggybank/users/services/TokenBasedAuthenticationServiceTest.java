@@ -1,8 +1,7 @@
 package com.piggybank.users.services;
 
+import com.piggybank.model.JpaUserRepository;
 import com.piggybank.users.dto.User;
-import com.piggybank.users.repository.TokenGenerator;
-import com.piggybank.users.repository.jpa.JpaUserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,7 +76,7 @@ public class TokenBasedAuthenticationServiceTest {
     public void shouldSaveTheGivenUserInRepository() {
         Mockito.when(passwordEncoder.encode(ArgumentMatchers.anyString())).thenReturn("encoded_password");
 
-        com.piggybank.users.repository.jpa.User expectedUser = new com.piggybank.users.repository.jpa.User();
+        com.piggybank.model.User expectedUser = new com.piggybank.model.User();
         expectedUser.setUsername("username");
         expectedUser.setPassword("encoded_password");
 
@@ -119,7 +118,7 @@ public class TokenBasedAuthenticationServiceTest {
     public void shouldRemoveSessionFromUserWhenLoggingOut() {
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString())).thenReturn(Optional.of(testUser()));
 
-        com.piggybank.users.repository.jpa.User expectedUser = new com.piggybank.users.repository.jpa.User();
+        com.piggybank.model.User expectedUser = new com.piggybank.model.User();
         expectedUser.setUsername("username");
         expectedUser.setPassword("password");
 
@@ -138,8 +137,8 @@ public class TokenBasedAuthenticationServiceTest {
         Mockito.verify(userRepository, Mockito.never()).save(ArgumentMatchers.any());
     }
 
-    private com.piggybank.users.repository.jpa.User testUser() {
-        com.piggybank.users.repository.jpa.User expectedUser = new com.piggybank.users.repository.jpa.User();
+    private com.piggybank.model.User testUser() {
+        com.piggybank.model.User expectedUser = new com.piggybank.model.User();
         expectedUser.setUsername("username");
         expectedUser.setPassword("password");
         expectedUser.setToken("token");

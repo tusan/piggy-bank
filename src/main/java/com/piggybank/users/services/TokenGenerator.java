@@ -1,4 +1,4 @@
-package com.piggybank.users.repository;
+package com.piggybank.users.services;
 
 import org.springframework.stereotype.Component;
 

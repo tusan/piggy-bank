@@ -1,4 +1,4 @@
-package com.piggybank.users.repository.jpa;
+package com.piggybank.model;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,4 +1,4 @@
-package com.piggybank.expenses.repository.jpa;
+package com.piggybank.model;
 
 import com.piggybank.expenses.dto.Expense;
 import com.piggybank.expenses.repository.ExpenseQuery;
@@ -31,7 +31,7 @@ public class ExpensesRepository implements ExpenseRepository {
         jpaRepository.save(convertToEntityExpense(expense));
     }
 
-    private List<com.piggybank.expenses.repository.jpa.Expense> execQuery(final ExpenseQuery query) {
+    private List<com.piggybank.model.Expense> execQuery(final ExpenseQuery query) {
         if (query.dateStart() != null && query.dateEnd() != null) {
             return jpaRepository.findByDateGreaterThanEqualAndDateLessThanEqual(query.dateStart(), query.dateEnd());
         } else if (query.dateStart() != null) {
@@ -43,9 +43,9 @@ public class ExpensesRepository implements ExpenseRepository {
         }
     }
 
-    private com.piggybank.expenses.repository.jpa.Expense convertToEntityExpense(final Expense expense) {
-        com.piggybank.expenses.repository.jpa.Expense exp =
-                new com.piggybank.expenses.repository.jpa.Expense();
+    private com.piggybank.model.Expense convertToEntityExpense(final Expense expense) {
+        com.piggybank.model.Expense exp =
+                new com.piggybank.model.Expense();
 
         exp.setType(expense.type());
         exp.setDate(expense.date());
@@ -54,7 +54,7 @@ public class ExpensesRepository implements ExpenseRepository {
         return exp;
     }
 
-    private Expense convertToDtoExpense(final com.piggybank.expenses.repository.jpa.Expense exp) {
+    private Expense convertToDtoExpense(final com.piggybank.model.Expense exp) {
         return Expense.newBuilder()
                 .setAmount(exp.getAmount())
                 .setDate(exp.getDate())
