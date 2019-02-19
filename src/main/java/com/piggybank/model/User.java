@@ -4,9 +4,7 @@ import com.google.common.base.MoreObjects;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -16,9 +14,6 @@ public class User {
     private String username;
     private String password;
     private String token;
-
-    @OneToMany
-    private List<Expense> expenses;
 
     public User() {
     }
@@ -47,13 +42,6 @@ public class User {
         this.token = token;
     }
 
-    public List<Expense> getExpenses() {
-        return expenses;
-    }
-
-    public void setExpenses(List<Expense> expenses) {
-        this.expenses = expenses;
-    }
 
     @Override
     public String toString() {
@@ -61,7 +49,6 @@ public class User {
                 .add("username", username)
                 .add("password", password)
                 .add("token", token)
-                .add("expenses", expenses)
                 .toString();
     }
 
@@ -72,13 +59,12 @@ public class User {
         User user = (User) o;
         return Objects.equals(username, user.username) &&
                 Objects.equals(password, user.password) &&
-                Objects.equals(token, user.token) &&
-                Objects.equals(expenses, user.expenses);
+                Objects.equals(token, user.token);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, password, token, expenses);
+        return Objects.hash(username, password, token);
     }
 
 }

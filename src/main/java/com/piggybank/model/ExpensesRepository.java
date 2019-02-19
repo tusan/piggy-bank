@@ -2,45 +2,51 @@ package com.piggybank.model;
 
 import com.piggybank.expenses.dto.Expense;
 import com.piggybank.expenses.repository.ExpenseQuery;
-import com.piggybank.expenses.repository.ExpenseRepository;
-import org.springframework.context.annotation.Primary;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-@Primary
 @Repository
-public class ExpensesRepository implements ExpenseRepository {
+public class ExpensesRepository {
     private final JpaExpensesRepository jpaRepository;
 
-    public ExpensesRepository(JpaExpensesRepository jpaRepository) {
+    ExpensesRepository(JpaExpensesRepository jpaRepository) {
         this.jpaRepository = jpaRepository;
     }
 
-    @Override
     public List<Expense> find(final ExpenseQuery query) {
-        return execQuery(query)
+        return getQueryFilters(query)
+                .reduce(Specification::and)
+                .map(jpaRepository::findAll)
+                .orElseGet(jpaRepository::findAll)
                 .stream()
                 .map(this::convertToDtoExpense)
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public void save(final Expense expense) {
-        jpaRepository.save(convertToEntityExpense(expense));
+    private Stream<Specification<com.piggybank.model.Expense>> getQueryFilters(ExpenseQuery query) {
+        return Stream
+                .of(dateStartFilter(query), dateEndFilter(query))
+                .filter(Optional::isPresent)
+                .map(Optional::get);
     }
 
-    private List<com.piggybank.model.Expense> execQuery(final ExpenseQuery query) {
-        if (query.dateStart() != null && query.dateEnd() != null) {
-            return jpaRepository.findByDateGreaterThanEqualAndDateLessThanEqual(query.dateStart(), query.dateEnd());
-        } else if (query.dateStart() != null) {
-            return jpaRepository.findByDateGreaterThanEqual(query.dateStart());
-        } else if (query.dateEnd() != null) {
-            return jpaRepository.findByDateLessThanEqual(query.dateEnd());
-        } else {
-            return jpaRepository.findAll();
-        }
+    public com.piggybank.model.Expense save(final Expense expense) {
+        return jpaRepository.save(convertToEntityExpense(expense));
+    }
+
+    private Optional<Specification<com.piggybank.model.Expense>> dateStartFilter(final ExpenseQuery query) {
+        return Optional.ofNullable(query.dateStart())
+                .map(dateStart -> (root, q, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("date"), dateStart));
+    }
+
+    private Optional<Specification<com.piggybank.model.Expense>> dateEndFilter(final ExpenseQuery query) {
+        return Optional.ofNullable(query.dateEnd())
+                .map(dateEnd -> (root, q, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("date"), dateEnd));
     }
 
     private com.piggybank.model.Expense convertToEntityExpense(final Expense expense) {

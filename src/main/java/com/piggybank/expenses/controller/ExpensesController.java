@@ -2,7 +2,7 @@ package com.piggybank.expenses.controller;
 
 import com.piggybank.expenses.dto.Expense;
 import com.piggybank.expenses.repository.ExpenseQuery;
-import com.piggybank.expenses.repository.ExpenseRepository;
+import com.piggybank.model.ExpensesRepository;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,9 @@ class ExpensesController {
 
     private static final DateTimeFormatter YYYY_MM_DD = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-    private final ExpenseRepository expenseRepository;
+    private final ExpensesRepository expenseRepository;
 
-    public ExpensesController(final ExpenseRepository expenseRepository) {
+    public ExpensesController(final ExpensesRepository expenseRepository) {
         this.expenseRepository = expenseRepository;
     }
 

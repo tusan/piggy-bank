@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-public class Expense {
+class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -19,42 +19,46 @@ public class Expense {
     private LocalDate date;
     private double amount;
 
-    public Expense() {
+    Expense() {
     }
 
-    public void setId(Long id) {
+    void setId(Long id) {
         this.id = id;
     }
 
-    public ExpenseType getType() {
+    Long getId() {
+        return id;
+    }
+
+    ExpenseType getType() {
         return type;
     }
 
-    public void setType(ExpenseType type) {
+    void setType(ExpenseType type) {
         this.type = type;
     }
 
-    public String getDescription() {
+    String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    void setDescription(String description) {
         this.description = description;
     }
 
-    public LocalDate getDate() {
+    LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public double getAmount() {
+    double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    void setAmount(double amount) {
         this.amount = amount;
     }
 

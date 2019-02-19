@@ -5,7 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.piggybank.expenses.dto.Expense;
 import com.piggybank.expenses.dto.ExpenseType;
 import com.piggybank.expenses.repository.ExpenseQuery;
-import com.piggybank.expenses.repository.ExpenseRepository;
+import com.piggybank.model.ExpensesRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +31,7 @@ public class ExpensesControllerTest {
     private ExpensesController sut;
 
     @Mock
-    private ExpenseRepository expenseRepository;
+    private ExpensesRepository expenseRepository;
 
     private MockMvc mockMvc;
 
