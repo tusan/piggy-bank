@@ -13,31 +13,39 @@ import java.util.stream.Stream;
 @Repository
 public class ExpensesRepository {
     private final JpaExpensesRepository jpaRepository;
+    private final PrincipalProvider principalProvider;
 
-    ExpensesRepository(JpaExpensesRepository jpaRepository) {
+    ExpensesRepository(JpaExpensesRepository jpaRepository, PrincipalProvider principalProvider) {
         this.jpaRepository = jpaRepository;
+        this.principalProvider = principalProvider;
     }
 
     public List<Expense> find(final ExpenseQuery query) {
-        return getQueryFilters(query)
-                .reduce(Specification::and)
-                .map(jpaRepository::findAll)
-                .orElseGet(jpaRepository::findAll)
+        return jpaRepository.findAll(getQueryFilters(query))
                 .stream()
                 .map(this::convertToDtoExpense)
                 .collect(Collectors.toList());
     }
 
-    private Stream<Specification<com.piggybank.model.Expense>> getQueryFilters(ExpenseQuery query) {
-        return Stream
-                .of(dateStartFilter(query), dateEndFilter(query))
-                .filter(Optional::isPresent)
-                .map(Optional::get);
-    }
 
     public com.piggybank.model.Expense save(final Expense expense) {
         return jpaRepository.save(convertToEntityExpense(expense));
     }
+
+    private Specification<com.piggybank.model.Expense> owner() {
+        return (root, q, criteriaBuilder) -> criteriaBuilder
+                .equal(root.get("owner").get("username"),
+                        principalProvider.getLoggedUser());
+    }
+
+    private Specification<com.piggybank.model.Expense> getQueryFilters(ExpenseQuery query) {
+        return Stream
+                .of(dateStartFilter(query), dateEndFilter(query))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .reduce(owner(), Specification::and);
+    }
+
 
     private Optional<Specification<com.piggybank.model.Expense>> dateStartFilter(final ExpenseQuery query) {
         return Optional.ofNullable(query.dateStart())

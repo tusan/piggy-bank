@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class TokenGenerator {
+class TokenGenerator {
     public String newToken() {
         return UUID.randomUUID().toString();
     }

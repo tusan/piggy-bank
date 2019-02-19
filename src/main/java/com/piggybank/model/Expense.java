@@ -1,11 +1,9 @@
 package com.piggybank.model;
 
+import com.google.common.base.MoreObjects;
 import com.piggybank.expenses.dto.ExpenseType;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -19,15 +17,18 @@ class Expense {
     private LocalDate date;
     private double amount;
 
-    Expense() {
-    }
+    @ManyToOne
+    private User owner;
 
-    void setId(Long id) {
-        this.id = id;
+    Expense() {
     }
 
     Long getId() {
         return id;
+    }
+
+    void setId(Long id) {
+        this.id = id;
     }
 
     ExpenseType getType() {
@@ -62,15 +63,24 @@ class Expense {
         this.amount = amount;
     }
 
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
     @Override
     public String toString() {
-        return "Expense{" +
-                "id=" + id +
-                ", type=" + type +
-                ", description='" + description + '\'' +
-                ", date=" + date +
-                ", amount=" + amount +
-                '}';
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("type", type)
+                .add("description", description)
+                .add("date", date)
+                .add("amount", amount)
+                .add("owner", owner)
+                .toString();
     }
 
     @Override
@@ -79,13 +89,16 @@ class Expense {
         if (o == null || getClass() != o.getClass()) return false;
         Expense expense = (Expense) o;
         return Double.compare(expense.amount, amount) == 0 &&
+                Objects.equals(id, expense.id) &&
                 type == expense.type &&
                 Objects.equals(description, expense.description) &&
-                Objects.equals(date, expense.date);
+                Objects.equals(date, expense.date) &&
+                Objects.equals(owner, expense.owner);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, description, date, amount);
+        return Objects.hash(id, type, description, date, amount, owner);
     }
+
 }

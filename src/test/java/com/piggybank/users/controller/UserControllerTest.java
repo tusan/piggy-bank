@@ -38,7 +38,7 @@ public class UserControllerTest {
     private JpaUserRepository userRepository;
 
     @Mock
-    private  PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     private MockMvc mockMvc;
 
