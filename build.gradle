@@ -9,7 +9,6 @@ plugins {
 }
 
 group 'myprojects'
-version '0.1'
 
 sourceCompatibility = 1.8
 
@@ -45,3 +44,10 @@ dependencies {
 bootJar {
     launchScript()
 }
+
+task copyJarToBin(type: Copy) {
+    from jar
+    into "docker"
+}
+
+build.dependsOn copyJarToBin
