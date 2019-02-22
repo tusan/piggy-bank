@@ -2,6 +2,7 @@ package com.piggybank.users.controller;
 
 import com.piggybank.model.JpaUserRepository;
 import com.piggybank.users.dto.LoggedUser;
+import com.piggybank.users.dto.LoginRequest;
 import com.piggybank.users.dto.User;
 import com.piggybank.users.services.UserAuthenticationService;
 import org.springframework.http.HttpHeaders;
@@ -29,14 +30,10 @@ class UserController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<LoggedUser> login(@RequestParam final String username, @RequestParam final String password) {
-        return userAuthenticationService.login(username, password)
+    public ResponseEntity<LoggedUser> login(@RequestBody final LoginRequest loginRequest) {
+        return userAuthenticationService.login(loginRequest.username(), loginRequest.password())
                 .map(user -> LoggedUser.forUsernameAndToken(user.username(), user.token()))
-                .map(user -> {
-                    System.out.println(user);
-                    return user;
-                })
-                .map(loggedUser -> ResponseEntity.ok(loggedUser))
+                .map(ResponseEntity::ok)
                 .orElseThrow(() -> new BadCredentialsException("wrong credential for user"));
     }
 

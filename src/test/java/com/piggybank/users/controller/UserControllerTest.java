@@ -56,6 +56,11 @@ public class UserControllerTest {
 
     @Test
     public void shouldReturn200IfLoginSucceed() throws Exception {
+        final String requestBody = "{\n" +
+                "    \"username\": \"username\",\n" +
+                "    \"password\": \"password\"\n" +
+                "}";
+
         Mockito.when(userAuthenticationService.login(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(User
                         .newBuilder()
@@ -66,8 +71,8 @@ public class UserControllerTest {
                         .build()));
 
         MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/login")
-                .param("username", "username")
-                .param("password", "password"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
@@ -83,10 +88,15 @@ public class UserControllerTest {
         Mockito.when(userAuthenticationService.login(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
 
+        final String requestBody = "{\n" +
+                "    \"username\": \"username\",\n" +
+                "    \"password\": \"password\"\n" +
+                "}";
+
         try {
             mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/login")
-                    .param("username", "username")
-                    .param("password", "password"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
                     .andReturn();
             Assert.fail();
         } catch(Exception e) {
