@@ -1,11 +1,13 @@
 package com.piggybank.users.controller;
 
 import com.piggybank.model.JpaUserRepository;
+import com.piggybank.users.dto.LoggedUser;
 import com.piggybank.users.dto.User;
 import com.piggybank.users.services.UserAuthenticationService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,15 +29,15 @@ class UserController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<Void> login(@RequestParam final String username, @RequestParam final String password) {
+    public ResponseEntity<LoggedUser> login(@RequestParam final String username, @RequestParam final String password) {
         return userAuthenticationService.login(username, password)
+                .map(user -> LoggedUser.forUsernameAndToken(user.username(), user.token()))
                 .map(user -> {
-                    HttpHeaders headers = new HttpHeaders();
-                    headers.set("Authorization", "Bearer: " + user.token());
-                    return headers;
+                    System.out.println(user);
+                    return user;
                 })
-                .map(headers -> new ResponseEntity<Void>(headers, HttpStatus.OK))
-                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+                .map(loggedUser -> ResponseEntity.ok(loggedUser))
+                .orElseThrow(() -> new BadCredentialsException("wrong credential for user"));
     }
 
     @PostMapping("register")

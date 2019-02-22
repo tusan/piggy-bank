@@ -3,6 +3,7 @@ package com.piggybank.users.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.piggybank.model.JpaUserRepository;
+import com.piggybank.users.dto.LoggedUser;
 import com.piggybank.users.dto.User;
 import com.piggybank.users.services.UserAuthenticationService;
 import org.junit.Assert;
@@ -16,6 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -41,6 +43,8 @@ public class UserControllerTest {
     private PasswordEncoder passwordEncoder;
 
     private MockMvc mockMvc;
+
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Before
     public void setUp() {
@@ -69,23 +73,25 @@ public class UserControllerTest {
 
         Mockito.verify(userAuthenticationService).login("username", "password");
 
-        Assert.assertEquals("Bearer: token", response.getResponse().getHeader("Authorization"));
+        LoggedUser actual = mapper.readValue(response.getResponse().getContentAsByteArray(), LoggedUser.class);
+        LoggedUser expected = LoggedUser.forUsernameAndToken("username", "token");
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
-    public void shouldReturnUnauthorizedIfLoginFails() throws Exception {
+    public void shouldThrowBadCredentialExceptionIfLoginFails() throws Exception {
         Mockito.when(userAuthenticationService.login(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
 
-        MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/login")
-                .param("username", "username")
-                .param("password", "password"))
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
-                .andReturn();
-
-        Mockito.verify(userAuthenticationService).login("username", "password");
-
-        Assert.assertNull(response.getResponse().getHeader("Authorization"));
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/login")
+                    .param("username", "username")
+                    .param("password", "password"))
+                    .andReturn();
+            Assert.fail();
+        } catch(Exception e) {
+            Assert.assertTrue(e.getCause() instanceof BadCredentialsException);
+        }
     }
 
     @Test
