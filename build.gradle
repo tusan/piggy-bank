@@ -1,9 +1,7 @@
-import org.springframework.boot.gradle.plugin.SpringBootPlugin
-
 plugins {
     id 'java'
     id 'net.ltgt.apt-idea' version '0.19'
-    id 'org.springframework.boot' version '2.1.1.RELEASE'
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
     id "com.palantir.docker-run" version "0.20.1"
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
 }
@@ -14,12 +12,6 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
-}
-
-dependencyManagement {
-    imports {
-        mavenBom(SpringBootPlugin.BOM_COORDINATES)
-    }
 }
 
 dependencies {
@@ -44,10 +36,3 @@ dependencies {
 bootJar {
     launchScript()
 }
-
-task copyJarToBin(type: Copy) {
-    from jar
-    into "docker"
-}
-
-build.dependsOn copyJarToBin
