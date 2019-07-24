@@ -13,38 +13,38 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import javax.servlet.http.HttpServletRequest;
 
 public class TokenAuthenticationFilterTest {
-    private TokenAuthenticationFilter sut;
+  private TokenAuthenticationFilter sut;
 
-    private HttpServletRequest request;
+  private HttpServletRequest request;
 
-    @Before
-    public void setUp() {
-        sut = new TokenAuthenticationFilter(AnyRequestMatcher.INSTANCE);
-        request = Mockito.mock(HttpServletRequest.class);
+  @Before
+  public void setUp() {
+    sut = new TokenAuthenticationFilter(AnyRequestMatcher.INSTANCE);
+    request = Mockito.mock(HttpServletRequest.class);
+  }
+
+  @Test
+  public void shouldReturnTheAuthenticationObjectIfTokenIsInRequestHeader() {
+    sut.setAuthenticationManager(new MockedAuthenticationManager());
+    Mockito.when(request.getHeader(Mockito.anyString())).thenReturn("Bearer token");
+
+    Authentication auth = sut.attemptAuthentication(request, null);
+
+    Assert.assertEquals("token", auth.getCredentials());
+    Assert.assertEquals("token", auth.getPrincipal());
+  }
+
+  @Test(expected = BadCredentialsException.class)
+  public void shouldThrowExceptionForMissingToken() {
+    Mockito.when(request.getHeader(Mockito.anyString())).thenReturn(null);
+
+    sut.attemptAuthentication(request, null);
+  }
+
+  class MockedAuthenticationManager implements AuthenticationManager {
+    @Override
+    public Authentication authenticate(Authentication auth) throws AuthenticationException {
+      return auth;
     }
-
-    @Test
-    public void shouldReturnTheAuthenticationObjectIfTokenIsInRequestHeader() {
-        sut.setAuthenticationManager(new MockedAuthenticationManager());
-        Mockito.when(request.getHeader(Mockito.anyString())).thenReturn("Bearer token");
-
-        Authentication auth = sut.attemptAuthentication(request, null);
-
-        Assert.assertEquals("token", auth.getCredentials());
-        Assert.assertEquals("token", auth.getPrincipal());
-    }
-
-    @Test(expected = BadCredentialsException.class)
-    public void shouldThrowExceptionForMissingToken() {
-        Mockito.when(request.getHeader(Mockito.anyString())).thenReturn(null);
-
-        sut.attemptAuthentication(request, null);
-    }
-
-    class MockedAuthenticationManager implements AuthenticationManager {
-        @Override
-        public Authentication authenticate(Authentication auth) throws AuthenticationException {
-            return auth;
-        }
-    }
+  }
 }

@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-interface JpaExpensesRepository extends JpaRepository<Expense, Long>, JpaSpecificationExecutor<Expense> {
-}
+interface JpaExpensesRepository
+    extends JpaRepository<Expense, Long>, JpaSpecificationExecutor<Expense> {}

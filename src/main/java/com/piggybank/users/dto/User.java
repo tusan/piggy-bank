@@ -12,47 +12,47 @@ import javax.annotation.Nullable;
 @JsonDeserialize(builder = User.Builder.class)
 public abstract class User {
 
-    public static Builder newBuilder() {
-        return new AutoValue_User.Builder();
+  public static Builder newBuilder() {
+    return new AutoValue_User.Builder();
+  }
+
+  @JsonProperty("id")
+  @Nullable
+  public abstract Long id();
+
+  @JsonProperty("username")
+  public abstract String username();
+
+  @JsonProperty("password")
+  public abstract String password();
+
+  @JsonProperty("token")
+  @Nullable
+  public abstract String token();
+
+  @AutoValue.Builder
+  @JsonPOJOBuilder
+  public abstract static class Builder {
+
+    @JsonCreator
+    private static Builder create() {
+      return newBuilder();
     }
 
     @JsonProperty("id")
     @Nullable
-    public abstract Long id();
+    public abstract Builder setId(Long id);
 
     @JsonProperty("username")
-    public abstract String username();
+    public abstract Builder setUsername(String username);
 
     @JsonProperty("password")
-    public abstract String password();
+    public abstract Builder setPassword(String password);
 
     @JsonProperty("token")
     @Nullable
-    public abstract String token();
+    public abstract Builder setToken(String token);
 
-    @AutoValue.Builder
-    @JsonPOJOBuilder
-    public abstract static class Builder {
-
-        @JsonCreator
-        private static Builder create() {
-            return newBuilder();
-        }
-
-        @JsonProperty("id")
-        @Nullable
-        public abstract Builder setId(Long id);
-
-        @JsonProperty("username")
-        public abstract Builder setUsername(String username);
-
-        @JsonProperty("password")
-        public abstract Builder setPassword(String password);
-
-        @JsonProperty("token")
-        @Nullable
-        public abstract Builder setToken(String token);
-
-        public abstract User build();
-    }
+    public abstract User build();
+  }
 }

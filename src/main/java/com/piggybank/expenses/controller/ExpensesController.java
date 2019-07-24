@@ -16,43 +16,40 @@ import java.util.List;
 @CrossOrigin
 class ExpensesController {
 
-    private static final DateTimeFormatter YYYY_MM_DD = DateTimeFormatter.ofPattern("yyyyMMdd");
+  private static final DateTimeFormatter YYYY_MM_DD = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-    private final ExpensesRepository expenseRepository;
+  private final ExpensesRepository expenseRepository;
 
-    public ExpensesController(final ExpensesRepository expenseRepository) {
-        this.expenseRepository = expenseRepository;
+  public ExpensesController(final ExpensesRepository expenseRepository) {
+    this.expenseRepository = expenseRepository;
+  }
+
+  @GetMapping
+  public ResponseEntity<List<Expense>> expenses(
+      @RequestParam(value = "date-start", required = false) final String dateStart,
+      @RequestParam(value = "date-end", required = false) final String dateEnd) {
+
+    final LocalDate startDate =
+        Strings.isBlank(dateStart) ? null : LocalDate.parse(dateStart, YYYY_MM_DD);
+
+    final LocalDate endDate =
+        Strings.isBlank(dateEnd) ? null : LocalDate.parse(dateEnd, YYYY_MM_DD);
+
+    final List<Expense> result =
+        expenseRepository.find(
+            ExpenseQuery.builder().setDateStart(startDate).setDateEnd(endDate).build());
+
+    return ResponseEntity.ok(result);
+  }
+
+  @PostMapping
+  public ResponseEntity<Void> save(@RequestBody final Expense expense) {
+    try {
+      expenseRepository.save(expense);
+      return ResponseEntity.status(HttpStatus.CREATED).build();
+    } catch (final Exception e) {
+      e.printStackTrace();
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-
-    @GetMapping
-    public ResponseEntity<List<Expense>> expenses(
-            @RequestParam(value = "date-start", required = false) final String dateStart,
-            @RequestParam(value = "date-end", required = false) final String dateEnd) {
-
-        final LocalDate startDate = Strings.isBlank(dateStart)
-                ? null
-                : LocalDate.parse(dateStart, YYYY_MM_DD);
-
-        final LocalDate endDate = Strings.isBlank(dateEnd)
-                ? null
-                : LocalDate.parse(dateEnd, YYYY_MM_DD);
-
-        final List<Expense> result = expenseRepository.find(ExpenseQuery.builder()
-                .setDateStart(startDate)
-                .setDateEnd(endDate)
-                .build());
-
-        return ResponseEntity.ok(result);
-    }
-
-    @PostMapping
-    public ResponseEntity<Void> save(@RequestBody final Expense expense) {
-        try {
-            expenseRepository.save(expense);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (final Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+  }
 }

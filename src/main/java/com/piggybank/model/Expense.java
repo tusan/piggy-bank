@@ -9,96 +9,94 @@ import java.util.Objects;
 
 @Entity
 class Expense {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private ExpenseType type;
-    private String description;
-    private LocalDate date;
-    private double amount;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
 
-    @ManyToOne
-    private User owner;
+  private ExpenseType type;
+  private String description;
+  private LocalDate date;
+  private double amount;
 
-    Expense() {
-    }
+  @ManyToOne private User owner;
 
-    Long getId() {
-        return id;
-    }
+  Expense() {}
 
-    void setId(Long id) {
-        this.id = id;
-    }
+  Long getId() {
+    return id;
+  }
 
-    ExpenseType getType() {
-        return type;
-    }
+  void setId(Long id) {
+    this.id = id;
+  }
 
-    void setType(ExpenseType type) {
-        this.type = type;
-    }
+  ExpenseType getType() {
+    return type;
+  }
 
-    String getDescription() {
-        return description;
-    }
+  void setType(ExpenseType type) {
+    this.type = type;
+  }
 
-    void setDescription(String description) {
-        this.description = description;
-    }
+  String getDescription() {
+    return description;
+  }
 
-    LocalDate getDate() {
-        return date;
-    }
+  void setDescription(String description) {
+    this.description = description;
+  }
 
-    void setDate(LocalDate date) {
-        this.date = date;
-    }
+  LocalDate getDate() {
+    return date;
+  }
 
-    double getAmount() {
-        return amount;
-    }
+  void setDate(LocalDate date) {
+    this.date = date;
+  }
 
-    void setAmount(double amount) {
-        this.amount = amount;
-    }
+  double getAmount() {
+    return amount;
+  }
 
-    public User getOwner() {
-        return owner;
-    }
+  void setAmount(double amount) {
+    this.amount = amount;
+  }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
+  public User getOwner() {
+    return owner;
+  }
 
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("id", id)
-                .add("type", type)
-                .add("description", description)
-                .add("date", date)
-                .add("amount", amount)
-                .add("owner", owner)
-                .toString();
-    }
+  public void setOwner(User owner) {
+    this.owner = owner;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Expense expense = (Expense) o;
-        return Double.compare(expense.amount, amount) == 0 &&
-                Objects.equals(id, expense.id) &&
-                type == expense.type &&
-                Objects.equals(description, expense.description) &&
-                Objects.equals(date, expense.date) &&
-                Objects.equals(owner, expense.owner);
-    }
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+        .add("id", id)
+        .add("type", type)
+        .add("description", description)
+        .add("date", date)
+        .add("amount", amount)
+        .add("owner", owner)
+        .toString();
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, type, description, date, amount, owner);
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Expense expense = (Expense) o;
+    return Double.compare(expense.amount, amount) == 0
+        && Objects.equals(id, expense.id)
+        && type == expense.type
+        && Objects.equals(description, expense.description)
+        && Objects.equals(date, expense.date)
+        && Objects.equals(owner, expense.owner);
+  }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, type, description, date, amount, owner);
+  }
 }

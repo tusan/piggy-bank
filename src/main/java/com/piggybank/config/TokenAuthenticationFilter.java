@@ -11,23 +11,23 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 class TokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    private static final String AUTHORIZATION = "Authorization";
-    private static final String BEARER = "Bearer";
+  private static final String AUTHORIZATION = "Authorization";
+  private static final String BEARER = "Bearer";
 
-    TokenAuthenticationFilter(final RequestMatcher requiresAuthenticationRequestMatcher) {
-        super(requiresAuthenticationRequestMatcher);
-    }
+  TokenAuthenticationFilter(final RequestMatcher requiresAuthenticationRequestMatcher) {
+    super(requiresAuthenticationRequestMatcher);
+  }
 
-    @Override
-    public Authentication attemptAuthentication(
-            final HttpServletRequest request,
-            final HttpServletResponse response) {
+  @Override
+  public Authentication attemptAuthentication(
+      final HttpServletRequest request, final HttpServletResponse response) {
 
-        String token = Optional.ofNullable(request.getHeader(AUTHORIZATION))
-                .map(v -> v.replace(BEARER, "").trim())
-                .orElseThrow(() -> new BadCredentialsException("Missing authentication token."));
+    String token =
+        Optional.ofNullable(request.getHeader(AUTHORIZATION))
+            .map(v -> v.replace(BEARER, "").trim())
+            .orElseThrow(() -> new BadCredentialsException("Missing authentication token."));
 
-        Authentication auth = new UsernamePasswordAuthenticationToken(token, token);
-        return getAuthenticationManager().authenticate(auth);
-    }
+    Authentication auth = new UsernamePasswordAuthenticationToken(token, token);
+    return getAuthenticationManager().authenticate(auth);
+  }
 }

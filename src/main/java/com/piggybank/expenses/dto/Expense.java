@@ -14,47 +14,47 @@ import java.time.LocalDate;
 @JsonDeserialize(builder = Expense.Builder.class)
 public abstract class Expense {
 
-    public static Builder newBuilder() {
-        return new AutoValue_Expense.Builder();
+  public static Builder newBuilder() {
+    return new AutoValue_Expense.Builder();
+  }
+
+  @JsonProperty("type")
+  public abstract ExpenseType type();
+
+  @Nullable
+  @JsonProperty("description")
+  public abstract String description();
+
+  @JsonProperty("date")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
+  public abstract LocalDate date();
+
+  @JsonProperty("amount")
+  public abstract double amount();
+
+  @AutoValue.Builder
+  @JsonPOJOBuilder
+  public abstract static class Builder {
+
+    @JsonCreator
+    private static Builder create() {
+      return newBuilder();
     }
 
     @JsonProperty("type")
-    public abstract ExpenseType type();
+    public abstract Builder setType(ExpenseType type);
 
-    @Nullable
     @JsonProperty("description")
-    public abstract String description();
+    @Nullable
+    public abstract Builder setDescription(String description);
 
     @JsonProperty("date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
-    public abstract LocalDate date();
+    public abstract Builder setDate(LocalDate date);
 
     @JsonProperty("amount")
-    public abstract double amount();
+    public abstract Builder setAmount(double amount);
 
-    @AutoValue.Builder
-    @JsonPOJOBuilder
-    public abstract static class Builder {
-
-        @JsonCreator
-        private static Builder create() {
-            return newBuilder();
-        }
-
-        @JsonProperty("type")
-        public abstract Builder setType(ExpenseType type);
-
-        @JsonProperty("description")
-        @Nullable
-        public abstract Builder setDescription(String description);
-
-        @JsonProperty("date")
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
-        public abstract Builder setDate(LocalDate date);
-
-        @JsonProperty("amount")
-        public abstract Builder setAmount(double amount);
-
-        public abstract Expense build();
-    }
+    public abstract Expense build();
+  }
 }

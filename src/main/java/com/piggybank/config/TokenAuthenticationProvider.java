@@ -13,27 +13,33 @@ import java.util.Optional;
 
 @Component
 class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
-    private final UserAuthenticationService userAuthenticationService;
+  private final UserAuthenticationService userAuthenticationService;
 
-    public TokenAuthenticationProvider(final UserAuthenticationService userAuthenticationService) {
-        this.userAuthenticationService = userAuthenticationService;
-    }
+  public TokenAuthenticationProvider(final UserAuthenticationService userAuthenticationService) {
+    this.userAuthenticationService = userAuthenticationService;
+  }
 
-    @Override
-    protected UserDetails retrieveUser(final String username, final UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-        return Optional
-                .ofNullable(authentication.getCredentials())
-                .flatMap(token -> userAuthenticationService.authenticateByToken(String.valueOf(token))
-                        .map(user -> User.builder()
+  @Override
+  protected UserDetails retrieveUser(
+      final String username, final UsernamePasswordAuthenticationToken authentication)
+      throws AuthenticationException {
+    return Optional.ofNullable(authentication.getCredentials())
+        .flatMap(
+            token ->
+                userAuthenticationService
+                    .authenticateByToken(String.valueOf(token))
+                    .map(
+                        user ->
+                            User.builder()
                                 .username(user.username())
                                 .password(user.password())
                                 .roles("user")
                                 .build()))
-                .orElseThrow(() -> new BadCredentialsException("Invalid authentication"));
-    }
+        .orElseThrow(() -> new BadCredentialsException("Invalid authentication"));
+  }
 
-    @Override
-    protected void additionalAuthenticationChecks(final UserDetails userDetails, final UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-
-    }
+  @Override
+  protected void additionalAuthenticationChecks(
+      final UserDetails userDetails, final UsernamePasswordAuthenticationToken authentication)
+      throws AuthenticationException {}
 }

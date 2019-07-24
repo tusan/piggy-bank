@@ -30,98 +30,104 @@ import java.util.Optional;
 @RunWith(MockitoJUnitRunner.class)
 public class UserControllerTest {
 
-    @InjectMocks
-    private UserController sut;
+  @InjectMocks private UserController sut;
 
-    @Mock
-    private UserAuthenticationService userAuthenticationService;
+  @Mock private UserAuthenticationService userAuthenticationService;
 
-    @Mock
-    private JpaUserRepository userRepository;
+  @Mock private JpaUserRepository userRepository;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
+  @Mock private PasswordEncoder passwordEncoder;
 
-    private MockMvc mockMvc;
+  private MockMvc mockMvc;
 
-    private ObjectMapper mapper = new ObjectMapper();
+  private ObjectMapper mapper = new ObjectMapper();
 
-    @Before
-    public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(sut)
-                .setMessageConverters(new MappingJackson2HttpMessageConverter(
-                        new ObjectMapper().registerModule(new JavaTimeModule())))
-                .build();
-    }
+  @Before
+  public void setUp() {
+    mockMvc =
+        MockMvcBuilders.standaloneSetup(sut)
+            .setMessageConverters(
+                new MappingJackson2HttpMessageConverter(
+                    new ObjectMapper().registerModule(new JavaTimeModule())))
+            .build();
+  }
 
-    @Test
-    public void shouldReturn200IfLoginSucceed() throws Exception {
-        final String requestBody = "{\n" +
-                "    \"username\": \"username\",\n" +
-                "    \"password\": \"password\"\n" +
-                "}";
+  @Test
+  public void shouldReturn200IfLoginSucceed() throws Exception {
+    final String requestBody =
+        "{\n" + "    \"username\": \"username\",\n" + "    \"password\": \"password\"\n" + "}";
 
-        Mockito.when(userAuthenticationService.login(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
-                .thenReturn(Optional.of(User
-                        .newBuilder()
-                        .setUsername("username")
-                        .setPassword("password")
-                        .setId(1L)
-                        .setToken("token")
-                        .build()));
+    Mockito.when(
+            userAuthenticationService.login(
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+        .thenReturn(
+            Optional.of(
+                User.newBuilder()
+                    .setUsername("username")
+                    .setPassword("password")
+                    .setId(1L)
+                    .setToken("token")
+                    .build()));
 
-        MvcResult response = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-
-        Mockito.verify(userAuthenticationService).login("username", "password");
-
-        LoggedUser actual = mapper.readValue(response.getResponse().getContentAsByteArray(), LoggedUser.class);
-        LoggedUser expected = LoggedUser.forUsernameAndToken("username", "token");
-        Assert.assertEquals(expected, actual);
-    }
-
-    @Test
-    public void shouldThrowBadCredentialExceptionIfLoginFails() throws Exception {
-        Mockito.when(userAuthenticationService.login(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
-                .thenReturn(Optional.empty());
-
-        final String requestBody = "{\n" +
-                "    \"username\": \"username\",\n" +
-                "    \"password\": \"password\"\n" +
-                "}";
-
-        try {
-            mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/login")
+    MvcResult response =
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders.post("/api/v1/users/login")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody))
-                    .andReturn();
-            Assert.fail();
-        } catch(Exception e) {
-            Assert.assertTrue(e.getCause() instanceof BadCredentialsException);
-        }
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
+
+    Mockito.verify(userAuthenticationService).login("username", "password");
+
+    LoggedUser actual =
+        mapper.readValue(response.getResponse().getContentAsByteArray(), LoggedUser.class);
+    LoggedUser expected = LoggedUser.forUsernameAndToken("username", "token");
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void shouldThrowBadCredentialExceptionIfLoginFails() throws Exception {
+    Mockito.when(
+            userAuthenticationService.login(
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+        .thenReturn(Optional.empty());
+
+    final String requestBody =
+        "{\n" + "    \"username\": \"username\",\n" + "    \"password\": \"password\"\n" + "}";
+
+    try {
+      mockMvc
+          .perform(
+              MockMvcRequestBuilders.post("/api/v1/users/login")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(requestBody))
+          .andReturn();
+      Assert.fail();
+    } catch (Exception e) {
+      Assert.assertTrue(e.getCause() instanceof BadCredentialsException);
     }
+  }
 
-    @Test
-    public void shouldReturnAcceptedWhenAddingNewUserProperly() throws Exception {
-        String requestBody = "{\n" +
-                "    \"username\": \"username\",\n" +
-                "    \"password\": \"password\"\n" +
-                "}";
+  @Test
+  public void shouldReturnAcceptedWhenAddingNewUserProperly() throws Exception {
+    String requestBody =
+        "{\n" + "    \"username\": \"username\",\n" + "    \"password\": \"password\"\n" + "}";
 
-        Mockito.when(passwordEncoder.encode(ArgumentMatchers.anyString())).thenReturn("encoded_password");
+    Mockito.when(passwordEncoder.encode(ArgumentMatchers.anyString()))
+        .thenReturn("encoded_password");
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users/register")
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.post("/api/v1/users/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isCreated());
+        .andExpect(MockMvcResultMatchers.status().isCreated());
 
-        com.piggybank.model.User expectedUser = new com.piggybank.model.User();
-        expectedUser.setUsername("username");
-        expectedUser.setPassword("encoded_password");
+    com.piggybank.model.User expectedUser = new com.piggybank.model.User();
+    expectedUser.setUsername("username");
+    expectedUser.setPassword("encoded_password");
 
-        Mockito.verify(userRepository).save(expectedUser);
-    }
+    Mockito.verify(userRepository).save(expectedUser);
+  }
 }

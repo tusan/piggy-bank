@@ -9,14 +9,15 @@ import com.google.auto.value.AutoValue;
 @JsonDeserialize
 public abstract class LoggedUser {
 
-    @JsonCreator
-    public static LoggedUser forUsernameAndToken(@JsonProperty("username") final String username, @JsonProperty("token") String token) {
-        return new AutoValue_LoggedUser(username, token);
-    }
+  @JsonCreator
+  public static LoggedUser forUsernameAndToken(
+      @JsonProperty("username") final String username, @JsonProperty("token") String token) {
+    return new AutoValue_LoggedUser(username, token);
+  }
 
-    @JsonProperty("username")
-    public abstract String username();
+  @JsonProperty("username")
+  public abstract String username();
 
-    @JsonProperty("token")
-    public abstract String token();
+  @JsonProperty("token")
+  public abstract String token();
 }

@@ -27,83 +27,97 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 public class ExpensesControllerTest {
 
-    @InjectMocks
-    private ExpensesController sut;
+  @InjectMocks private ExpensesController sut;
 
-    @Mock
-    private ExpensesRepository expenseRepository;
+  @Mock private ExpensesRepository expenseRepository;
 
-    private MockMvc mockMvc;
+  private MockMvc mockMvc;
 
-    @Before
-    public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(sut)
-                .setMessageConverters(new MappingJackson2HttpMessageConverter(
-                        new ObjectMapper().registerModule(new JavaTimeModule())))
-                .build();
-    }
+  @Before
+  public void setUp() {
+    mockMvc =
+        MockMvcBuilders.standaloneSetup(sut)
+            .setMessageConverters(
+                new MappingJackson2HttpMessageConverter(
+                    new ObjectMapper().registerModule(new JavaTimeModule())))
+            .build();
+  }
 
-
-    @Test
-    public void shouldReturn200AndTheTransferObjectsInDateRange() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/expenses")
+  @Test
+  public void shouldReturn200AndTheTransferObjectsInDateRange() throws Exception {
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get("/api/v1/expenses")
                 .param("date-start", "20181107")
                 .param("date-end", "20181207"))
-                .andExpect(status().isOk())
-                .andReturn();
+        .andExpect(status().isOk())
+        .andReturn();
 
-        Mockito.verify(expenseRepository).find(ExpenseQuery.builder()
+    Mockito.verify(expenseRepository)
+        .find(
+            ExpenseQuery.builder()
                 .setDateStart(LocalDate.of(2018, 11, 7))
                 .setDateEnd(LocalDate.of(2018, 12, 7))
                 .build());
-    }
+  }
 
-    @Test
-    public void shouldReturn201AndCallSaveOnRepository() throws Exception {
-        final String json = "{\n"
-                + "  \"date\": \"20181107\",\n"
-                + "  \"type\": \"CASA\",\n"
-                + "  \"amount\": \"22.57\",\n"
-                + "  \"description\": \"test description\"\n"
-                + "}";
+  @Test
+  public void shouldReturn201AndCallSaveOnRepository() throws Exception {
+    final String json =
+        "{\n"
+            + "  \"date\": \"20181107\",\n"
+            + "  \"type\": \"CASA\",\n"
+            + "  \"amount\": \"22.57\",\n"
+            + "  \"description\": \"test description\"\n"
+            + "}";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/expenses")
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.post("/api/v1/expenses")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
-                .andExpect(status().isCreated())
-                .andReturn();
+        .andExpect(status().isCreated())
+        .andReturn();
 
-        Mockito.verify(expenseRepository).save(Expense.newBuilder()
+    Mockito.verify(expenseRepository)
+        .save(
+            Expense.newBuilder()
                 .setDate(LocalDate.of(2018, 11, 7))
                 .setType(ExpenseType.CASA)
                 .setAmount(22.57)
                 .setDescription("test description")
                 .build());
-    }
+  }
 
-    @Test
-    public void shouldReturnInternalServerErrorWhenRepositoryFails() throws Exception {
-        final String json = "{\n"
-                + "  \"date\": \"20181107\",\n"
-                + "  \"type\": \"CASA\",\n"
-                + "  \"amount\": \"22.57\",\n"
-                + "  \"description\": \"test description\"\n"
-                + "}";
+  @Test
+  public void shouldReturnInternalServerErrorWhenRepositoryFails() throws Exception {
+    final String json =
+        "{\n"
+            + "  \"date\": \"20181107\",\n"
+            + "  \"type\": \"CASA\",\n"
+            + "  \"amount\": \"22.57\",\n"
+            + "  \"description\": \"test description\"\n"
+            + "}";
 
-        Mockito.doThrow(new RuntimeException("test exception"))
-                .when(expenseRepository).save(ArgumentMatchers.any(Expense.class));
+    Mockito.doThrow(new RuntimeException("test exception"))
+        .when(expenseRepository)
+        .save(ArgumentMatchers.any(Expense.class));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/expenses")
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.post("/api/v1/expenses")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
-                .andExpect(status().isInternalServerError())
-                .andReturn();
+        .andExpect(status().isInternalServerError())
+        .andReturn();
 
-        Mockito.verify(expenseRepository).save(Expense.newBuilder()
+    Mockito.verify(expenseRepository)
+        .save(
+            Expense.newBuilder()
                 .setDate(LocalDate.of(2018, 11, 7))
                 .setType(ExpenseType.CASA)
                 .setAmount(22.57)
                 .setDescription("test description")
                 .build());
-    }
+  }
 }

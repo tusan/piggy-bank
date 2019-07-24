@@ -9,14 +9,16 @@ import com.google.auto.value.AutoValue;
 @JsonDeserialize
 public abstract class LoginRequest {
 
-    @JsonCreator
-    public static LoginRequest forUsernameAndPassword(@JsonProperty("username") final String username, @JsonProperty("password") final String password) {
-        return new AutoValue_LoginRequest(username, password);
-    }
+  @JsonCreator
+  public static LoginRequest forUsernameAndPassword(
+      @JsonProperty("username") final String username,
+      @JsonProperty("password") final String password) {
+    return new AutoValue_LoginRequest(username, password);
+  }
 
-    @JsonProperty("username")
-    public abstract String username();
+  @JsonProperty("username")
+  public abstract String username();
 
-    @JsonProperty("password")
-    public abstract String password();
+  @JsonProperty("password")
+  public abstract String password();
 }

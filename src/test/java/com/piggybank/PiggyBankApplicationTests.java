@@ -13,9 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @AutoConfigureTestDatabase
 public class PiggyBankApplicationTests {
 
-    @SuppressWarnings("EmptyMethod")
-    @Test
-    public void contextLoads() {
-    }
-
+  @SuppressWarnings("EmptyMethod")
+  @Test
+  public void contextLoads() {}
 }

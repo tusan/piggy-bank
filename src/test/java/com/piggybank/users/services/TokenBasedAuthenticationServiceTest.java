@@ -18,112 +18,115 @@ import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TokenBasedAuthenticationServiceTest {
-    @InjectMocks
-    private TokenBasedAuthenticationService sut;
+  @InjectMocks private TokenBasedAuthenticationService sut;
 
-    @Mock
-    private JpaUserRepository userRepository;
+  @Mock private JpaUserRepository userRepository;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
+  @Mock private PasswordEncoder passwordEncoder;
 
-    @Mock
-    private TokenGenerator tokenGenerator;
+  @Mock private TokenGenerator tokenGenerator;
 
-    @Before
-    public void setUp() {
-        Mockito.when(tokenGenerator.newToken()).thenReturn("token");
-    }
+  @Before
+  public void setUp() {
+    Mockito.when(tokenGenerator.newToken()).thenReturn("token");
+  }
 
-    @Test
-    public void shouldReturnTheAuthenticatedUserWhenSuccessfullyLogin() {
-        Mockito.when(passwordEncoder.matches(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(true);
-        Mockito.when(userRepository.findByUsername(ArgumentMatchers.any(String.class))).thenReturn(Optional.of(testUser()));
+  @Test
+  public void shouldReturnTheAuthenticatedUserWhenSuccessfullyLogin() {
+    Mockito.when(
+            passwordEncoder.matches(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+        .thenReturn(true);
+    Mockito.when(userRepository.findByUsername(ArgumentMatchers.any(String.class)))
+        .thenReturn(Optional.of(testUser()));
 
-        Optional<User> user = sut.login("username", "password");
+    Optional<User> user = sut.login("username", "password");
 
-        assertTrue(user.isPresent());
+    assertTrue(user.isPresent());
 
-        assertEquals(User.newBuilder()
-                .setUsername("username")
-                .setPassword("password")
-                .setToken("token")
-                .build(), user.get());
+    assertEquals(
+        User.newBuilder().setUsername("username").setPassword("password").setToken("token").build(),
+        user.get());
 
-        Mockito.verify(userRepository).save(testUser());
-    }
+    Mockito.verify(userRepository).save(testUser());
+  }
 
-    @Test
-    public void shouldReturnEmptyWhenPasswordIsWrong() {
-        Mockito.when(passwordEncoder.matches(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(false);
-        Mockito.when(userRepository.findByUsername(ArgumentMatchers.any(String.class))).thenReturn(Optional.of(testUser()));
+  @Test
+  public void shouldReturnEmptyWhenPasswordIsWrong() {
+    Mockito.when(
+            passwordEncoder.matches(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+        .thenReturn(false);
+    Mockito.when(userRepository.findByUsername(ArgumentMatchers.any(String.class)))
+        .thenReturn(Optional.of(testUser()));
 
-        Optional<User> user = sut.login("username", "wrong_password");
+    Optional<User> user = sut.login("username", "wrong_password");
 
-        assertFalse(user.isPresent());
-    }
+    assertFalse(user.isPresent());
+  }
 
-    @Test
-    public void shouldReturnEmptyWhenUsernameIsWrong() {
-        Mockito.when(userRepository.findByUsername(ArgumentMatchers.any(String.class))).thenReturn(Optional.empty());
+  @Test
+  public void shouldReturnEmptyWhenUsernameIsWrong() {
+    Mockito.when(userRepository.findByUsername(ArgumentMatchers.any(String.class)))
+        .thenReturn(Optional.empty());
 
-        Optional<User> user = sut.login("wrong_username", "password");
+    Optional<User> user = sut.login("wrong_username", "password");
 
-        assertFalse(user.isPresent());
-    }
+    assertFalse(user.isPresent());
+  }
 
-    @Test
-    public void shouldReturnTheUserIfFoundByToken() {
-        Mockito.when(userRepository.findByToken(ArgumentMatchers.anyString())).thenReturn(Optional.of(testUser()));
+  @Test
+  public void shouldReturnTheUserIfFoundByToken() {
+    Mockito.when(userRepository.findByToken(ArgumentMatchers.anyString()))
+        .thenReturn(Optional.of(testUser()));
 
-        Optional<User> user = sut.authenticateByToken("token");
+    Optional<User> user = sut.authenticateByToken("token");
 
-        assertTrue(user.isPresent());
+    assertTrue(user.isPresent());
 
-        assertEquals(User.newBuilder()
-                .setUsername("username")
-                .setPassword("password")
-                .setToken("token")
-                .build(), user.get());
-    }
+    assertEquals(
+        User.newBuilder().setUsername("username").setPassword("password").setToken("token").build(),
+        user.get());
+  }
 
-    @Test
-    public void shouldReturnEmptyIfNoUserFoundByToken() {
-        Mockito.when(userRepository.findByToken(ArgumentMatchers.anyString())).thenReturn(Optional.empty());
+  @Test
+  public void shouldReturnEmptyIfNoUserFoundByToken() {
+    Mockito.when(userRepository.findByToken(ArgumentMatchers.anyString()))
+        .thenReturn(Optional.empty());
 
-        Optional<User> user = sut.authenticateByToken("token");
+    Optional<User> user = sut.authenticateByToken("token");
 
-        assertFalse(user.isPresent());
-    }
+    assertFalse(user.isPresent());
+  }
 
-    @Test
-    public void shouldRemoveSessionFromUserWhenLoggingOut() {
-        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString())).thenReturn(Optional.of(testUser()));
+  @Test
+  public void shouldRemoveSessionFromUserWhenLoggingOut() {
+    Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+        .thenReturn(Optional.of(testUser()));
 
-        com.piggybank.model.User expectedUser = new com.piggybank.model.User();
-        expectedUser.setUsername("username");
-        expectedUser.setPassword("password");
+    com.piggybank.model.User expectedUser = new com.piggybank.model.User();
+    expectedUser.setUsername("username");
+    expectedUser.setPassword("password");
 
-        sut.logout("username");
+    sut.logout("username");
 
-        Mockito.verify(userRepository).save(expectedUser);
-    }
+    Mockito.verify(userRepository).save(expectedUser);
+  }
 
-    @Test
-    public void shouldDoNothingWhenLoggingOutButUserIsMissing() {
-        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString())).thenReturn(Optional.empty());
+  @Test
+  public void shouldDoNothingWhenLoggingOutButUserIsMissing() {
+    Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+        .thenReturn(Optional.empty());
 
-        sut.logout("username");
+    sut.logout("username");
 
-        Mockito.verify(userRepository).findByUsername("username");
-        Mockito.verify(userRepository, Mockito.never()).save(ArgumentMatchers.any());
-    }
+    Mockito.verify(userRepository).findByUsername("username");
+    Mockito.verify(userRepository, Mockito.never()).save(ArgumentMatchers.any());
+  }
 
-    private com.piggybank.model.User testUser() {
-        com.piggybank.model.User expectedUser = new com.piggybank.model.User();
-        expectedUser.setUsername("username");
-        expectedUser.setPassword("password");
-        expectedUser.setToken("token");
-        return expectedUser;
-    }
+  private com.piggybank.model.User testUser() {
+    com.piggybank.model.User expectedUser = new com.piggybank.model.User();
+    expectedUser.setUsername("username");
+    expectedUser.setPassword("password");
+    expectedUser.setToken("token");
+    return expectedUser;
+  }
 }

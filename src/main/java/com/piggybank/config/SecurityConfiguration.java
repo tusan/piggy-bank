@@ -26,66 +26,73 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private static final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
-            new AntPathRequestMatcher("/api/v1/users/register"),
-            new AntPathRequestMatcher("/api/v1/users/login")
-    );
+  private static final RequestMatcher PUBLIC_URLS =
+      new OrRequestMatcher(
+          new AntPathRequestMatcher("/api/v1/users/register"),
+          new AntPathRequestMatcher("/api/v1/users/login"));
 
-    private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(PUBLIC_URLS);
+  private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(PUBLIC_URLS);
 
-    private final TokenAuthenticationProvider authenticationProvider;
+  private final TokenAuthenticationProvider authenticationProvider;
 
-    public SecurityConfiguration(TokenAuthenticationProvider authenticationProvider) {
-        this.authenticationProvider = authenticationProvider;
-    }
+  public SecurityConfiguration(TokenAuthenticationProvider authenticationProvider) {
+    this.authenticationProvider = authenticationProvider;
+  }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(authenticationProvider);
-    }
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) {
+    auth.authenticationProvider(authenticationProvider);
+  }
 
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().requestMatchers(PUBLIC_URLS);
-    }
+  @Override
+  public void configure(WebSecurity web) {
+    web.ignoring().requestMatchers(PUBLIC_URLS);
+  }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement().sessionCreationPolicy(STATELESS)
-                .and()
-                .exceptionHandling()
-                .defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(FORBIDDEN), PROTECTED_URLS)
-                .and()
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(restAuthenticationFilter(), AnonymousAuthenticationFilter.class)
-                .authorizeRequests()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .csrf().disable()
-                .formLogin().disable()
-                .httpBasic().disable()
-                .logout().disable();
-    }
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.sessionManagement()
+        .sessionCreationPolicy(STATELESS)
+        .and()
+        .exceptionHandling()
+        .defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(FORBIDDEN), PROTECTED_URLS)
+        .and()
+        .authenticationProvider(authenticationProvider)
+        .addFilterBefore(restAuthenticationFilter(), AnonymousAuthenticationFilter.class)
+        .authorizeRequests()
+        .anyRequest()
+        .authenticated()
+        .and()
+        .csrf()
+        .disable()
+        .formLogin()
+        .disable()
+        .httpBasic()
+        .disable()
+        .logout()
+        .disable();
+  }
 
-    @Bean
-    FilterRegistrationBean disableAutoRegistration() {
-        FilterRegistrationBean registration = new FilterRegistrationBean<>(new TokenAuthenticationFilter(PROTECTED_URLS));
-        registration.setEnabled(false);
-        return registration;
-    }
+  @Bean
+  FilterRegistrationBean disableAutoRegistration() {
+    FilterRegistrationBean registration =
+        new FilterRegistrationBean<>(new TokenAuthenticationFilter(PROTECTED_URLS));
+    registration.setEnabled(false);
+    return registration;
+  }
 
-    private Filter restAuthenticationFilter() throws Exception {
-        SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler();
-        successHandler.setRedirectStrategy((request, response, url) -> {
-            //DO NOTHING
+  private Filter restAuthenticationFilter() throws Exception {
+    SimpleUrlAuthenticationSuccessHandler successHandler =
+        new SimpleUrlAuthenticationSuccessHandler();
+    successHandler.setRedirectStrategy(
+        (request, response, url) -> {
+          // DO NOTHING
         });
 
-        TokenAuthenticationFilter filter = new TokenAuthenticationFilter(PROTECTED_URLS);
+    TokenAuthenticationFilter filter = new TokenAuthenticationFilter(PROTECTED_URLS);
 
-        filter.setAuthenticationManager(authenticationManager());
-        filter.setAuthenticationSuccessHandler(successHandler);
-        return filter;
-    }
-
+    filter.setAuthenticationManager(authenticationManager());
+    filter.setAuthenticationSuccessHandler(successHandler);
+    return filter;
+  }
 }
