@@ -1,9 +1,8 @@
 plugins {
     id 'java'
-    id 'net.ltgt.apt-idea' version '0.19'
-    id 'org.springframework.boot' version '2.1.6.RELEASE'
-    id "com.palantir.docker-run" version "0.20.1"
-    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+    id 'net.ltgt.apt-idea' version '0.21'
+    id 'org.springframework.boot' version '2.2.6.RELEASE'
+    id "io.spring.dependency-management" version "1.0.9.RELEASE"
 }
 
 group 'myprojects'
@@ -14,11 +13,17 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    autovalueVersion = "1.7"
+    jacksonVersion = "2.10.3"
+    guavaVersion = "28.2-jre"
+    mockitoVersion = "3.3.3"
+    junitVersion = "4.13"
+}
+
 dependencies {
-    compile "com.fasterxml.jackson.core:jackson-databind:2.9.7"
-    compile "com.google.auto.value:auto-value-annotations:1.6.2"
-    compile "com.google.guava:guava:27.0.1-jre"
-    compile "org.apache.commons:commons-csv:1.6"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.google.guava:guava:$guavaVersion"
 
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-security"
@@ -26,11 +31,13 @@ dependencies {
 
     runtimeOnly 'org.postgresql:postgresql'
     
-    testCompile "junit:junit:4.12"
-    testCompile "org.mockito:mockito-core:2.23.4"
-    testCompile "org.springframework.boot:spring-boot-starter-test:2.1.1.RELEASE"
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "org.springframework.boot:spring-boot-starter-test"
     testCompile "com.h2database:h2"
-    annotationProcessor "com.google.auto.value:auto-value:1.6.2"
+
+    annotationProcessor "com.google.auto.value:auto-value:$autovalueVersion"
+    compile "com.google.auto.value:auto-value-annotations:$autovalueVersion"
 }
 
 bootJar {
