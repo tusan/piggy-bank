@@ -1,6 +1,5 @@
 package com.piggybank.service.expenses;
 
-import com.piggybank.security.PrincipalProvider;
 import com.piggybank.service.expenses.dto.ExpenseDto;
 import com.piggybank.service.expenses.repository.Expense;
 import com.piggybank.service.expenses.repository.JpaExpensesRepository;
@@ -15,11 +14,9 @@ import java.util.stream.Stream;
 @Service
 class ExpensesService implements IExpensesService {
   private final JpaExpensesRepository jpaRepository;
-  private final PrincipalProvider principalProvider;
 
-  ExpensesService(JpaExpensesRepository jpaRepository, PrincipalProvider principalProvider) {
+  ExpensesService(final JpaExpensesRepository jpaRepository) {
     this.jpaRepository = jpaRepository;
-    this.principalProvider = principalProvider;
   }
 
   @Override
@@ -35,16 +32,16 @@ class ExpensesService implements IExpensesService {
     return Optional.ofNullable(result.getId());
   }
 
-  private Specification<Expense> getQueryFilters(Query query) {
+  private Specification<Expense> getQueryFilters(final Query query) {
     return Stream.of(dateStartFilter(query), dateEndFilter(query))
         .filter(Optional::isPresent)
         .map(Optional::get)
-        .reduce(owner(), Specification::and);
+        .reduce(withOwner(query.owner()), Specification::and);
   }
 
-  private Specification<Expense> owner() {
+  private Specification<Expense> withOwner(final String owner) {
     return (root, q, criteriaBuilder) ->
-        criteriaBuilder.equal(root.get("owner").get("username"), principalProvider.getLoggedUser());
+        criteriaBuilder.equal(root.get("owner").get("username"), owner);
   }
 
   private Optional<Specification<Expense>> dateStartFilter(final Query query) {
@@ -60,7 +57,7 @@ class ExpensesService implements IExpensesService {
   }
 
   private Expense convertToEntityExpense(final ExpenseDto expenseDto) {
-    Expense exp = new Expense();
+    final Expense exp = new Expense();
 
     exp.setType(expenseDto.type());
     exp.setDate(expenseDto.date());

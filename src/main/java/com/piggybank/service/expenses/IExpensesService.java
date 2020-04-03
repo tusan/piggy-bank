@@ -15,8 +15,9 @@ public interface IExpensesService {
   @AutoValue
   abstract class Query {
 
-    public static Builder builder() {
-      return new AutoValue_IExpensesService_Query.Builder();
+    public static Builder builder(final String owner) {
+      return new AutoValue_IExpensesService_Query.Builder()
+          .setOwner(owner);
     }
 
     @Nullable
@@ -25,11 +26,15 @@ public interface IExpensesService {
     @Nullable
     public abstract LocalDate dateEnd();
 
+    public abstract String owner();
+
     @AutoValue.Builder
     public abstract static class Builder {
-      public abstract Builder setDateStart(LocalDate dateStart);
+      public abstract Builder setDateStart(final LocalDate dateStart);
 
-      public abstract Builder setDateEnd(LocalDate dateEnd);
+      public abstract Builder setDateEnd(final LocalDate dateEnd);
+
+      public abstract Builder setOwner(final String owner);
 
       public abstract Query build();
     }

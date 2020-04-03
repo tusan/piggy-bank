@@ -18,9 +18,11 @@ class ExpensesController {
   private static final DateTimeFormatter YYYY_MM_DD = DateTimeFormatter.ofPattern("yyyyMMdd");
 
   private final IExpensesService expenseRepository;
+  private final PrincipalProvider principalProvider;
 
-  public ExpensesController(final IExpensesService expenseRepository) {
+  ExpensesController(final IExpensesService expenseRepository, final PrincipalProvider principalProvider) {
     this.expenseRepository = expenseRepository;
+    this.principalProvider = principalProvider;
   }
 
   @GetMapping
@@ -36,7 +38,7 @@ class ExpensesController {
 
     final List<ExpenseDto> result =
         expenseRepository.find(IExpensesService.Query
-                .builder()
+                .builder(principalProvider.getLoggedUser())
                 .setDateStart(startDate)
                 .setDateEnd(endDate)
                 .build());

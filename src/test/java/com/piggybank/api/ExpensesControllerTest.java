@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -21,6 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
 
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -29,6 +29,8 @@ public class ExpensesControllerTest {
   @InjectMocks private ExpensesController sut;
 
   @Mock private IExpensesService expenseRepository;
+
+  @Mock private PrincipalProvider principalProvider;
 
   private MockMvc mockMvc;
 
@@ -40,6 +42,8 @@ public class ExpensesControllerTest {
                 new MappingJackson2HttpMessageConverter(
                     new ObjectMapper().registerModule(new JavaTimeModule())))
             .build();
+
+    when(principalProvider.getLoggedUser()).thenReturn("logger_user");
   }
 
   @Test
@@ -52,9 +56,9 @@ public class ExpensesControllerTest {
         .andExpect(status().isOk())
         .andReturn();
 
-    Mockito.verify(expenseRepository)
+    verify(expenseRepository)
         .find(
-            IExpensesService.Query.builder()
+            IExpensesService.Query.builder("logger_user")
                 .setDateStart(LocalDate.of(2018, 11, 7))
                 .setDateEnd(LocalDate.of(2018, 12, 7))
                 .build());
@@ -78,7 +82,7 @@ public class ExpensesControllerTest {
         .andExpect(status().isCreated())
         .andReturn();
 
-    Mockito.verify(expenseRepository)
+    verify(expenseRepository)
         .save(
             ExpenseDto.newBuilder()
                 .setDate(LocalDate.of(2018, 11, 7))
@@ -98,7 +102,7 @@ public class ExpensesControllerTest {
             + "  \"description\": \"test description\"\n"
             + "}";
 
-    Mockito.doThrow(new RuntimeException("test exception"))
+    doThrow(new RuntimeException("test exception"))
         .when(expenseRepository)
         .save(ArgumentMatchers.any(ExpenseDto.class));
 
@@ -110,7 +114,7 @@ public class ExpensesControllerTest {
         .andExpect(status().isInternalServerError())
         .andReturn();
 
-    Mockito.verify(expenseRepository)
+    verify(expenseRepository)
         .save(
             ExpenseDto.newBuilder()
                 .setDate(LocalDate.of(2018, 11, 7))

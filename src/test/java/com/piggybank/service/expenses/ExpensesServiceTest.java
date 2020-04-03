@@ -1,6 +1,5 @@
 package com.piggybank.service.expenses;
 
-import com.piggybank.security.PrincipalProvider;
 import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import com.piggybank.service.expenses.dto.ExpenseDto;
 import com.piggybank.service.expenses.dto.ExpenseType;
@@ -10,7 +9,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -34,21 +32,17 @@ public class ExpensesServiceTest {
 
   @Autowired private JpaExpensesRepository repository;
 
-  @MockBean private PrincipalProvider principalProvider;
-
   @MockBean private Principal loggedUser;
 
   private IExpensesService sut;
 
   private static IExpensesService.Query.Builder getBuilder() {
-    return IExpensesService.Query.builder();
+    return IExpensesService.Query.builder("test_user");
   }
 
   @Before
   public void setUp() {
-    sut = new ExpensesService(repository, principalProvider);
-
-    Mockito.when(principalProvider.getLoggedUser()).thenReturn("test_user");
+    sut = new ExpensesService(repository);
 
     PiggyBankUser owner = fakeUser("test_user");
     testEntityManager.persist(owner);
