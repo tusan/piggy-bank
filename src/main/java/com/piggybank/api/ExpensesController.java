@@ -4,6 +4,9 @@ import com.piggybank.security.AuthenticationResolver;
 import com.piggybank.service.expenses.ExpensesService;
 import com.piggybank.service.expenses.dto.ExpenseDto;
 import com.piggybank.service.expenses.repository.Expense;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +17,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RestController
 @RequestMapping("api/v1/expenses")
+@SecurityScheme(
+    name = "bearerToken",
+    type = SecuritySchemeType.HTTP,
+    scheme = "bearer",
+    bearerFormat = "JWT")
 @CrossOrigin
 class ExpensesController {
 
@@ -31,6 +40,7 @@ class ExpensesController {
   }
 
   @GetMapping
+  @SecurityRequirement(name = "bearerToken")
   public ResponseEntity<List<ExpenseDto>> expenses(
       @RequestParam(value = "date-start", required = false) final String dateStart,
       @RequestParam(value = "date-end", required = false) final String dateEnd) {
@@ -56,6 +66,7 @@ class ExpensesController {
   }
 
   @PostMapping
+  @SecurityRequirement(name = "bearerToken")
   public ResponseEntity<Void> save(@RequestBody final ExpenseDto expenseDto) {
     try {
       expenseRepository.save(ExpenseConverter.toEntity(expenseDto));
