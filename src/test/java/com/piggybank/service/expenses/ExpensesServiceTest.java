@@ -17,11 +17,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.piggybank.service.expenses.dto.ExpenseType.HOUSE;
+import static com.piggybank.service.expenses.dto.ExpenseType.MOTORBIKE;
+import static java.time.Month.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -48,12 +50,12 @@ public class ExpensesServiceTest {
     testEntityManager.persist(owner);
 
     Expense januaryExpense =
-        fakeExpense(ExpenseType.CASA, "description1", LocalDate.of(2018, Month.JANUARY, 1), owner);
+        fakeExpense(HOUSE, "description1", LocalDate.of(2018, JANUARY, 1), owner);
     Expense februaryExpense =
-        fakeExpense(ExpenseType.MOTO, "description2", LocalDate.of(2018, Month.FEBRUARY, 1), owner);
+        fakeExpense(MOTORBIKE, "description2", LocalDate.of(2018, FEBRUARY, 1), owner);
     Expense marchExpense =
         fakeExpense(
-            ExpenseType.BOLLETTE, "description3", LocalDate.of(2018, Month.MARCH, 1), owner);
+            ExpenseType.BILLS, "description3", LocalDate.of(2018, MARCH, 1), owner);
 
     testEntityManager.persist(januaryExpense);
     testEntityManager.persist(februaryExpense);
@@ -70,7 +72,7 @@ public class ExpensesServiceTest {
 
   @Test
   public void shouldCallFilterByDateStartAndDateEnd() {
-    final LocalDate dateStart = LocalDate.of(2018, Month.JANUARY, 1);
+    final LocalDate dateStart = LocalDate.of(2018, JANUARY, 1);
     final LocalDate dateEnd = dateStart.plusMonths(1);
 
     List<ExpenseDto> result =
@@ -78,9 +80,9 @@ public class ExpensesServiceTest {
 
     assertEquals(
         Arrays.asList(
-            fakeDtoExpense("description1", ExpenseType.CASA, LocalDate.of(2018, Month.JANUARY, 1)),
+            fakeDtoExpense("description1", HOUSE, LocalDate.of(2018, JANUARY, 1)),
             fakeDtoExpense(
-                "description2", ExpenseType.MOTO, LocalDate.of(2018, Month.FEBRUARY, 1))),
+                "description2", MOTORBIKE, LocalDate.of(2018, FEBRUARY, 1))),
         result);
   }
 
@@ -88,13 +90,13 @@ public class ExpensesServiceTest {
   public void shouldCallFilterByDateStartOnly() {
 
     List<ExpenseDto> result =
-        sut.find(getBuilder().setDateStart(LocalDate.of(2018, Month.FEBRUARY, 1)).build());
+        sut.find(getBuilder().setDateStart(LocalDate.of(2018, FEBRUARY, 1)).build());
 
     assertEquals(
         Arrays.asList(
-            fakeDtoExpense("description2", ExpenseType.MOTO, LocalDate.of(2018, Month.FEBRUARY, 1)),
+            fakeDtoExpense("description2", MOTORBIKE, LocalDate.of(2018, FEBRUARY, 1)),
             fakeDtoExpense(
-                "description3", ExpenseType.BOLLETTE, LocalDate.of(2018, Month.MARCH, 1))),
+                "description3", ExpenseType.BILLS, LocalDate.of(2018, MARCH, 1))),
         result);
   }
 
@@ -102,13 +104,13 @@ public class ExpensesServiceTest {
   public void shouldCallFilterByDateEndOnly() {
 
     List<ExpenseDto> result =
-        sut.find(getBuilder().setDateEnd(LocalDate.of(2018, Month.FEBRUARY, 1)).build());
+        sut.find(getBuilder().setDateEnd(LocalDate.of(2018, FEBRUARY, 1)).build());
 
     assertEquals(
         Arrays.asList(
-            fakeDtoExpense("description1", ExpenseType.CASA, LocalDate.of(2018, Month.JANUARY, 1)),
+            fakeDtoExpense("description1", HOUSE, LocalDate.of(2018, JANUARY, 1)),
             fakeDtoExpense(
-                "description2", ExpenseType.MOTO, LocalDate.of(2018, Month.FEBRUARY, 1))),
+                "description2", MOTORBIKE, LocalDate.of(2018, FEBRUARY, 1))),
         result);
   }
 
@@ -116,10 +118,10 @@ public class ExpensesServiceTest {
   public void shouldSaveTheExpense() {
     final LocalDate date = LocalDate.now();
 
-    Optional<Long> actual = sut.save(ExpenseDto.newBuilder()
+    final Optional<Long> actual = sut.save(ExpenseDto.newBuilder()
                 .setAmount(123L)
                 .setDescription("description")
-                .setType(ExpenseType.CASA)
+                .setType(HOUSE)
                 .setDate(date)
                 .build());
 
@@ -129,27 +131,30 @@ public class ExpensesServiceTest {
 
   @Test
   public void shouldReturnOnlyExpensesAssociatedWithLoggedUser() {
-    PiggyBankUser otherOwner = fakeUser("other_owner");
+    final PiggyBankUser otherOwner = fakeUser("other_owner");
     testEntityManager.persist(otherOwner);
 
-    Expense otherExpense =
-        fakeExpense(ExpenseType.BOLLETTE, "test_description", LocalDate.now(), otherOwner);
+    final Expense otherExpense =
+        fakeExpense(ExpenseType.BILLS, "test_description", LocalDate.now(), otherOwner);
     testEntityManager.persist(otherExpense);
     testEntityManager.flush();
 
-    List<ExpenseDto> result = sut.find(getBuilder().build());
+    final List<ExpenseDto> result = sut.find(getBuilder().build());
     assertEquals(
         Arrays.asList(
-            fakeDtoExpense("description1", ExpenseType.CASA, LocalDate.of(2018, Month.JANUARY, 1)),
-            fakeDtoExpense("description2", ExpenseType.MOTO, LocalDate.of(2018, Month.FEBRUARY, 1)),
+            fakeDtoExpense("description1", HOUSE, LocalDate.of(2018, JANUARY, 1)),
+            fakeDtoExpense("description2", MOTORBIKE, LocalDate.of(2018, FEBRUARY, 1)),
             fakeDtoExpense(
-                "description3", ExpenseType.BOLLETTE, LocalDate.of(2018, Month.MARCH, 1))),
+                "description3", ExpenseType.BILLS, LocalDate.of(2018, MARCH, 1))),
         result);
   }
 
-  private Expense fakeExpense(ExpenseType casa, String description, LocalDate date, PiggyBankUser owner) {
-    Expense expense = new Expense();
-    expense.setType(casa);
+  private Expense fakeExpense(final ExpenseType expenseType,
+                              final String description,
+                              final LocalDate date,
+                              final PiggyBankUser owner) {
+    final Expense expense = new Expense();
+    expense.setType(expenseType);
     expense.setDescription(description);
     expense.setDate(date);
     expense.setAmount(100);
@@ -157,7 +162,7 @@ public class ExpensesServiceTest {
     return expense;
   }
 
-  private PiggyBankUser fakeUser(String username) {
+  private PiggyBankUser fakeUser(final String username) {
     final PiggyBankUser piggyBankUser = new PiggyBankUser();
     piggyBankUser.setPassword("password");
     piggyBankUser.setToken("token");
@@ -165,8 +170,9 @@ public class ExpensesServiceTest {
     return piggyBankUser;
   }
 
-  private ExpenseDto fakeDtoExpense(
-      String description, ExpenseType expenseType, LocalDate date) {
+  private ExpenseDto fakeDtoExpense(final String description,
+                                    final ExpenseType expenseType,
+                                    final LocalDate date) {
     return ExpenseDto.newBuilder()
         .setAmount(100L)
         .setDescription(description)

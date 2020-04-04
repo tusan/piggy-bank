@@ -41,7 +41,7 @@ public class TokenAuthenticationFilterTest {
     sut.attemptAuthentication(request, null);
   }
 
-  class MockedAuthenticationManager implements AuthenticationManager {
+  static class MockedAuthenticationManager implements AuthenticationManager {
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
       return auth;

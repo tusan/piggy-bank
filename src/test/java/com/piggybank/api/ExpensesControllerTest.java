@@ -69,7 +69,7 @@ public class ExpensesControllerTest {
     final String json =
         "{\n"
             + "  \"date\": \"20181107\",\n"
-            + "  \"type\": \"CASA\",\n"
+            + "  \"type\": \"HOUSE\",\n"
             + "  \"amount\": \"22.57\",\n"
             + "  \"description\": \"test description\"\n"
             + "}";
@@ -86,7 +86,7 @@ public class ExpensesControllerTest {
         .save(
             ExpenseDto.newBuilder()
                 .setDate(LocalDate.of(2018, 11, 7))
-                .setType(ExpenseType.CASA)
+                .setType(ExpenseType.HOUSE)
                 .setAmount(22.57)
                 .setDescription("test description")
                 .build());
@@ -97,7 +97,7 @@ public class ExpensesControllerTest {
     final String json =
         "{\n"
             + "  \"date\": \"20181107\",\n"
-            + "  \"type\": \"CASA\",\n"
+            + "  \"type\": \"HOUSE\",\n"
             + "  \"amount\": \"22.57\",\n"
             + "  \"description\": \"test description\"\n"
             + "}";
@@ -118,7 +118,7 @@ public class ExpensesControllerTest {
         .save(
             ExpenseDto.newBuilder()
                 .setDate(LocalDate.of(2018, 11, 7))
-                .setType(ExpenseType.CASA)
+                .setType(ExpenseType.HOUSE)
                 .setAmount(22.57)
                 .setDescription("test description")
                 .build());

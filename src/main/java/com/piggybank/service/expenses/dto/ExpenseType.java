@@ -1,15 +1,15 @@
 package com.piggybank.service.expenses.dto;
 
 public enum ExpenseType {
-  MOTO,
-  CASA,
-  STIPENDIO,
-  VESTITI,
-  VIAGGI,
-  VARIE,
-  SPESA,
-  BOLLETTE,
-  PRELIEVO,
-  PRANZO,
-  CONTO
+  MOTORBIKE,
+  HOUSE,
+  PAYROLL,
+  DRESS,
+  TRAVELS,
+  MISC,
+  SHOPPING,
+  BILLS,
+  WITHDRAW,
+  LAUNCH,
+  BANK_ACCOUNT
 }
