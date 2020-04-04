@@ -35,6 +35,46 @@ public class ExpensesRepositoryTest {
 
   @MockBean private Principal principal;
 
+  private static PiggyBankUser fakeUser(final String username) {
+    final PiggyBankUser piggyBankUser = new PiggyBankUser();
+    piggyBankUser.setPassword("password");
+    piggyBankUser.setToken("token");
+    piggyBankUser.setUsername(username);
+    return piggyBankUser;
+  }
+
+  private static Expense expenseJanuary() {
+    return fakeExpense(HOUSE, "description1", JANUARY, loggedUser());
+  }
+
+  private static Expense expenseFebruary() {
+    return fakeExpense(MOTORBIKE, "description2", FEBRUARY, loggedUser());
+  }
+
+  private static Expense expenseMarch() {
+    return fakeExpense(BILLS, "description3", MARCH, loggedUser());
+  }
+
+  private static Expense fakeExpense(
+      final ExpenseType expenseType,
+      final String description,
+      final LocalDate date,
+      final PiggyBankUser owner) {
+    final Expense expense = new Expense();
+
+    expense.setType(expenseType);
+    expense.setDescription(description);
+    expense.setDate(date);
+    expense.setAmount(100);
+    expense.setOwner(owner);
+
+    return expense;
+  }
+
+  private static PiggyBankUser loggedUser() {
+    return fakeUser("test_user");
+  }
+
   @Before
   public void setUp() {
     final PiggyBankUser otherOwner = fakeUser("other_owner");
@@ -91,45 +131,5 @@ public class ExpensesRepositoryTest {
   public void shouldReturnOnlyExpensesAssociatedWithLoggedUser() {
     final List<Expense> result = sut.findByOwner(loggedUser());
     assertEquals(asList(expenseJanuary(), expenseFebruary(), expenseMarch()), result);
-  }
-
-  private static PiggyBankUser fakeUser(final String username) {
-    final PiggyBankUser piggyBankUser = new PiggyBankUser();
-    piggyBankUser.setPassword("password");
-    piggyBankUser.setToken("token");
-    piggyBankUser.setUsername(username);
-    return piggyBankUser;
-  }
-
-  private static Expense expenseJanuary() {
-    return fakeExpense(HOUSE, "description1", JANUARY, loggedUser());
-  }
-
-  private static Expense expenseFebruary() {
-    return fakeExpense(MOTORBIKE, "description2", FEBRUARY, loggedUser());
-  }
-
-  private static Expense expenseMarch() {
-    return fakeExpense(BILLS, "description3", MARCH, loggedUser());
-  }
-
-  private static Expense fakeExpense(
-      final ExpenseType expenseType,
-      final String description,
-      final LocalDate date,
-      final PiggyBankUser owner) {
-    final Expense expense = new Expense();
-
-    expense.setType(expenseType);
-    expense.setDescription(description);
-    expense.setDate(date);
-    expense.setAmount(100);
-    expense.setOwner(owner);
-
-    return expense;
-  }
-
-  private static PiggyBankUser loggedUser() {
-    return fakeUser("test_user");
   }
 }

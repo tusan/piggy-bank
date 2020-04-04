@@ -17,6 +17,10 @@ import static org.junit.Assert.assertEquals;
 public class ExpenseDtoTest {
   private static ObjectMapper mapper = new ObjectMapper();
 
+  static {
+    mapper.registerModule(new JavaTimeModule());
+  }
+
   @Test
   public void shouldBuildAnExpense() throws Exception {
     final String initialJson =
@@ -89,9 +93,5 @@ public class ExpenseDtoTest {
                 .build());
 
     assertEquals(expected, mapper.readValue(initialJson, new TypeReference<List<ExpenseDto>>() {}));
-  }
-
-  static {
-    mapper.registerModule(new JavaTimeModule());
   }
 }

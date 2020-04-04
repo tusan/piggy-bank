@@ -5,26 +5,23 @@ import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 public interface AuthenticationResolver {
   PiggyBankUser getLoggedUser();
 
-  @Component
   final class PrincipalProvider implements AuthenticationResolver {
     private final JpaUserRepository userRepository;
-    private final IAuthenticationFacade authenticationFacade;
+    private final SecurityHolder securityHolder;
 
-    PrincipalProvider(
-        final JpaUserRepository userRepository, final IAuthenticationFacade authenticationFacade) {
+    public PrincipalProvider(
+        final JpaUserRepository userRepository, final SecurityHolder securityHolder) {
       this.userRepository = userRepository;
-      this.authenticationFacade = authenticationFacade;
+      this.securityHolder = securityHolder;
     }
 
     @Override
     public PiggyBankUser getLoggedUser() {
-      final Authentication authentication = authenticationFacade.getAuthentication();
+      final Authentication authentication = securityHolder.getAuthentication();
       if (!(authentication instanceof AnonymousAuthenticationToken)) {
         return userRepository
             .findByUsername(authentication.getName())

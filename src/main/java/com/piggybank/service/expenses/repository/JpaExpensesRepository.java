@@ -3,12 +3,10 @@ package com.piggybank.service.expenses.repository;
 import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Repository
 public interface JpaExpensesRepository
     extends JpaRepository<Expense, Long>, JpaSpecificationExecutor<Expense> {
   List<Expense> findByOwner(final PiggyBankUser owner);
@@ -17,5 +15,6 @@ public interface JpaExpensesRepository
 
   List<Expense> findByDateGreaterThanEqualAndOwner(final LocalDate date, final PiggyBankUser owner);
 
-  List<Expense> findByDateBetweenAndOwner(final LocalDate dateStart, final LocalDate dateEnd, final PiggyBankUser owner);
+  List<Expense> findByDateBetweenAndOwner(
+      final LocalDate dateStart, final LocalDate dateEnd, final PiggyBankUser owner);
 }

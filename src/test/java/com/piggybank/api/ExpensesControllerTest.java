@@ -31,15 +31,15 @@ public class ExpensesControllerTest {
   private static final ObjectMapper mapper = new ObjectMapper();
   private static final MappingJackson2HttpMessageConverter messageConverter =
       new MappingJackson2HttpMessageConverter(mapper);
+  private static final PiggyBankUser LOGGER_USER = new PiggyBankUser();
+
+  static {
+    mapper.registerModule(new JavaTimeModule());
+  }
 
   @InjectMocks private ExpensesController sut;
-
   @Mock private ExpensesService expenseRepository;
-
   @Mock private AuthenticationResolver authenticationResolver;
-
-  private static final PiggyBankUser LOGGER_USER =  new PiggyBankUser();
-
   private MockMvc mockMvc;
 
   @Before
@@ -114,9 +114,5 @@ public class ExpensesControllerTest {
     expense.setDate(date);
     expense.setAmount(22.57);
     return expense;
-  }
-
-  static {
-    mapper.registerModule(new JavaTimeModule());
   }
 }

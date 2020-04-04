@@ -31,16 +31,31 @@ public class ExpensesServiceImplTest {
   private static final LocalDate JANUARY = LocalDate.of(2018, Month.JANUARY, 1);
   private static final LocalDate FEBRUARY = LocalDate.of(2018, Month.FEBRUARY, 1);
   private static final LocalDate MARCH = LocalDate.of(2018, Month.MARCH, 1);
-
+  private static final PiggyBankUser LOGGED_USER = new PiggyBankUser();
   private static final Expense EXPENSE_JANUARY = fakeExpense(HOUSE, "description1", JANUARY);
   private static final Expense EXPENSE_FEBRUARY = fakeExpense(MOTORBIKE, "description2", FEBRUARY);
   private static final Expense EXPENSE_MARCH = fakeExpense(BILLS, "description3", MARCH);
-
-  private static final PiggyBankUser LOGGED_USER = new PiggyBankUser();
-
   @Mock private JpaExpensesRepository repository;
 
   @InjectMocks private ExpensesServiceImpl sut;
+
+  private static Expense fakeExpense(
+      final ExpenseType expenseType, final String description, final LocalDate date) {
+    final Expense expense = new Expense();
+
+    expense.setId(1L);
+    expense.setType(expenseType);
+    expense.setDescription(description);
+    expense.setDate(date);
+    expense.setAmount(100);
+    expense.setOwner(LOGGED_USER);
+
+    return expense;
+  }
+
+  private static ExpensesService.Query.Builder baseQuery() {
+    return ExpensesService.Query.builder(LOGGED_USER);
+  }
 
   @Before
   public void setUp() {
@@ -98,23 +113,5 @@ public class ExpensesServiceImplTest {
 
     assertTrue(actual.isPresent());
     actual.ifPresent(res -> assertEquals(Long.valueOf(1L), res));
-  }
-
-  private static Expense fakeExpense(
-      final ExpenseType expenseType, final String description, final LocalDate date) {
-    final Expense expense = new Expense();
-
-    expense.setId(1L);
-    expense.setType(expenseType);
-    expense.setDescription(description);
-    expense.setDate(date);
-    expense.setAmount(100);
-    expense.setOwner(LOGGED_USER);
-
-    return expense;
-  }
-
-  private static ExpensesService.Query.Builder baseQuery() {
-    return ExpensesService.Query.builder(LOGGED_USER);
   }
 }
