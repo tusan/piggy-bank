@@ -1,6 +1,7 @@
 package com.piggybank.service.expenses;
 
 import com.google.auto.value.AutoValue;
+import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import com.piggybank.service.expenses.repository.Expense;
 
 import javax.annotation.Nullable;
@@ -16,7 +17,7 @@ public interface ExpensesService {
   @AutoValue
   abstract class Query {
 
-    public static Builder builder(final String owner) {
+    public static Builder builder(final PiggyBankUser owner) {
       return new AutoValue_ExpensesService_Query.Builder().setOwner(owner);
     }
 
@@ -26,7 +27,7 @@ public interface ExpensesService {
     @Nullable
     public abstract LocalDate dateEnd();
 
-    public abstract String owner();
+    public abstract PiggyBankUser owner();
 
     @AutoValue.Builder
     public abstract static class Builder {
@@ -34,7 +35,7 @@ public interface ExpensesService {
 
       public abstract Builder setDateEnd(final LocalDate dateEnd);
 
-      public abstract Builder setOwner(final String owner);
+      public abstract Builder setOwner(final PiggyBankUser owner);
 
       public abstract Query build();
     }

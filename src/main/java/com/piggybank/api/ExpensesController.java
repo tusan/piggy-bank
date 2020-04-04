@@ -1,5 +1,6 @@
 package com.piggybank.api;
 
+import com.piggybank.security.AuthenticationResolver;
 import com.piggybank.service.expenses.ExpensesService;
 import com.piggybank.service.expenses.dto.ExpenseDto;
 import com.piggybank.service.expenses.repository.Expense;
@@ -20,12 +21,13 @@ class ExpensesController {
   private static final DateTimeFormatter YYYY_MM_DD = DateTimeFormatter.ofPattern("yyyyMMdd");
 
   private final ExpensesService expenseRepository;
-  private final PrincipalProvider principalProvider;
+  private final AuthenticationResolver authenticationResolver;
 
   ExpensesController(
-      final ExpensesService expenseRepository, final PrincipalProvider principalProvider) {
+      final ExpensesService expenseRepository,
+      final AuthenticationResolver authenticationResolver) {
     this.expenseRepository = expenseRepository;
-    this.principalProvider = principalProvider;
+    this.authenticationResolver = authenticationResolver;
   }
 
   @GetMapping
@@ -42,7 +44,7 @@ class ExpensesController {
     final List<ExpenseDto> result =
         expenseRepository
             .find(
-                ExpensesService.Query.builder(principalProvider.getLoggedUser())
+                ExpensesService.Query.builder(authenticationResolver.getLoggedUser())
                     .setDateStart(startDate)
                     .setDateEnd(endDate)
                     .build())

@@ -2,6 +2,8 @@ package com.piggybank.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.piggybank.security.AuthenticationResolver;
+import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
 import com.piggybank.service.expenses.dto.ExpenseType;
 import com.piggybank.service.expenses.repository.Expense;
@@ -34,7 +36,9 @@ public class ExpensesControllerTest {
 
   @Mock private ExpensesService expenseRepository;
 
-  @Mock private PrincipalProvider principalProvider;
+  @Mock private AuthenticationResolver authenticationResolver;
+
+  private static final PiggyBankUser LOGGER_USER =  new PiggyBankUser();
 
   private MockMvc mockMvc;
 
@@ -42,7 +46,7 @@ public class ExpensesControllerTest {
   public void setUp() {
     mockMvc = MockMvcBuilders.standaloneSetup(sut).setMessageConverters(messageConverter).build();
 
-    when(principalProvider.getLoggedUser()).thenReturn("logger_user");
+    when(authenticationResolver.getLoggedUser()).thenReturn(LOGGER_USER);
   }
 
   @Test
@@ -57,7 +61,7 @@ public class ExpensesControllerTest {
 
     verify(expenseRepository)
         .find(
-            ExpensesService.Query.builder("logger_user")
+            ExpensesService.Query.builder(LOGGER_USER)
                 .setDateStart(LocalDate.of(2018, 11, 7))
                 .setDateEnd(LocalDate.of(2018, 12, 7))
                 .build());
