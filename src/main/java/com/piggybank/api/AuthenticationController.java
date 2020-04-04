@@ -3,7 +3,7 @@ package com.piggybank.api;
 import com.piggybank.service.auhtentication.AuthenticationService;
 import com.piggybank.service.auhtentication.dto.LoggedUserDto;
 import com.piggybank.service.auhtentication.dto.LoginRequestDto;
-import com.piggybank.service.auhtentication.dto.UserDto;
+import com.piggybank.service.auhtentication.dto.RegistrationDto;
 import com.piggybank.service.auhtentication.repository.JpaUserRepository;
 import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import org.springframework.http.HttpStatus;
@@ -17,13 +17,13 @@ import static com.piggybank.service.auhtentication.dto.LoggedUserDto.forUsername
 @RestController
 @RequestMapping("api/v1/users")
 @CrossOrigin
-class UserController {
+class AuthenticationController {
 
   private final AuthenticationService authenticationService;
   private final JpaUserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
-  public UserController(
+  public AuthenticationController(
       final AuthenticationService authenticationService,
       final JpaUserRepository userRepository,
       final PasswordEncoder passwordEncoder) {
@@ -32,8 +32,9 @@ class UserController {
     this.passwordEncoder = passwordEncoder;
   }
 
-  @PostMapping("login")
-  public ResponseEntity<LoggedUserDto> login(@RequestBody final LoginRequestDto loginRequestDto) {
+  @PostMapping("authorize")
+  public ResponseEntity<LoggedUserDto> authorize(
+      @RequestBody final LoginRequestDto loginRequestDto) {
     return authenticationService
         .login(loginRequestDto.username(), loginRequestDto.password())
         .map(user -> forUsernameAndToken(user.getUsername(), user.getToken()))
@@ -42,10 +43,10 @@ class UserController {
   }
 
   @PostMapping("register")
-  public ResponseEntity<Void> register(@RequestBody final UserDto userDto) {
+  public ResponseEntity<Void> register(@RequestBody final RegistrationDto registrationDto) {
     PiggyBankUser newPiggyBankUser = new PiggyBankUser();
-    newPiggyBankUser.setUsername(userDto.username());
-    newPiggyBankUser.setPassword(passwordEncoder.encode(userDto.password()));
+    newPiggyBankUser.setUsername(registrationDto.username());
+    newPiggyBankUser.setPassword(passwordEncoder.encode(registrationDto.password()));
     userRepository.save(newPiggyBankUser);
 
     return ResponseEntity.status(HttpStatus.CREATED).build();

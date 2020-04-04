@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class JpaPiggyBankUserDtoRepositoryTest {
+public class JpaPiggyBankRegistrationDtoRepositoryTest {
   @Autowired private TestEntityManager testEntityManager;
 
   @Autowired private JpaUserRepository sut;

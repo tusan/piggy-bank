@@ -30,9 +30,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PiggyBankUserDtoControllerTest {
+public class PiggyBankRegistrationDtoControllerTest {
 
-  @InjectMocks private UserController sut;
+  @InjectMocks private AuthenticationController sut;
 
   @Mock private AuthenticationService authenticationService;
 
@@ -70,7 +70,7 @@ public class PiggyBankUserDtoControllerTest {
     final MvcResult response =
         mockMvc
             .perform(
-                post("/api/v1/users/login")
+                post("/api/v1/users/authorize")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(requestBody))
             .andExpect(MockMvcResultMatchers.status().isOk())
@@ -95,7 +95,7 @@ public class PiggyBankUserDtoControllerTest {
     try {
       mockMvc
           .perform(
-              post("/api/v1/users/login")
+              post("/api/v1/users/authorize")
                   .contentType(MediaType.APPLICATION_JSON)
                   .content(requestBody))
           .andReturn();
