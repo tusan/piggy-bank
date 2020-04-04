@@ -4,12 +4,12 @@ import com.piggybank.security.TokenGenerator;
 import com.piggybank.service.auhtentication.repository.JpaUserRepository;
 import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Repository
-public class JwtAuthenticationService implements AuthenticationService {
+@Service
+final class JwtAuthenticationService implements AuthenticationService {
   private final JpaUserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final TokenGenerator tokenGenerator;

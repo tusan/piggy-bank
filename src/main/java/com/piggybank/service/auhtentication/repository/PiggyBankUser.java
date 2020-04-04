@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users")
-public class PiggyBankUser {
+public final class PiggyBankUser {
   @Id private String username;
   private String password;
   private String token;

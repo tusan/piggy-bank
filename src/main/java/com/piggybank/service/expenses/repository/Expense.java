@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-public class Expense {
+public final class Expense {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
@@ -74,7 +74,6 @@ public class Expense {
   @Override
   public String toString() {
     return MoreObjects.toStringHelper(this)
-        .add("id", id)
         .add("type", type)
         .add("description", description)
         .add("date", date)
@@ -89,7 +88,6 @@ public class Expense {
     if (o == null || getClass() != o.getClass()) return false;
     Expense expense = (Expense) o;
     return Double.compare(expense.amount, amount) == 0
-        && Objects.equals(id, expense.id)
         && type == expense.type
         && Objects.equals(description, expense.description)
         && Objects.equals(date, expense.date)
@@ -98,6 +96,6 @@ public class Expense {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, type, description, date, amount, owner);
+    return Objects.hash(type, description, date, amount, owner);
   }
 }

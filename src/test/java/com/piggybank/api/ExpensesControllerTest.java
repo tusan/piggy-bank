@@ -2,17 +2,15 @@ package com.piggybank.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.piggybank.service.expenses.IExpensesService;
-import com.piggybank.service.expenses.dto.ExpenseDto;
+import com.piggybank.service.expenses.ExpensesService;
 import com.piggybank.service.expenses.dto.ExpenseType;
+import com.piggybank.service.expenses.repository.Expense;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -20,15 +18,21 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ExpensesControllerTest {
+  private static final ObjectMapper mapper = new ObjectMapper();
+  private static final MappingJackson2HttpMessageConverter messageConverter =
+      new MappingJackson2HttpMessageConverter(mapper);
 
   @InjectMocks private ExpensesController sut;
 
-  @Mock private IExpensesService expenseRepository;
+  @Mock private ExpensesService expenseRepository;
 
   @Mock private PrincipalProvider principalProvider;
 
@@ -36,12 +40,7 @@ public class ExpensesControllerTest {
 
   @Before
   public void setUp() {
-    mockMvc =
-        MockMvcBuilders.standaloneSetup(sut)
-            .setMessageConverters(
-                new MappingJackson2HttpMessageConverter(
-                    new ObjectMapper().registerModule(new JavaTimeModule())))
-            .build();
+    mockMvc = MockMvcBuilders.standaloneSetup(sut).setMessageConverters(messageConverter).build();
 
     when(principalProvider.getLoggedUser()).thenReturn("logger_user");
   }
@@ -58,7 +57,7 @@ public class ExpensesControllerTest {
 
     verify(expenseRepository)
         .find(
-            IExpensesService.Query.builder("logger_user")
+            ExpensesService.Query.builder("logger_user")
                 .setDateStart(LocalDate.of(2018, 11, 7))
                 .setDateEnd(LocalDate.of(2018, 12, 7))
                 .build());
@@ -75,21 +74,11 @@ public class ExpensesControllerTest {
             + "}";
 
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.post("/api/v1/expenses")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
+        .perform(post("/api/v1/expenses").contentType(APPLICATION_JSON).content(json))
         .andExpect(status().isCreated())
         .andReturn();
 
-    verify(expenseRepository)
-        .save(
-            ExpenseDto.newBuilder()
-                .setDate(LocalDate.of(2018, 11, 7))
-                .setType(ExpenseType.HOUSE)
-                .setAmount(22.57)
-                .setDescription("test description")
-                .build());
+    verify(expenseRepository).save(fakeExpense(LocalDate.of(2018, 11, 7)));
   }
 
   @Test
@@ -104,23 +93,26 @@ public class ExpensesControllerTest {
 
     doThrow(new RuntimeException("test exception"))
         .when(expenseRepository)
-        .save(ArgumentMatchers.any(ExpenseDto.class));
+        .save(any(Expense.class));
 
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.post("/api/v1/expenses")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
+        .perform(post("/api/v1/expenses").contentType(APPLICATION_JSON).content(json))
         .andExpect(status().isInternalServerError())
         .andReturn();
 
-    verify(expenseRepository)
-        .save(
-            ExpenseDto.newBuilder()
-                .setDate(LocalDate.of(2018, 11, 7))
-                .setType(ExpenseType.HOUSE)
-                .setAmount(22.57)
-                .setDescription("test description")
-                .build());
+    verify(expenseRepository).save(fakeExpense(LocalDate.of(2018, 11, 7)));
+  }
+
+  private Expense fakeExpense(final LocalDate date) {
+    final Expense expense = new Expense();
+    expense.setType(ExpenseType.HOUSE);
+    expense.setDescription("test description");
+    expense.setDate(date);
+    expense.setAmount(22.57);
+    return expense;
+  }
+
+  static {
+    mapper.registerModule(new JavaTimeModule());
   }
 }
