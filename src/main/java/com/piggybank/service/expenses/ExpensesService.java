@@ -46,14 +46,18 @@ class ExpensesService implements IExpensesService {
 
   private Optional<Specification<Expense>> dateStartFilter(final Query query) {
     return Optional.ofNullable(query.dateStart())
-        .map(dateStart -> (root, q, criteriaBuilder) ->
-            criteriaBuilder.greaterThanOrEqualTo(root.get("date"), dateStart));
+        .map(
+            dateStart ->
+                (root, q, criteriaBuilder) ->
+                    criteriaBuilder.greaterThanOrEqualTo(root.get("date"), dateStart));
   }
 
   private Optional<Specification<Expense>> dateEndFilter(final Query query) {
     return Optional.ofNullable(query.dateEnd())
-        .map(dateEnd -> (root, q, criteriaBuilder) ->
-            criteriaBuilder.lessThanOrEqualTo(root.get("date"), dateEnd));
+        .map(
+            dateEnd ->
+                (root, q, criteriaBuilder) ->
+                    criteriaBuilder.lessThanOrEqualTo(root.get("date"), dateEnd));
   }
 
   private Expense convertToEntityExpense(final ExpenseDto expenseDto) {
@@ -75,5 +79,4 @@ class ExpensesService implements IExpensesService {
         .setType(exp.getType())
         .build();
   }
-
 }

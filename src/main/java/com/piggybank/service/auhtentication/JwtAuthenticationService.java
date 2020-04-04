@@ -28,11 +28,12 @@ public class JwtAuthenticationService implements AuthenticationService {
     return userRepository
         .findByUsername(username)
         .filter(user -> passwordEncoder.matches(password, user.getPassword()))
-        .map(user -> {
-          user.setToken(tokenGenerator.newToken());
-          userRepository.save(user);
-          return user;
-        });
+        .map(
+            user -> {
+              user.setToken(tokenGenerator.newToken());
+              userRepository.save(user);
+              return user;
+            });
   }
 
   @Override
@@ -42,10 +43,12 @@ public class JwtAuthenticationService implements AuthenticationService {
 
   @Override
   public void logout(final String username) {
-    userRepository.findByUsername(username)
-        .ifPresent(user -> {
-          user.setToken(null);
-          userRepository.save(user);
-        });
+    userRepository
+        .findByUsername(username)
+        .ifPresent(
+            user -> {
+              user.setToken(null);
+              userRepository.save(user);
+            });
   }
 }

@@ -54,8 +54,7 @@ public class ExpensesServiceTest {
     Expense februaryExpense =
         fakeExpense(MOTORBIKE, "description2", LocalDate.of(2018, FEBRUARY, 1), owner);
     Expense marchExpense =
-        fakeExpense(
-            ExpenseType.BILLS, "description3", LocalDate.of(2018, MARCH, 1), owner);
+        fakeExpense(ExpenseType.BILLS, "description3", LocalDate.of(2018, MARCH, 1), owner);
 
     testEntityManager.persist(januaryExpense);
     testEntityManager.persist(februaryExpense);
@@ -81,8 +80,7 @@ public class ExpensesServiceTest {
     assertEquals(
         Arrays.asList(
             fakeDtoExpense("description1", HOUSE, LocalDate.of(2018, JANUARY, 1)),
-            fakeDtoExpense(
-                "description2", MOTORBIKE, LocalDate.of(2018, FEBRUARY, 1))),
+            fakeDtoExpense("description2", MOTORBIKE, LocalDate.of(2018, FEBRUARY, 1))),
         result);
   }
 
@@ -95,8 +93,7 @@ public class ExpensesServiceTest {
     assertEquals(
         Arrays.asList(
             fakeDtoExpense("description2", MOTORBIKE, LocalDate.of(2018, FEBRUARY, 1)),
-            fakeDtoExpense(
-                "description3", ExpenseType.BILLS, LocalDate.of(2018, MARCH, 1))),
+            fakeDtoExpense("description3", ExpenseType.BILLS, LocalDate.of(2018, MARCH, 1))),
         result);
   }
 
@@ -109,8 +106,7 @@ public class ExpensesServiceTest {
     assertEquals(
         Arrays.asList(
             fakeDtoExpense("description1", HOUSE, LocalDate.of(2018, JANUARY, 1)),
-            fakeDtoExpense(
-                "description2", MOTORBIKE, LocalDate.of(2018, FEBRUARY, 1))),
+            fakeDtoExpense("description2", MOTORBIKE, LocalDate.of(2018, FEBRUARY, 1))),
         result);
   }
 
@@ -118,13 +114,14 @@ public class ExpensesServiceTest {
   public void shouldSaveTheExpense() {
     final LocalDate date = LocalDate.now();
 
-    final Optional<Long> actual = sut.save(ExpenseDto.newBuilder()
+    final Optional<Long> actual =
+        sut.save(
+            ExpenseDto.newBuilder()
                 .setAmount(123L)
                 .setDescription("description")
                 .setType(HOUSE)
                 .setDate(date)
                 .build());
-
 
     assertTrue(actual.isPresent());
   }
@@ -144,15 +141,15 @@ public class ExpensesServiceTest {
         Arrays.asList(
             fakeDtoExpense("description1", HOUSE, LocalDate.of(2018, JANUARY, 1)),
             fakeDtoExpense("description2", MOTORBIKE, LocalDate.of(2018, FEBRUARY, 1)),
-            fakeDtoExpense(
-                "description3", ExpenseType.BILLS, LocalDate.of(2018, MARCH, 1))),
+            fakeDtoExpense("description3", ExpenseType.BILLS, LocalDate.of(2018, MARCH, 1))),
         result);
   }
 
-  private Expense fakeExpense(final ExpenseType expenseType,
-                              final String description,
-                              final LocalDate date,
-                              final PiggyBankUser owner) {
+  private Expense fakeExpense(
+      final ExpenseType expenseType,
+      final String description,
+      final LocalDate date,
+      final PiggyBankUser owner) {
     final Expense expense = new Expense();
     expense.setType(expenseType);
     expense.setDescription(description);
@@ -170,9 +167,8 @@ public class ExpensesServiceTest {
     return piggyBankUser;
   }
 
-  private ExpenseDto fakeDtoExpense(final String description,
-                                    final ExpenseType expenseType,
-                                    final LocalDate date) {
+  private ExpenseDto fakeDtoExpense(
+      final String description, final ExpenseType expenseType, final LocalDate date) {
     return ExpenseDto.newBuilder()
         .setAmount(100L)
         .setDescription(description)

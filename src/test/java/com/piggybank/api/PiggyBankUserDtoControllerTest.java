@@ -2,9 +2,9 @@ package com.piggybank.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.piggybank.service.auhtentication.AuthenticationService;
 import com.piggybank.service.auhtentication.dto.LoggedUserDto;
 import com.piggybank.service.auhtentication.repository.JpaUserRepository;
-import com.piggybank.service.auhtentication.AuthenticationService;
 import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,17 +32,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @RunWith(MockitoJUnitRunner.class)
 public class PiggyBankUserDtoControllerTest {
 
-  @InjectMocks
-  private UserController sut;
+  @InjectMocks private UserController sut;
 
-  @Mock
-  private AuthenticationService authenticationService;
+  @Mock private AuthenticationService authenticationService;
 
-  @Mock
-  private JpaUserRepository userRepository;
+  @Mock private JpaUserRepository userRepository;
 
-  @Mock
-  private PasswordEncoder passwordEncoder;
+  @Mock private PasswordEncoder passwordEncoder;
 
   private MockMvc mockMvc;
 
@@ -68,12 +64,15 @@ public class PiggyBankUserDtoControllerTest {
     final String requestBody =
         "{\n" + "    \"username\": \"username\",\n" + "    \"password\": \"password\"\n" + "}";
 
-    when(authenticationService.login(anyString(), anyString())).thenReturn(Optional.of(piggyBankUser));
+    when(authenticationService.login(anyString(), anyString()))
+        .thenReturn(Optional.of(piggyBankUser));
 
     final MvcResult response =
-        mockMvc.perform(post("/api/v1/users/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(requestBody))
+        mockMvc
+            .perform(
+                post("/api/v1/users/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestBody))
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn();
 
@@ -88,16 +87,17 @@ public class PiggyBankUserDtoControllerTest {
 
   @Test
   public void shouldThrowBadCredentialExceptionIfLoginFails() {
-    when(authenticationService.login(anyString(), anyString()))
-        .thenReturn(Optional.empty());
+    when(authenticationService.login(anyString(), anyString())).thenReturn(Optional.empty());
 
     final String requestBody =
         "{\n" + "    \"username\": \"username\",\n" + "    \"password\": \"password\"\n" + "}";
 
     try {
-      mockMvc.perform(post("/api/v1/users/login")
-          .contentType(MediaType.APPLICATION_JSON)
-          .content(requestBody))
+      mockMvc
+          .perform(
+              post("/api/v1/users/login")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(requestBody))
           .andReturn();
       fail();
     } catch (Exception e) {
@@ -110,12 +110,13 @@ public class PiggyBankUserDtoControllerTest {
     String requestBody =
         "{\n" + "    \"username\": \"username\",\n" + "    \"password\": \"password\"\n" + "}";
 
-    when(passwordEncoder.encode(anyString()))
-        .thenReturn("encoded_password");
+    when(passwordEncoder.encode(anyString())).thenReturn("encoded_password");
 
-    mockMvc.perform(post("/api/v1/users/register")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(requestBody))
+    mockMvc
+        .perform(
+            post("/api/v1/users/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
         .andExpect(MockMvcResultMatchers.status().isCreated());
 
     PiggyBankUser expectedPiggyBankUser = new PiggyBankUser();

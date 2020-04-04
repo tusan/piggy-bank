@@ -3,8 +3,6 @@ package com.piggybank.service.expenses.dto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -14,15 +12,10 @@ import java.util.List;
 import static com.piggybank.service.expenses.dto.ExpenseType.HOUSE;
 import static com.piggybank.service.expenses.dto.ExpenseType.MOTORBIKE;
 import static java.time.Month.NOVEMBER;
+import static org.junit.Assert.assertEquals;
 
 public class ExpenseDtoTest {
-  private ObjectMapper mapper;
-
-  @Before
-  public void setUp() {
-    mapper = new ObjectMapper();
-    mapper.registerModule(new JavaTimeModule());
-  }
+  private static ObjectMapper mapper = new ObjectMapper();
 
   @Test
   public void shouldBuildAnExpense() throws Exception {
@@ -34,7 +27,7 @@ public class ExpenseDtoTest {
             + "        \"description\": \"Fuel\"\n"
             + "    }";
 
-    Assert.assertEquals(
+    assertEquals(
         ExpenseDto.newBuilder()
             .setDate(LocalDate.of(2018, NOVEMBER, 27))
             .setDescription("Fuel")
@@ -53,7 +46,7 @@ public class ExpenseDtoTest {
             + "        \"amount\" : \"24.5\""
             + "    }";
 
-    Assert.assertEquals(
+    assertEquals(
         ExpenseDto.newBuilder()
             .setDate(LocalDate.of(2018, NOVEMBER, 27))
             .setType(MOTORBIKE)
@@ -95,7 +88,10 @@ public class ExpenseDtoTest {
                 .setAmount(400)
                 .build());
 
-    Assert.assertEquals(
-        expected, mapper.readValue(initialJson, new TypeReference<List<ExpenseDto>>() {}));
+    assertEquals(expected, mapper.readValue(initialJson, new TypeReference<List<ExpenseDto>>() {}));
+  }
+
+  static {
+    mapper.registerModule(new JavaTimeModule());
   }
 }

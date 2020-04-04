@@ -24,9 +24,13 @@ public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticati
       final String username, final UsernamePasswordAuthenticationToken authentication)
       throws AuthenticationException {
     return Optional.ofNullable(authentication.getCredentials())
-        .flatMap(token -> authenticationService
+        .flatMap(
+            token ->
+                authenticationService
                     .authenticateByToken(String.valueOf(token))
-                    .map(user -> User.builder()
+                    .map(
+                        user ->
+                            User.builder()
                                 .username(user.getUsername())
                                 .password(user.getPassword())
                                 .roles("user")

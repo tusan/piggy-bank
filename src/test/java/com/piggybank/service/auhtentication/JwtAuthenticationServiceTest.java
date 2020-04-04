@@ -18,17 +18,13 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JwtAuthenticationServiceTest {
-  @InjectMocks
-  private JwtAuthenticationService sut;
+  @InjectMocks private JwtAuthenticationService sut;
 
-  @Mock
-  private JpaUserRepository userRepository;
+  @Mock private JpaUserRepository userRepository;
 
-  @Mock
-  private PasswordEncoder passwordEncoder;
+  @Mock private PasswordEncoder passwordEncoder;
 
-  @Mock
-  private TokenGenerator tokenGenerator;
+  @Mock private TokenGenerator tokenGenerator;
 
   @Before
   public void setUp() {
@@ -43,11 +39,12 @@ public class JwtAuthenticationServiceTest {
     Optional<PiggyBankUser> user = sut.login("username", "password");
 
     assertTrue(user.isPresent());
-    user.ifPresent(u -> {
-      assertEquals("username", u.getUsername());
-      assertEquals("password", u.getPassword());
-      assertEquals("token", u.getToken());
-    });
+    user.ifPresent(
+        u -> {
+          assertEquals("username", u.getUsername());
+          assertEquals("password", u.getPassword());
+          assertEquals("token", u.getToken());
+        });
 
     verify(userRepository).save(testUser());
   }
@@ -78,11 +75,12 @@ public class JwtAuthenticationServiceTest {
     Optional<PiggyBankUser> user = sut.authenticateByToken("token");
 
     assertTrue(user.isPresent());
-    user.ifPresent(u -> {
-      assertEquals("username", u.getUsername());
-      assertEquals("password", u.getPassword());
-      assertEquals("token", u.getToken());
-    });
+    user.ifPresent(
+        u -> {
+          assertEquals("username", u.getUsername());
+          assertEquals("password", u.getPassword());
+          assertEquals("token", u.getToken());
+        });
   }
 
   @Test

@@ -20,7 +20,8 @@ class ExpensesController {
   private final IExpensesService expenseRepository;
   private final PrincipalProvider principalProvider;
 
-  ExpensesController(final IExpensesService expenseRepository, final PrincipalProvider principalProvider) {
+  ExpensesController(
+      final IExpensesService expenseRepository, final PrincipalProvider principalProvider) {
     this.expenseRepository = expenseRepository;
     this.principalProvider = principalProvider;
   }
@@ -37,8 +38,8 @@ class ExpensesController {
         Strings.isBlank(dateEnd) ? null : LocalDate.parse(dateEnd, YYYY_MM_DD);
 
     final List<ExpenseDto> result =
-        expenseRepository.find(IExpensesService.Query
-                .builder(principalProvider.getLoggedUser())
+        expenseRepository.find(
+            IExpensesService.Query.builder(principalProvider.getLoggedUser())
                 .setDateStart(startDate)
                 .setDateEnd(endDate)
                 .build());

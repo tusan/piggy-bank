@@ -10,14 +10,14 @@ import java.util.Optional;
 
 public interface IExpensesService {
   List<ExpenseDto> find(Query query);
+
   Optional<Long> save(ExpenseDto expenseDto);
 
   @AutoValue
   abstract class Query {
 
     public static Builder builder(final String owner) {
-      return new AutoValue_IExpensesService_Query.Builder()
-          .setOwner(owner);
+      return new AutoValue_IExpensesService_Query.Builder().setOwner(owner);
     }
 
     @Nullable
