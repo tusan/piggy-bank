@@ -9,7 +9,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 
@@ -17,6 +16,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static com.piggybank.security.ValidAuthenticationToken.unauthorizedFromToken;
 import static com.piggybank.security.TokenAuthenticationFilter.AUTHORIZATION;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,8 +46,7 @@ public class TokenAuthenticationFilterTest {
 
   @Test
   public void shouldSetTheAuthenticationObjectIfTokenIsInRequestHeader() throws Exception {
-    when(authenticationProvider.authenticate(
-            new UsernamePasswordAuthenticationToken("a token", "a token")))
+    when(authenticationProvider.authenticate(unauthorizedFromToken("a token")))
         .thenReturn(authentication);
 
     when(request.getHeader(AUTHORIZATION)).thenReturn("a token");

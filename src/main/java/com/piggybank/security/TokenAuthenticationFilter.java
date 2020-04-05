@@ -2,7 +2,6 @@ package com.piggybank.security;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -37,10 +36,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
       final FilterChain filterChain)
       throws ServletException, IOException {
 
-    final String token = resolveAuthenticationToken(request);
-
     final Authentication auth =
-        authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(token, token));
+        resolveAuthenticationToken(request)
+            .map(ValidAuthenticationToken::unauthorizedFromToken)
+            .map(authenticationProvider::authenticate)
+            .orElseThrow(() -> new BadCredentialsException("Missing authentication token."));
 
     LOGGER.info(String.format("User properly logged. [user=%s]", auth.getPrincipal()));
 
@@ -48,9 +48,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     filterChain.doFilter(request, response);
   }
 
-  private String resolveAuthenticationToken(HttpServletRequest request) {
+  private Optional<String> resolveAuthenticationToken(HttpServletRequest request) {
     return Optional.ofNullable(request.getHeader(AUTHORIZATION))
-        .map(v -> v.replace(BEARER, "").trim())
-        .orElseThrow(() -> new BadCredentialsException("Missing authentication token."));
+        .map(v -> v.replace(BEARER, "").trim());
   }
 }
