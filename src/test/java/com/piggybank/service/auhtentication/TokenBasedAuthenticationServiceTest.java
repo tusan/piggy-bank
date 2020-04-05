@@ -115,10 +115,21 @@ public class TokenBasedAuthenticationServiceTest {
     verify(userRepository, never()).save(any());
   }
 
+  @Test
+  public void shouldEncodePasswordAndSaveNewUser() {
+    when(passwordEncoder.encode("password")).thenReturn("encoded-password");
+    sut.add(testUser());
+    verify(userRepository).save(testUser("encoded-password"));
+  }
+
   private PiggyBankUser testUser() {
+    return testUser("password");
+  }
+
+  private PiggyBankUser testUser(final String password) {
     PiggyBankUser expectedPiggyBankUser = new PiggyBankUser();
     expectedPiggyBankUser.setUsername("username");
-    expectedPiggyBankUser.setPassword("password");
+    expectedPiggyBankUser.setPassword(password);
     expectedPiggyBankUser.setToken("token");
     return expectedPiggyBankUser;
   }

@@ -10,4 +10,6 @@ public interface AuthenticationService {
   Optional<PiggyBankUser> retrieveForToken(String token);
 
   void revoke(String username);
+
+  void add(PiggyBankUser addedUser);
 }

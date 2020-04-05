@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -41,8 +40,7 @@ public class TokenAuthenticationProviderTest {
 
   @Test(expected = UsernameNotFoundException.class)
   public void shouldThrowExceptionForInvalidToken() {
-    when(authenticationService.retrieveForToken(Mockito.anyString()))
-        .thenReturn(Optional.empty());
+    when(authenticationService.retrieveForToken(Mockito.anyString())).thenReturn(Optional.empty());
 
     sut.retrieveUser("invalid_user", new UsernamePasswordAuthenticationToken("token", "token"));
   }

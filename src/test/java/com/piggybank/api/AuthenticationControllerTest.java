@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.piggybank.service.auhtentication.AuthenticationService;
 import com.piggybank.service.auhtentication.dto.LoggedUserDto;
-import com.piggybank.service.auhtentication.repository.JpaUserRepository;
 import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +14,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -32,17 +30,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @RunWith(MockitoJUnitRunner.class)
 public class AuthenticationControllerTest {
 
-  @InjectMocks private AuthenticationController sut;
-
-  @Mock private AuthenticationService authenticationService;
-
-  @Mock private JpaUserRepository userRepository;
-
-  @Mock private PasswordEncoder passwordEncoder;
-
-  private MockMvc mockMvc;
-
   private final ObjectMapper mapper = new ObjectMapper();
+  @InjectMocks private AuthenticationController sut;
+  @Mock private AuthenticationService authenticationService;
+  private MockMvc mockMvc;
 
   @Before
   public void setUp() {
@@ -110,8 +101,6 @@ public class AuthenticationControllerTest {
     String requestBody =
         "{\n" + "    \"username\": \"username\",\n" + "    \"password\": \"password\"\n" + "}";
 
-    when(passwordEncoder.encode(anyString())).thenReturn("encoded_password");
-
     mockMvc
         .perform(
             post("/api/v1/users/register")
@@ -119,18 +108,16 @@ public class AuthenticationControllerTest {
                 .content(requestBody))
         .andExpect(MockMvcResultMatchers.status().isCreated());
 
-    PiggyBankUser expectedPiggyBankUser = new PiggyBankUser();
-    expectedPiggyBankUser.setUsername("username");
-    expectedPiggyBankUser.setPassword("encoded_password");
+    PiggyBankUser addedUser = new PiggyBankUser();
+    addedUser.setUsername("username");
+    addedUser.setPassword("password");
 
-    verify(userRepository).save(expectedPiggyBankUser);
+    verify(authenticationService).add(addedUser);
   }
 
   @Test
   public void shouldLogout() throws Exception {
     String requestBody = "{\"username\": \"username\"}";
-
-    when(passwordEncoder.encode(anyString())).thenReturn("encoded_password");
 
     mockMvc
         .perform(
@@ -140,6 +127,5 @@ public class AuthenticationControllerTest {
         .andExpect(MockMvcResultMatchers.status().isNoContent());
 
     verify(authenticationService).revoke("username");
-
   }
 }

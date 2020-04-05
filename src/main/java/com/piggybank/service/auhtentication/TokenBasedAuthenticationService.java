@@ -51,4 +51,10 @@ final class TokenBasedAuthenticationService implements AuthenticationService {
               userRepository.save(user);
             });
   }
+
+  @Override
+  public void add(final PiggyBankUser addedUser) {
+    addedUser.setPassword(passwordEncoder.encode(addedUser.getPassword()));
+    userRepository.save(addedUser);
+  }
 }

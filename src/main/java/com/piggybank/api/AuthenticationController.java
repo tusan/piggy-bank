@@ -5,12 +5,10 @@ import com.piggybank.service.auhtentication.dto.LoggedUserDto;
 import com.piggybank.service.auhtentication.dto.LoginRequestDto;
 import com.piggybank.service.auhtentication.dto.LogoutDto;
 import com.piggybank.service.auhtentication.dto.RegistrationDto;
-import com.piggybank.service.auhtentication.repository.JpaUserRepository;
 import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import static com.piggybank.service.auhtentication.dto.LoggedUserDto.forUsernameAndToken;
@@ -21,16 +19,9 @@ import static com.piggybank.service.auhtentication.dto.LoggedUserDto.forUsername
 class AuthenticationController {
 
   private final AuthenticationService authenticationService;
-  private final JpaUserRepository userRepository;
-  private final PasswordEncoder passwordEncoder;
 
-  public AuthenticationController(
-      final AuthenticationService authenticationService,
-      final JpaUserRepository userRepository,
-      final PasswordEncoder passwordEncoder) {
+  public AuthenticationController(final AuthenticationService authenticationService) {
     this.authenticationService = authenticationService;
-    this.userRepository = userRepository;
-    this.passwordEncoder = passwordEncoder;
   }
 
   @PostMapping("authorize")
@@ -45,10 +36,11 @@ class AuthenticationController {
 
   @PostMapping("register")
   public ResponseEntity<Void> register(@RequestBody final RegistrationDto registrationDto) {
-    PiggyBankUser newPiggyBankUser = new PiggyBankUser();
+    final PiggyBankUser newPiggyBankUser = new PiggyBankUser();
     newPiggyBankUser.setUsername(registrationDto.username());
-    newPiggyBankUser.setPassword(passwordEncoder.encode(registrationDto.password()));
-    userRepository.save(newPiggyBankUser);
+    newPiggyBankUser.setPassword(registrationDto.password());
+
+    authenticationService.add(newPiggyBankUser);
 
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
