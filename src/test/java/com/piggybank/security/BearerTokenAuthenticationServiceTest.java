@@ -12,15 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-import static com.piggybank.security.BearerRememberMeService.AUTHORIZATION;
+import static com.piggybank.security.BearerTokenAuthenticationService.AUTHORIZATION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BearerRememberMeServiceTest {
-  @InjectMocks private BearerRememberMeService sut;
+public class BearerTokenAuthenticationServiceTest {
+  @InjectMocks private BearerTokenAuthenticationService sut;
 
   @Mock private HttpServletRequest request;
 
@@ -34,8 +34,8 @@ public class BearerRememberMeServiceTest {
     when(request.getHeader(AUTHORIZATION)).thenReturn("a token");
 
     final Authentication actual = sut.autoLogin(request, response);
-    final ValidAuthenticationToken expected =
-        ValidAuthenticationToken.authorizedUser(testUser());
+    final BearerTokenAuthentication expected =
+        BearerTokenAuthentication.authorizedUser(testUser());
 
     assertEquals(expected, actual);
   }

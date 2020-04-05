@@ -1,8 +1,6 @@
 package com.piggybank.security;
 
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.stereotype.Service;
 
@@ -12,15 +10,15 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
-public class BearerRememberMeService implements RememberMeServices, AuthenticationProvider {
-  private static final Logger LOGGER = Logger.getLogger(BearerRememberMeService.class.getName());
+public class BearerTokenAuthenticationService implements RememberMeServices {
+  private static final Logger LOGGER = Logger.getLogger(BearerTokenAuthenticationService.class.getName());
 
   static final String AUTHORIZATION = "Authorization";
   static final String BEARER = "Bearer";
 
   private final AuthenticationResolver authenticationResolver;
 
-  BearerRememberMeService(final AuthenticationResolver authenticationResolver) {
+  BearerTokenAuthenticationService(final AuthenticationResolver authenticationResolver) {
     this.authenticationResolver = authenticationResolver;
   }
 
@@ -30,7 +28,7 @@ public class BearerRememberMeService implements RememberMeServices, Authenticati
     return Optional.ofNullable(request.getHeader(AUTHORIZATION))
         .map(v -> v.replace(BEARER, "").trim())
         .flatMap(authenticationResolver::retrieveForToken)
-        .map(ValidAuthenticationToken::authorizedUser)
+        .map(BearerTokenAuthentication::authorizedUser)
         .orElse(null);
   }
 
@@ -45,15 +43,5 @@ public class BearerRememberMeService implements RememberMeServices, Authenticati
       HttpServletResponse response,
       Authentication successfulAuthentication) {
     LOGGER.info(String.format("User authenticated. [user=%s]", successfulAuthentication));
-  }
-
-  @Override
-  public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-    return authentication;
-  }
-
-  @Override
-  public boolean supports(Class<?> authentication) {
-    return ValidAuthenticationToken.class.isAssignableFrom(authentication);
   }
 }

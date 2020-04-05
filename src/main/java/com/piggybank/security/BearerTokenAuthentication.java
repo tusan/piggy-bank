@@ -7,16 +7,16 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import static java.util.Collections.singleton;
 
-public final class ValidAuthenticationToken extends AbstractAuthenticationToken {
+final class BearerTokenAuthentication extends AbstractAuthenticationToken {
   private static final GrantedAuthority USER_ROLE = new SimpleGrantedAuthority("USER");
 
   private final PiggyBankUser user;
 
-  static ValidAuthenticationToken authorizedUser(final PiggyBankUser user) {
-    return new ValidAuthenticationToken(user);
+  static BearerTokenAuthentication authorizedUser(final PiggyBankUser user) {
+    return new BearerTokenAuthentication(user);
   }
 
-  private ValidAuthenticationToken(final PiggyBankUser user) {
+  private BearerTokenAuthentication(final PiggyBankUser user) {
     super(singleton(USER_ROLE));
     this.user = user;
     setAuthenticated(true);
