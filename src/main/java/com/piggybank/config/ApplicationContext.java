@@ -21,7 +21,7 @@ public class ApplicationContext {
   @Bean
   AuthenticationResolver authenticationResolver(final JpaUserRepository userRepository) {
     return new AuthenticationResolver.PrincipalProvider(
-        userRepository, () -> SecurityContextHolder.getContext().getAuthentication());
+        userRepository, SecurityContextHolder::getContext);
   }
 
   @Bean

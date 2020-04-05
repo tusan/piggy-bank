@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -113,6 +112,7 @@ public class ExpensesControllerTest {
     expense.setDescription("test description");
     expense.setDate(date);
     expense.setAmount(22.57);
+    expense.setOwner(LOGGER_USER);
     return expense;
   }
 }

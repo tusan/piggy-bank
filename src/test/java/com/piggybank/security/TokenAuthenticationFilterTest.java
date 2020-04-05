@@ -1,50 +1,66 @@
 package com.piggybank.security;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.util.matcher.AnyRequestMatcher;
+import org.springframework.security.core.context.SecurityContext;
 
+import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import static com.piggybank.security.TokenAuthenticationFilter.AUTHORIZATION;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@RunWith(MockitoJUnitRunner.class)
 public class TokenAuthenticationFilterTest {
-  private TokenAuthenticationFilter sut;
+  @InjectMocks private TokenAuthenticationFilter sut;
 
-  private HttpServletRequest request;
+  @Mock private HttpServletRequest request;
+
+  @Mock private HttpServletResponse response;
+
+  @Mock private ISecurityContextHolder securityContextHolder;
+
+  @Mock private SecurityContext securityContext;
+
+  @Mock private AuthenticationProvider authenticationProvider;
+
+  @Mock private Authentication authentication;
+
+  @Mock private FilterChain filterChain;
 
   @Before
   public void setUp() {
-    sut = new TokenAuthenticationFilter(AnyRequestMatcher.INSTANCE);
-    request = Mockito.mock(HttpServletRequest.class);
+    when(securityContextHolder.getContext()).thenReturn(securityContext);
   }
 
   @Test
-  public void shouldReturnTheAuthenticationObjectIfTokenIsInRequestHeader() {
-    sut.setAuthenticationManager(new MockedAuthenticationManager());
-    Mockito.when(request.getHeader(Mockito.anyString())).thenReturn("Bearer token");
+  public void shouldSetTheAuthenticationObjectIfTokenIsInRequestHeader() throws Exception {
+    when(authenticationProvider.authenticate(
+            new UsernamePasswordAuthenticationToken("a token", "a token")))
+        .thenReturn(authentication);
 
-    Authentication auth = sut.attemptAuthentication(request, null);
+    when(request.getHeader(AUTHORIZATION)).thenReturn("a token");
 
-    Assert.assertEquals("token", auth.getCredentials());
-    Assert.assertEquals("token", auth.getPrincipal());
+    sut.doFilterInternal(request, response, filterChain);
+
+    verify(securityContext).setAuthentication(authentication);
+    verify(filterChain).doFilter(request, response);
   }
 
   @Test(expected = BadCredentialsException.class)
-  public void shouldThrowExceptionForMissingToken() {
-    Mockito.when(request.getHeader(Mockito.anyString())).thenReturn(null);
-
-    sut.attemptAuthentication(request, null);
-  }
-
-  static class MockedAuthenticationManager implements AuthenticationManager {
-    @Override
-    public Authentication authenticate(Authentication auth) throws AuthenticationException {
-      return auth;
-    }
+  public void shouldThrowExceptionForMissingToken() throws Exception {
+    when(request.getHeader(Mockito.anyString())).thenReturn(null);
+    sut.doFilterInternal(request, response, filterChain);
   }
 }

@@ -63,10 +63,6 @@ public final class Expense {
     this.amount = amount;
   }
 
-  public PiggyBankUser getOwner() {
-    return owner;
-  }
-
   public void setOwner(PiggyBankUser owner) {
     this.owner = owner;
   }

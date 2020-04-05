@@ -42,7 +42,7 @@ public class PiggyBankRegistrationDtoControllerTest {
 
   private MockMvc mockMvc;
 
-  private ObjectMapper mapper = new ObjectMapper();
+  private final ObjectMapper mapper = new ObjectMapper();
 
   @Before
   public void setUp() {

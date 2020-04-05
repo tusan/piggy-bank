@@ -1,25 +1,20 @@
 package com.piggybank.security;
 
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import javax.servlet.Filter;
-
-import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -33,7 +28,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   private static final RequestMatcher PROTECTED_URLS = new NegatedRequestMatcher(PUBLIC_URLS);
 
-  private final TokenAuthenticationProvider authenticationProvider;
+  private final AuthenticationProvider authenticationProvider;
 
   public SecurityConfiguration(TokenAuthenticationProvider authenticationProvider) {
     this.authenticationProvider = authenticationProvider;
@@ -56,7 +51,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/webjars/**");
-    ;
   }
 
   @Override
@@ -65,44 +59,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .sessionCreationPolicy(STATELESS)
         .and()
         .exceptionHandling()
-        .defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(FORBIDDEN), PROTECTED_URLS)
         .and()
-        .authenticationProvider(authenticationProvider)
-        .addFilterBefore(restAuthenticationFilter(), AnonymousAuthenticationFilter.class)
+        .addFilterBefore(
+            new TokenAuthenticationFilter(
+                authenticationProvider, SecurityContextHolder::getContext),
+            AnonymousAuthenticationFilter.class)
         .authorizeRequests()
         .anyRequest()
-        .authenticated()
-        .and()
-        .csrf()
-        .disable()
-        .formLogin()
-        .disable()
-        .httpBasic()
-        .disable()
-        .logout()
-        .disable();
-  }
+        .authenticated();
 
-  @Bean
-  FilterRegistrationBean<TokenAuthenticationFilter> disableAutoRegistration() {
-    FilterRegistrationBean<TokenAuthenticationFilter> registration =
-        new FilterRegistrationBean<>(new TokenAuthenticationFilter(PROTECTED_URLS));
-    registration.setEnabled(false);
-    return registration;
-  }
-
-  private Filter restAuthenticationFilter() throws Exception {
-    SimpleUrlAuthenticationSuccessHandler successHandler =
-        new SimpleUrlAuthenticationSuccessHandler();
-    successHandler.setRedirectStrategy(
-        (request, response, url) -> {
-          // DO NOTHING
-        });
-
-    TokenAuthenticationFilter filter = new TokenAuthenticationFilter(PROTECTED_URLS);
-
-    filter.setAuthenticationManager(authenticationManager());
-    filter.setAuthenticationSuccessHandler(successHandler);
-    return filter;
+    http.csrf().disable();
   }
 }

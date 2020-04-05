@@ -15,7 +15,7 @@ import static java.time.Month.NOVEMBER;
 import static org.junit.Assert.assertEquals;
 
 public class ExpenseDtoTest {
-  private static ObjectMapper mapper = new ObjectMapper();
+  private static final ObjectMapper mapper = new ObjectMapper();
 
   static {
     mapper.registerModule(new JavaTimeModule());

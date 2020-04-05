@@ -1,6 +1,7 @@
 package com.piggybank.api;
 
 import com.piggybank.security.AuthenticationResolver;
+import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
 import com.piggybank.service.expenses.dto.ExpenseDto;
 import com.piggybank.service.expenses.repository.Expense;
@@ -16,6 +17,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.piggybank.api.ExpensesController.ExpenseConverter.toEntity;
 
 @RestController
 @RequestMapping("api/v1/expenses")
@@ -69,7 +72,8 @@ class ExpensesController {
   @SecurityRequirement(name = "bearerToken")
   public ResponseEntity<Void> save(@RequestBody final ExpenseDto expenseDto) {
     try {
-      expenseRepository.save(ExpenseConverter.toEntity(expenseDto));
+      final PiggyBankUser owner = authenticationResolver.getLoggedUser();
+      expenseRepository.save(toEntity(expenseDto, owner));
       return ResponseEntity.status(HttpStatus.CREATED).build();
     } catch (final Exception e) {
       e.printStackTrace();
@@ -78,13 +82,14 @@ class ExpensesController {
   }
 
   static final class ExpenseConverter {
-    static Expense toEntity(final ExpenseDto expenseDto) {
+    static Expense toEntity(final ExpenseDto expenseDto, final PiggyBankUser owner) {
       final Expense exp = new Expense();
 
       exp.setType(expenseDto.type());
       exp.setDate(expenseDto.date());
       exp.setAmount(expenseDto.amount());
       exp.setDescription(expenseDto.description());
+      exp.setOwner(owner);
 
       return exp;
     }

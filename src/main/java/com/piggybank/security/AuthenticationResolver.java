@@ -11,17 +11,18 @@ public interface AuthenticationResolver {
 
   final class PrincipalProvider implements AuthenticationResolver {
     private final JpaUserRepository userRepository;
-    private final SecurityHolder securityHolder;
+    private final ISecurityContextHolder securityContextHolder;
 
     public PrincipalProvider(
-        final JpaUserRepository userRepository, final SecurityHolder securityHolder) {
+        final JpaUserRepository userRepository,
+        final ISecurityContextHolder securityContextHolder) {
       this.userRepository = userRepository;
-      this.securityHolder = securityHolder;
+      this.securityContextHolder = securityContextHolder;
     }
 
     @Override
     public PiggyBankUser getLoggedUser() {
-      final Authentication authentication = securityHolder.getAuthentication();
+      final Authentication authentication = securityContextHolder.getContext().getAuthentication();
       if (!(authentication instanceof AnonymousAuthenticationToken)) {
         return userRepository
             .findByUsername(authentication.getName())
