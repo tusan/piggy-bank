@@ -13,16 +13,17 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+class SecurityConfigs extends WebSecurityConfigurerAdapter {
   private final AuthenticationProvider authenticationProvider;
 
-  public SecurityConfiguration(AuthenticationProvider authenticationProvider) {
+  public SecurityConfigs(AuthenticationProvider authenticationProvider) {
     this.authenticationProvider = authenticationProvider;
   }
 
   @Override
   public void configure(WebSecurity web) {
-    web.ignoring().antMatchers("/api/v1/users/**", "/v3/api-docs/**", "/swagger-ui/**");
+    web.ignoring()
+        .antMatchers("/api/v1/users/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html");
   }
 
   @Override

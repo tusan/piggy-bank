@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.security.Principal;
 import java.time.LocalDate;
 
 import static org.mockito.Mockito.*;
@@ -39,13 +40,15 @@ public class ExpensesControllerTest {
   @InjectMocks private ExpensesController sut;
   @Mock private ExpensesService expenseRepository;
   @Mock private AuthenticationResolver authenticationResolver;
+  @Mock private Principal principal;
   private MockMvc mockMvc;
 
   @Before
   public void setUp() {
     mockMvc = MockMvcBuilders.standaloneSetup(sut).setMessageConverters(messageConverter).build();
 
-    when(authenticationResolver.getLoggedUser()).thenReturn(LOGGER_USER);
+    when(authenticationResolver.getLoggedUser("username")).thenReturn(LOGGER_USER);
+    when(principal.getName()).thenReturn("username");
   }
 
   @Test
@@ -54,7 +57,8 @@ public class ExpensesControllerTest {
         .perform(
             MockMvcRequestBuilders.get("/api/v1/expenses")
                 .param("date-start", "2018-11-07")
-                .param("date-end", "2018-12-07"))
+                .param("date-end", "2018-12-07")
+                .principal(principal))
         .andExpect(status().isOk())
         .andReturn();
 
@@ -77,7 +81,11 @@ public class ExpensesControllerTest {
             + "}";
 
     mockMvc
-        .perform(post("/api/v1/expenses").contentType(APPLICATION_JSON).content(json))
+        .perform(
+            post("/api/v1/expenses")
+                .contentType(APPLICATION_JSON)
+                .content(json)
+                .principal(principal))
         .andExpect(status().isCreated())
         .andReturn();
 
@@ -99,7 +107,11 @@ public class ExpensesControllerTest {
         .save(any(Expense.class));
 
     mockMvc
-        .perform(post("/api/v1/expenses").contentType(APPLICATION_JSON).content(json))
+        .perform(
+            post("/api/v1/expenses")
+                .contentType(APPLICATION_JSON)
+                .content(json)
+                .principal(principal))
         .andExpect(status().isInternalServerError())
         .andReturn();
 
