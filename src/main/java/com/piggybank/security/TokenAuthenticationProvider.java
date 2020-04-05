@@ -7,6 +7,7 @@ import org.springframework.security.authentication.dao.AbstractUserDetailsAuthen
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -27,7 +28,7 @@ public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticati
         .flatMap(
             token ->
                 authenticationService
-                    .authenticateByToken(String.valueOf(token))
+                    .retrieveForToken(String.valueOf(token))
                     .map(
                         user ->
                             User.builder()
@@ -35,7 +36,7 @@ public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticati
                                 .password(user.getPassword())
                                 .roles("user")
                                 .build()))
-        .orElseThrow(() -> new BadCredentialsException("Invalid authentication"));
+        .orElseThrow(() -> new UsernameNotFoundException("Invalid authentication"));
   }
 
   @Override

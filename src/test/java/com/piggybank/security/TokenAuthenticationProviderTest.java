@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class TokenAuthenticationProviderTest {
     piggyBankUser.setUsername("username");
     piggyBankUser.setPassword("password");
 
-    when(authenticationService.authenticateByToken(Mockito.anyString()))
+    when(authenticationService.retrieveForToken(Mockito.anyString()))
         .thenReturn(Optional.of(piggyBankUser));
 
     final UserDetails userDetails =
@@ -38,9 +39,9 @@ public class TokenAuthenticationProviderTest {
     Assert.assertEquals("password", userDetails.getPassword());
   }
 
-  @Test(expected = BadCredentialsException.class)
+  @Test(expected = UsernameNotFoundException.class)
   public void shouldThrowExceptionForInvalidToken() {
-    when(authenticationService.authenticateByToken(Mockito.anyString()))
+    when(authenticationService.retrieveForToken(Mockito.anyString()))
         .thenReturn(Optional.empty());
 
     sut.retrieveUser("invalid_user", new UsernamePasswordAuthenticationToken("token", "token"));

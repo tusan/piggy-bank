@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-final class JwtAuthenticationService implements AuthenticationService {
+final class TokenBasedAuthenticationService implements AuthenticationService {
   private final JpaUserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final TokenGenerator tokenGenerator;
 
-  public JwtAuthenticationService(
+  public TokenBasedAuthenticationService(
       final JpaUserRepository userRepository,
       final PasswordEncoder passwordEncoder,
       final TokenGenerator tokenGenerator) {
@@ -24,7 +24,7 @@ final class JwtAuthenticationService implements AuthenticationService {
   }
 
   @Override
-  public Optional<PiggyBankUser> login(final String username, final String password) {
+  public Optional<PiggyBankUser> authenticate(final String username, final String password) {
     return userRepository
         .findByUsername(username)
         .filter(user -> passwordEncoder.matches(password, user.getPassword()))
@@ -37,12 +37,12 @@ final class JwtAuthenticationService implements AuthenticationService {
   }
 
   @Override
-  public Optional<PiggyBankUser> authenticateByToken(final String token) {
+  public Optional<PiggyBankUser> retrieveForToken(final String token) {
     return userRepository.findByToken(token);
   }
 
   @Override
-  public void logout(final String username) {
+  public void revoke(final String username) {
     userRepository
         .findByUsername(username)
         .ifPresent(

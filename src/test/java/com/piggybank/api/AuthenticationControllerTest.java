@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PiggyBankRegistrationDtoControllerTest {
+public class AuthenticationControllerTest {
 
   @InjectMocks private AuthenticationController sut;
 
@@ -64,7 +64,7 @@ public class PiggyBankRegistrationDtoControllerTest {
     final String requestBody =
         "{\n" + "    \"username\": \"username\",\n" + "    \"password\": \"password\"\n" + "}";
 
-    when(authenticationService.login(anyString(), anyString()))
+    when(authenticationService.authenticate(anyString(), anyString()))
         .thenReturn(Optional.of(piggyBankUser));
 
     final MvcResult response =
@@ -76,7 +76,7 @@ public class PiggyBankRegistrationDtoControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn();
 
-    verify(authenticationService).login("username", "password");
+    verify(authenticationService).authenticate("username", "password");
 
     final LoggedUserDto actual =
         mapper.readValue(response.getResponse().getContentAsByteArray(), LoggedUserDto.class);
@@ -87,7 +87,7 @@ public class PiggyBankRegistrationDtoControllerTest {
 
   @Test
   public void shouldThrowBadCredentialExceptionIfLoginFails() {
-    when(authenticationService.login(anyString(), anyString())).thenReturn(Optional.empty());
+    when(authenticationService.authenticate(anyString(), anyString())).thenReturn(Optional.empty());
 
     final String requestBody =
         "{\n" + "    \"username\": \"username\",\n" + "    \"password\": \"password\"\n" + "}";
@@ -124,5 +124,22 @@ public class PiggyBankRegistrationDtoControllerTest {
     expectedPiggyBankUser.setPassword("encoded_password");
 
     verify(userRepository).save(expectedPiggyBankUser);
+  }
+
+  @Test
+  public void shouldLogout() throws Exception {
+    String requestBody = "{\"username\": \"username\"}";
+
+    when(passwordEncoder.encode(anyString())).thenReturn("encoded_password");
+
+    mockMvc
+        .perform(
+            post("/api/v1/users/revoke")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+    verify(authenticationService).revoke("username");
+
   }
 }

@@ -5,9 +5,9 @@ import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import java.util.Optional;
 
 public interface AuthenticationService {
-  Optional<PiggyBankUser> login(String username, String password);
+  Optional<PiggyBankUser> authenticate(String username, String password);
 
-  Optional<PiggyBankUser> authenticateByToken(String token);
+  Optional<PiggyBankUser> retrieveForToken(String token);
 
-  void logout(String username);
+  void revoke(String username);
 }

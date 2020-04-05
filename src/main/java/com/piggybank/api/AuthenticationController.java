@@ -3,6 +3,7 @@ package com.piggybank.api;
 import com.piggybank.service.auhtentication.AuthenticationService;
 import com.piggybank.service.auhtentication.dto.LoggedUserDto;
 import com.piggybank.service.auhtentication.dto.LoginRequestDto;
+import com.piggybank.service.auhtentication.dto.LogoutDto;
 import com.piggybank.service.auhtentication.dto.RegistrationDto;
 import com.piggybank.service.auhtentication.repository.JpaUserRepository;
 import com.piggybank.service.auhtentication.repository.PiggyBankUser;
@@ -36,7 +37,7 @@ class AuthenticationController {
   public ResponseEntity<LoggedUserDto> authorize(
       @RequestBody final LoginRequestDto loginRequestDto) {
     return authenticationService
-        .login(loginRequestDto.username(), loginRequestDto.password())
+        .authenticate(loginRequestDto.username(), loginRequestDto.password())
         .map(user -> forUsernameAndToken(user.getUsername(), user.getToken()))
         .map(ResponseEntity::ok)
         .orElseThrow(() -> new BadCredentialsException("wrong credential for user"));
@@ -50,5 +51,11 @@ class AuthenticationController {
     userRepository.save(newPiggyBankUser);
 
     return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
+
+  @PostMapping("revoke")
+  public ResponseEntity<Void> revoke(@RequestBody final LogoutDto logoutDto) {
+    authenticationService.revoke(logoutDto.username());
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 }

@@ -17,8 +17,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class JwtAuthenticationServiceTest {
-  @InjectMocks private JwtAuthenticationService sut;
+public class TokenBasedAuthenticationServiceTest {
+  @InjectMocks private TokenBasedAuthenticationService sut;
 
   @Mock private JpaUserRepository userRepository;
 
@@ -36,7 +36,7 @@ public class JwtAuthenticationServiceTest {
     when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
     when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(testUser()));
 
-    Optional<PiggyBankUser> user = sut.login("username", "password");
+    Optional<PiggyBankUser> user = sut.authenticate("username", "password");
 
     assertTrue(user.isPresent());
     user.ifPresent(
@@ -54,7 +54,7 @@ public class JwtAuthenticationServiceTest {
     when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
     when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(testUser()));
 
-    Optional<PiggyBankUser> user = sut.login("username", "wrong_password");
+    Optional<PiggyBankUser> user = sut.authenticate("username", "wrong_password");
 
     assertFalse(user.isPresent());
   }
@@ -63,7 +63,7 @@ public class JwtAuthenticationServiceTest {
   public void shouldReturnEmptyWhenUsernameIsWrong() {
     when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
 
-    Optional<PiggyBankUser> user = sut.login("wrong_username", "password");
+    Optional<PiggyBankUser> user = sut.authenticate("wrong_username", "password");
 
     assertFalse(user.isPresent());
   }
@@ -72,7 +72,7 @@ public class JwtAuthenticationServiceTest {
   public void shouldReturnTheUserIfFoundByToken() {
     when(userRepository.findByToken(anyString())).thenReturn(Optional.of(testUser()));
 
-    Optional<PiggyBankUser> user = sut.authenticateByToken("token");
+    Optional<PiggyBankUser> user = sut.retrieveForToken("token");
 
     assertTrue(user.isPresent());
     user.ifPresent(
@@ -87,7 +87,7 @@ public class JwtAuthenticationServiceTest {
   public void shouldReturnEmptyIfNoUserFoundByToken() {
     when(userRepository.findByToken(anyString())).thenReturn(Optional.empty());
 
-    Optional<PiggyBankUser> user = sut.authenticateByToken("token");
+    Optional<PiggyBankUser> user = sut.retrieveForToken("token");
 
     assertFalse(user.isPresent());
   }
@@ -100,7 +100,7 @@ public class JwtAuthenticationServiceTest {
     expectedPiggyBankUser.setUsername("username");
     expectedPiggyBankUser.setPassword("password");
 
-    sut.logout("username");
+    sut.revoke("username");
 
     verify(userRepository).save(expectedPiggyBankUser);
   }
@@ -109,7 +109,7 @@ public class JwtAuthenticationServiceTest {
   public void shouldDoNothingWhenLoggingOutButUserIsMissing() {
     when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
 
-    sut.logout("username");
+    sut.revoke("username");
 
     verify(userRepository).findByUsername("username");
     verify(userRepository, never()).save(any());
