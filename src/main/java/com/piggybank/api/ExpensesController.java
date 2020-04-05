@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,7 +44,8 @@ class ExpensesController {
       @Parameter(example = "2020-03-27") @RequestParam(value = "date-start", required = false)
           final String dateStart,
       @Parameter(example = "2020-03-30") @RequestParam(value = "date-end", required = false)
-          final String dateEnd) {
+          final String dateEnd,
+      final Principal principal) {
 
     final LocalDate startDate =
         isBlank(dateStart) ? null : LocalDate.parse(dateStart, DATE_TIME_FORMATTER);
@@ -54,7 +56,8 @@ class ExpensesController {
     final List<ExpenseDto> result =
         expenseRepository
             .find(
-                ExpensesService.Query.builder(authenticationResolver.getLoggedUser())
+                ExpensesService.Query.builder(
+                        authenticationResolver.getLoggedUser(principal.getName()))
                     .setDateStart(startDate)
                     .setDateEnd(endDate)
                     .build())
@@ -67,9 +70,10 @@ class ExpensesController {
 
   @PostMapping
   @SecurityRequirement(name = "bearerToken")
-  public ResponseEntity<Void> save(@RequestBody final ExpenseDto expenseDto) {
+  public ResponseEntity<Void> save(
+      @RequestBody final ExpenseDto expenseDto, final Principal principal) {
     try {
-      final PiggyBankUser owner = authenticationResolver.getLoggedUser();
+      final PiggyBankUser owner = authenticationResolver.getLoggedUser(principal.getName());
       expenseRepository.save(toEntity(expenseDto, owner));
       return ResponseEntity.status(HttpStatus.CREATED).build();
     } catch (final Exception e) {
