@@ -13,12 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.piggybank.api.ExpensesController.ExpenseConverter.toEntity;
-import static com.piggybank.config.Constants.INPUT_DATE_FORMAT;
+import static com.piggybank.config.Environment.DATE_TIME_FORMATTER;
 import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.HTTP;
 import static org.apache.logging.log4j.util.Strings.isBlank;
 
@@ -27,9 +26,6 @@ import static org.apache.logging.log4j.util.Strings.isBlank;
 @SecurityScheme(name = "bearerToken", type = HTTP, scheme = "bearer", bearerFormat = "JWT")
 @CrossOrigin
 class ExpensesController {
-
-  private static final DateTimeFormatter YYYY_MM_DD =
-      DateTimeFormatter.ofPattern(INPUT_DATE_FORMAT);
 
   private final ExpensesService expenseRepository;
   private final AuthenticationResolver authenticationResolver;
@@ -49,9 +45,11 @@ class ExpensesController {
       @Parameter(example = "2020-03-30") @RequestParam(value = "date-end", required = false)
           final String dateEnd) {
 
-    final LocalDate startDate = isBlank(dateStart) ? null : LocalDate.parse(dateStart, YYYY_MM_DD);
+    final LocalDate startDate =
+        isBlank(dateStart) ? null : LocalDate.parse(dateStart, DATE_TIME_FORMATTER);
 
-    final LocalDate endDate = isBlank(dateEnd) ? null : LocalDate.parse(dateEnd, YYYY_MM_DD);
+    final LocalDate endDate =
+        isBlank(dateEnd) ? null : LocalDate.parse(dateEnd, DATE_TIME_FORMATTER);
 
     final List<ExpenseDto> result =
         expenseRepository

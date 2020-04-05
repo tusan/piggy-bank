@@ -10,7 +10,7 @@ import com.google.auto.value.AutoValue;
 import javax.annotation.Nullable;
 import java.time.LocalDate;
 
-import static com.piggybank.config.Constants.INPUT_DATE_FORMAT;
+import static com.piggybank.config.Environment.INPUT_DATE_FORMAT;
 
 @AutoValue
 @JsonDeserialize(builder = ExpenseDto.Builder.class)
