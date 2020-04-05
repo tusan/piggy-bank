@@ -1,6 +1,5 @@
 package com.piggybank.security;
 
-import com.piggybank.service.auhtentication.AuthenticationService;
 import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
-import static com.piggybank.security.ValidAuthenticationToken.unauthorizedFromToken;
+import static com.piggybank.security.UnauthorizedAuthenticationToken.unauthorizedFromToken;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -22,7 +21,7 @@ import static org.mockito.Mockito.when;
 public class TokenAuthenticationProviderTest {
   @InjectMocks private TokenAuthenticationProvider sut;
 
-  @Mock private AuthenticationService authenticationService;
+  @Mock private AuthenticationResolver authenticationService;
 
   @Test
   public void shouldReturnTheAuthenticatedUserForValidToken() {

@@ -14,12 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.security.Principal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -40,15 +41,16 @@ public class ExpensesControllerTest {
   @InjectMocks private ExpensesController sut;
   @Mock private ExpensesService expenseRepository;
   @Mock private AuthenticationResolver authenticationResolver;
-  @Mock private Principal principal;
+  @Mock private Authentication principal;
+
   private MockMvc mockMvc;
 
   @Before
   public void setUp() {
     mockMvc = MockMvcBuilders.standaloneSetup(sut).setMessageConverters(messageConverter).build();
 
-    when(authenticationResolver.getLoggedUser("username")).thenReturn(LOGGER_USER);
-    when(principal.getName()).thenReturn("username");
+    when(authenticationResolver.retrieveForToken("username")).thenReturn(Optional.of(LOGGER_USER));
+    when(principal.getCredentials()).thenReturn("username");
   }
 
   @Test

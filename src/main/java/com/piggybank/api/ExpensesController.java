@@ -8,25 +8,35 @@ import com.piggybank.service.expenses.repository.Expense;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.piggybank.api.ExpensesController.ExpenseConverter.toEntity;
 import static com.piggybank.config.Environment.DATE_TIME_FORMATTER;
 import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.HTTP;
+import static java.util.Collections.emptyList;
+import static java.util.logging.Level.SEVERE;
 import static org.apache.logging.log4j.util.Strings.isBlank;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.status;
 
 @RestController
 @RequestMapping("api/v1/expenses")
 @SecurityScheme(name = "bearerToken", type = HTTP, scheme = "bearer", bearerFormat = "JWT")
 @CrossOrigin
 class ExpensesController {
+  private static final Logger LOGGER = Logger.getLogger(ExpensesController.class.getName());
 
   private final ExpensesService expenseRepository;
   private final AuthenticationResolver authenticationResolver;
@@ -45,7 +55,41 @@ class ExpensesController {
           final String dateStart,
       @Parameter(example = "2020-03-30") @RequestParam(value = "date-end", required = false)
           final String dateEnd,
-      final Principal principal) {
+      final Authentication principal) {
+
+    return authenticationResolver
+        .retrieveForToken(String.valueOf(principal.getCredentials()))
+        .map(buildQueryObject(dateStart, dateEnd))
+        .map(this::associatedExpenses)
+        .map(ResponseEntity::ok)
+        .orElseGet(() -> ok(emptyList()));
+  }
+
+  @PostMapping
+  @SecurityRequirement(name = "bearerToken")
+  public ResponseEntity<Void> save(
+      @RequestBody final ExpenseDto expenseDto, final Authentication principal) {
+    return authenticationResolver
+        .retrieveForToken(principal.getCredentials().toString())
+        .map(owner -> toEntity(expenseDto, owner))
+        .flatMap(trySave())
+        .orElseGet(() -> status(INTERNAL_SERVER_ERROR).build());
+  }
+
+  private Function<Expense, Optional<ResponseEntity<Void>>> trySave() {
+    return entity -> {
+      try {
+        expenseRepository.save(entity);
+        return Optional.of(status(CREATED).build());
+      } catch (Exception e) {
+        LOGGER.log(SEVERE, String.format("Error while saving entity [entity=%s]", entity), e);
+        return Optional.empty();
+      }
+    };
+  }
+
+  private Function<PiggyBankUser, ExpensesService.Query> buildQueryObject(
+      final String dateStart, final String dateEnd) {
 
     final LocalDate startDate =
         isBlank(dateStart) ? null : LocalDate.parse(dateStart, DATE_TIME_FORMATTER);
@@ -53,33 +97,14 @@ class ExpensesController {
     final LocalDate endDate =
         isBlank(dateEnd) ? null : LocalDate.parse(dateEnd, DATE_TIME_FORMATTER);
 
-    final List<ExpenseDto> result =
-        expenseRepository
-            .find(
-                ExpensesService.Query.builder(
-                        authenticationResolver.getLoggedUser(principal.getName()))
-                    .setDateStart(startDate)
-                    .setDateEnd(endDate)
-                    .build())
-            .stream()
-            .map(ExpenseConverter::toDto)
-            .collect(Collectors.toList());
-
-    return ResponseEntity.ok(result);
+    return owner ->
+        ExpensesService.Query.builder(owner).setDateStart(startDate).setDateEnd(endDate).build();
   }
 
-  @PostMapping
-  @SecurityRequirement(name = "bearerToken")
-  public ResponseEntity<Void> save(
-      @RequestBody final ExpenseDto expenseDto, final Principal principal) {
-    try {
-      final PiggyBankUser owner = authenticationResolver.getLoggedUser(principal.getName());
-      expenseRepository.save(toEntity(expenseDto, owner));
-      return ResponseEntity.status(HttpStatus.CREATED).build();
-    } catch (final Exception e) {
-      e.printStackTrace();
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
+  private List<ExpenseDto> associatedExpenses(ExpensesService.Query query) {
+    return expenseRepository.find(query).stream()
+        .map(ExpenseConverter::toDto)
+        .collect(Collectors.toList());
   }
 
   static final class ExpenseConverter {

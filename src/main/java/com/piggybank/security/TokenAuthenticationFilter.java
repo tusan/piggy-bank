@@ -38,7 +38,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     final Authentication auth =
         resolveAuthenticationToken(request)
-            .map(ValidAuthenticationToken::unauthorizedFromToken)
+            .map(UnauthorizedAuthenticationToken::unauthorizedFromToken)
             .map(authenticationProvider::authenticate)
             .orElseThrow(() -> new BadCredentialsException("Missing authentication token."));
 

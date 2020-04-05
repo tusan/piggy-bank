@@ -16,8 +16,8 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.piggybank.security.ValidAuthenticationToken.unauthorizedFromToken;
 import static com.piggybank.security.TokenAuthenticationFilter.AUTHORIZATION;
+import static com.piggybank.security.UnauthorizedAuthenticationToken.unauthorizedFromToken;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

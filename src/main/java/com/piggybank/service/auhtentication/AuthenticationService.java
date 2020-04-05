@@ -7,8 +7,6 @@ import java.util.Optional;
 public interface AuthenticationService {
   Optional<PiggyBankUser> authenticate(String username, String password);
 
-  Optional<PiggyBankUser> retrieveForToken(String token);
-
   void revoke(String username);
 
   void add(PiggyBankUser addedUser);
