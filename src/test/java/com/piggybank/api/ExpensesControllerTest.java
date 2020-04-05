@@ -2,7 +2,6 @@ package com.piggybank.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.piggybank.security.AuthenticationResolver;
 import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
 import com.piggybank.service.expenses.dto.ExpenseType;
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -40,7 +38,6 @@ public class ExpensesControllerTest {
 
   @InjectMocks private ExpensesController sut;
   @Mock private ExpensesService expenseRepository;
-  @Mock private AuthenticationResolver authenticationResolver;
   @Mock private Authentication principal;
 
   private MockMvc mockMvc;
@@ -49,8 +46,7 @@ public class ExpensesControllerTest {
   public void setUp() {
     mockMvc = MockMvcBuilders.standaloneSetup(sut).setMessageConverters(messageConverter).build();
 
-    when(authenticationResolver.retrieveForToken("username")).thenReturn(Optional.of(LOGGER_USER));
-    when(principal.getCredentials()).thenReturn("username");
+    when(principal.getPrincipal()).thenReturn(LOGGER_USER);
   }
 
   @Test

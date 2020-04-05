@@ -1,6 +1,5 @@
 package com.piggybank.api;
 
-import com.piggybank.security.AuthenticationResolver;
 import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
 import com.piggybank.service.expenses.dto.ExpenseDto;
@@ -12,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -39,26 +39,23 @@ class ExpensesController {
   private static final Logger LOGGER = Logger.getLogger(ExpensesController.class.getName());
 
   private final ExpensesService expenseRepository;
-  private final AuthenticationResolver authenticationResolver;
 
-  ExpensesController(
-      final ExpensesService expenseRepository,
-      final AuthenticationResolver authenticationResolver) {
+  ExpensesController(final ExpensesService expenseRepository) {
     this.expenseRepository = expenseRepository;
-    this.authenticationResolver = authenticationResolver;
   }
 
   @GetMapping
   @SecurityRequirement(name = "bearerToken")
   public ResponseEntity<List<ExpenseDto>> expenses(
-      @Parameter(description = INPUT_DATE_FORMAT) @RequestParam(value = "date-start", required = false)
+      @Parameter(description = INPUT_DATE_FORMAT)
+          @RequestParam(value = "date-start", required = false)
           final String dateStart,
-      @Parameter(description = INPUT_DATE_FORMAT) @RequestParam(value = "date-end", required = false)
+      @Parameter(description = INPUT_DATE_FORMAT)
+          @RequestParam(value = "date-end", required = false)
           final String dateEnd,
       @Parameter(hidden = true) final Authentication principal) {
 
-    return authenticationResolver
-        .retrieveForToken(String.valueOf(principal.getCredentials()))
+    return resolveUser(principal)
         .map(buildQueryObject(dateStart, dateEnd))
         .map(this::associatedExpenses)
         .map(ResponseEntity::ok)
@@ -70,8 +67,7 @@ class ExpensesController {
   public ResponseEntity<Void> save(
       @RequestBody final ExpenseDto expenseDto,
       @Parameter(hidden = true) final Authentication principal) {
-    return authenticationResolver
-        .retrieveForToken(principal.getCredentials().toString())
+    return resolveUser(principal)
         .map(owner -> toEntity(expenseDto, owner))
         .flatMap(trySave())
         .orElseGet(() -> status(INTERNAL_SERVER_ERROR).build());
@@ -106,6 +102,13 @@ class ExpensesController {
     return expenseRepository.find(query).stream()
         .map(ExpenseConverter::toDto)
         .collect(Collectors.toList());
+  }
+
+  private Optional<PiggyBankUser> resolveUser(final Principal principal) {
+    final Authentication authenticationToken = (Authentication) principal;
+    final PiggyBankUser piggyBankUser = (PiggyBankUser) authenticationToken.getPrincipal();
+
+    return Optional.ofNullable(piggyBankUser);
   }
 
   static final class ExpenseConverter {

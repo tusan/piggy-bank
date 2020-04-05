@@ -10,10 +10,9 @@ import static java.util.Collections.singleton;
 public final class ValidAuthenticationToken extends AbstractAuthenticationToken {
   private static final GrantedAuthority USER_ROLE = new SimpleGrantedAuthority("USER");
 
- private final PiggyBankUser user;
+  private final PiggyBankUser user;
 
-  static ValidAuthenticationToken authorizedUser(
-      final PiggyBankUser user) {
+  static ValidAuthenticationToken authorizedUser(final PiggyBankUser user) {
     return new ValidAuthenticationToken(user);
   }
 
