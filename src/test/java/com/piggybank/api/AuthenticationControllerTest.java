@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -92,7 +92,7 @@ public class AuthenticationControllerTest {
           .andReturn();
       fail();
     } catch (Exception e) {
-      assertTrue(e.getCause() instanceof BadCredentialsException);
+      assertTrue(e.getCause() instanceof UsernameNotFoundException);
     }
   }
 

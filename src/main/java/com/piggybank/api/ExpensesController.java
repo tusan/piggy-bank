@@ -1,6 +1,5 @@
 package com.piggybank.api;
 
-import com.piggybank.config.Environment;
 import com.piggybank.security.AuthenticationResolver;
 import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;

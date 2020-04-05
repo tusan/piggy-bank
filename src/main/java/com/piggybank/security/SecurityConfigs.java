@@ -1,7 +1,6 @@
 package com.piggybank.security;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -12,10 +11,10 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @EnableWebSecurity
 class SecurityConfigs extends WebSecurityConfigurerAdapter {
-  private final AuthenticationProvider authenticationProvider;
+  private final BearerRememberMeService bearerRememberMeService;
 
-  public SecurityConfigs(AuthenticationProvider authenticationProvider) {
-    this.authenticationProvider = authenticationProvider;
+  public SecurityConfigs(final BearerRememberMeService bearerRememberMeService) {
+    this.bearerRememberMeService = bearerRememberMeService;
   }
 
   @Override
@@ -32,7 +31,7 @@ class SecurityConfigs extends WebSecurityConfigurerAdapter {
         .sessionCreationPolicy(STATELESS)
         .and()
         .rememberMe()
-        .rememberMeServices(new BearerRememberMeService(authenticationProvider))
+        .rememberMeServices(bearerRememberMeService)
         .and()
         .authorizeRequests()
         .anyRequest()
