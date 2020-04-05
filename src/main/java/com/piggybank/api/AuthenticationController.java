@@ -7,7 +7,7 @@ import com.piggybank.service.auhtentication.dto.LogoutDto;
 import com.piggybank.service.auhtentication.dto.RegistrationDto;
 import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import static com.piggybank.service.auhtentication.dto.LoggedUserDto.forUsernameAndToken;
@@ -32,7 +32,10 @@ class AuthenticationController {
         .authenticate(loginRequestDto.username(), loginRequestDto.password())
         .map(user -> forUsernameAndToken(user.getUsername(), user.getToken()))
         .map(ResponseEntity::ok)
-        .orElseThrow(() -> new BadCredentialsException("wrong credential for user"));
+        .orElseThrow(
+            () ->
+                new UsernameNotFoundException(
+                    String.format("User not found [request=%s]", loginRequestDto)));
   }
 
   @PostMapping("register")

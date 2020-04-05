@@ -1,5 +1,6 @@
 package com.piggybank.api;
 
+import com.piggybank.config.Environment;
 import com.piggybank.security.AuthenticationResolver;
 import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import static com.piggybank.api.ExpensesController.ExpenseConverter.toEntity;
 import static com.piggybank.config.Environment.DATE_TIME_FORMATTER;
+import static com.piggybank.config.Environment.INPUT_DATE_FORMAT;
 import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.HTTP;
 import static java.util.Collections.emptyList;
 import static java.util.logging.Level.SEVERE;
@@ -51,11 +52,11 @@ class ExpensesController {
   @GetMapping
   @SecurityRequirement(name = "bearerToken")
   public ResponseEntity<List<ExpenseDto>> expenses(
-      @Parameter(example = "2020-03-27") @RequestParam(value = "date-start", required = false)
+      @Parameter(description = INPUT_DATE_FORMAT) @RequestParam(value = "date-start", required = false)
           final String dateStart,
-      @Parameter(example = "2020-03-30") @RequestParam(value = "date-end", required = false)
+      @Parameter(description = INPUT_DATE_FORMAT) @RequestParam(value = "date-end", required = false)
           final String dateEnd,
-      final Authentication principal) {
+      @Parameter(hidden = true) final Authentication principal) {
 
     return authenticationResolver
         .retrieveForToken(String.valueOf(principal.getCredentials()))
@@ -68,7 +69,8 @@ class ExpensesController {
   @PostMapping
   @SecurityRequirement(name = "bearerToken")
   public ResponseEntity<Void> save(
-      @RequestBody final ExpenseDto expenseDto, final Authentication principal) {
+      @RequestBody final ExpenseDto expenseDto,
+      @Parameter(hidden = true) final Authentication principal) {
     return authenticationResolver
         .retrieveForToken(principal.getCredentials().toString())
         .map(owner -> toEntity(expenseDto, owner))
