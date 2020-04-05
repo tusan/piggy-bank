@@ -1,5 +1,6 @@
 package com.piggybank.security;
 
+import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,28 +10,26 @@ import static java.util.Collections.singleton;
 public final class ValidAuthenticationToken extends AbstractAuthenticationToken {
   private static final GrantedAuthority USER_ROLE = new SimpleGrantedAuthority("USER");
 
-  private final String token;
-  private final String username;
+ private final PiggyBankUser user;
 
-  static ValidAuthenticationToken authorizedFromTokenAndUsername(
-      final String token, final String username) {
-    return new ValidAuthenticationToken(token, username);
+  static ValidAuthenticationToken authorizedUser(
+      final PiggyBankUser user) {
+    return new ValidAuthenticationToken(user);
   }
 
-  private ValidAuthenticationToken(final String token, final String username) {
+  private ValidAuthenticationToken(final PiggyBankUser user) {
     super(singleton(USER_ROLE));
-    this.token = token;
-    this.username = username;
+    this.user = user;
     setAuthenticated(true);
   }
 
   @Override
   public Object getCredentials() {
-    return token;
+    return user.getToken();
   }
 
   @Override
   public Object getPrincipal() {
-    return username;
+    return user;
   }
 }

@@ -1,18 +1,18 @@
 package com.piggybank.security;
 
+import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 import static com.piggybank.security.BearerRememberMeService.AUTHORIZATION;
-import static com.piggybank.security.UnauthorizedAuthenticationToken.unauthorizedFromToken;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -26,26 +26,32 @@ public class BearerRememberMeServiceTest {
 
   @Mock private HttpServletResponse response;
 
-  @Mock private AuthenticationProvider authenticationProvider;
-
-  @Mock private Authentication authentication;
+  @Mock private AuthenticationResolver authenticationResolver;
 
   @Test
-  public void shouldReturnTheAuthenticationObjectIfTokenIsValidAndInRequestHeader() {
-    when(authenticationProvider.authenticate(unauthorizedFromToken("a token")))
-        .thenReturn(authentication);
-
+  public void shouldAuthenticateUserIfValidTokenIsInRequestHeader() {
+    when(authenticationResolver.retrieveForToken("a token")).thenReturn(Optional.of(testUser()));
     when(request.getHeader(AUTHORIZATION)).thenReturn("a token");
 
-    assertEquals(authentication, sut.autoLogin(request, response));
+    final Authentication actual = sut.autoLogin(request, response);
+    final ValidAuthenticationToken expected =
+        ValidAuthenticationToken.authorizedUser(testUser());
+
+    assertEquals(expected, actual);
   }
 
-  @Test
-  public void shouldReturnNullForMissingToken() throws Exception {
+  public void shouldReturnNullIfTokenHeaderIsMissing() {
     when(request.getHeader(AUTHORIZATION)).thenReturn(null);
 
     assertNull(sut.autoLogin(request, response));
+    verifyNoInteractions(authenticationResolver);
+  }
 
-    verifyNoInteractions(authenticationProvider);
+  private PiggyBankUser testUser() {
+    PiggyBankUser expectedPiggyBankUser = new PiggyBankUser();
+    expectedPiggyBankUser.setUsername("username");
+    expectedPiggyBankUser.setPassword("password");
+    expectedPiggyBankUser.setToken("a token");
+    return expectedPiggyBankUser;
   }
 }

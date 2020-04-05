@@ -5,16 +5,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.RememberMeServices;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfigs extends WebSecurityConfigurerAdapter {
-  private final BearerRememberMeService bearerRememberMeService;
+  private final RememberMeServices rememberMeServices;
 
-  public SecurityConfigs(final BearerRememberMeService bearerRememberMeService) {
-    this.bearerRememberMeService = bearerRememberMeService;
+  public SecurityConfigs(final RememberMeServices rememberMeServices) {
+    this.rememberMeServices = rememberMeServices;
   }
 
   @Override
@@ -31,7 +32,7 @@ class SecurityConfigs extends WebSecurityConfigurerAdapter {
         .sessionCreationPolicy(STATELESS)
         .and()
         .rememberMe()
-        .rememberMeServices(bearerRememberMeService)
+        .rememberMeServices(rememberMeServices)
         .and()
         .authorizeRequests()
         .anyRequest()
