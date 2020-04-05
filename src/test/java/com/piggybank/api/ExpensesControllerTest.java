@@ -53,8 +53,8 @@ public class ExpensesControllerTest {
     mockMvc
         .perform(
             MockMvcRequestBuilders.get("/api/v1/expenses")
-                .param("date-start", "20181107")
-                .param("date-end", "20181207"))
+                .param("date-start", "2018-11-07")
+                .param("date-end", "2018-12-07"))
         .andExpect(status().isOk())
         .andReturn();
 
@@ -70,7 +70,7 @@ public class ExpensesControllerTest {
   public void shouldReturn201AndCallSaveOnRepository() throws Exception {
     final String json =
         "{\n"
-            + "  \"date\": \"20181107\",\n"
+            + "  \"date\": \"2018-11-07\",\n"
             + "  \"type\": \"HOUSE\",\n"
             + "  \"amount\": \"22.57\",\n"
             + "  \"description\": \"test description\"\n"
@@ -88,7 +88,7 @@ public class ExpensesControllerTest {
   public void shouldReturnInternalServerErrorWhenRepositoryFails() throws Exception {
     final String json =
         "{\n"
-            + "  \"date\": \"20181107\",\n"
+            + "  \"date\": \"2018-11-07\",\n"
             + "  \"type\": \"HOUSE\",\n"
             + "  \"amount\": \"22.57\",\n"
             + "  \"description\": \"test description\"\n"

@@ -26,7 +26,7 @@ public class ExpenseDtoTest {
     final String initialJson =
         " {\n"
             + "        \"type\" : \"MOTORBIKE\",\n"
-            + "        \"date\" : \"20181127\",\n"
+            + "        \"date\" : \"2018-11-27\",\n"
             + "        \"amount\" : \"24.5\",\n"
             + "        \"description\": \"Fuel\"\n"
             + "    }";
@@ -46,7 +46,7 @@ public class ExpenseDtoTest {
     final String initialJson =
         " {\n"
             + "        \"type\" : \"MOTORBIKE\",\n"
-            + "        \"date\" : \"20181127\",\n"
+            + "        \"date\" : \"2018-11-27\",\n"
             + "        \"amount\" : \"24.5\""
             + "    }";
 
@@ -65,13 +65,13 @@ public class ExpenseDtoTest {
         "[\n"
             + "    {\n"
             + "        \"type\" : \"MOTORBIKE\",\n"
-            + "        \"date\" : \"20181127\",\n"
+            + "        \"date\" : \"2018-11-27\",\n"
             + "        \"amount\": 24.5,\n"
             + "        \"description\": \"Fuel\"\n"
             + "    },\n"
             + "    {\n"
             + "        \"type\" : \"HOUSE\",\n"
-            + "        \"date\" : \"20181129\",\n"
+            + "        \"date\" : \"2018-11-29\",\n"
             + "        \"amount\": 400,\n"
             + "        \"description\": \"Rent\"\n"
             + "    }\n"

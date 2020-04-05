@@ -5,10 +5,9 @@ import com.piggybank.service.auhtentication.repository.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
 import com.piggybank.service.expenses.dto.ExpenseDto;
 import com.piggybank.service.expenses.repository.Expense;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,18 +18,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.piggybank.api.ExpensesController.ExpenseConverter.toEntity;
+import static com.piggybank.config.Constants.INPUT_DATE_FORMAT;
+import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.HTTP;
+import static org.apache.logging.log4j.util.Strings.isBlank;
 
 @RestController
 @RequestMapping("api/v1/expenses")
-@SecurityScheme(
-    name = "bearerToken",
-    type = SecuritySchemeType.HTTP,
-    scheme = "bearer",
-    bearerFormat = "JWT")
+@SecurityScheme(name = "bearerToken", type = HTTP, scheme = "bearer", bearerFormat = "JWT")
 @CrossOrigin
 class ExpensesController {
 
-  private static final DateTimeFormatter YYYY_MM_DD = DateTimeFormatter.ofPattern("yyyyMMdd");
+  private static final DateTimeFormatter YYYY_MM_DD =
+      DateTimeFormatter.ofPattern(INPUT_DATE_FORMAT);
 
   private final ExpensesService expenseRepository;
   private final AuthenticationResolver authenticationResolver;
@@ -45,14 +44,14 @@ class ExpensesController {
   @GetMapping
   @SecurityRequirement(name = "bearerToken")
   public ResponseEntity<List<ExpenseDto>> expenses(
-      @RequestParam(value = "date-start", required = false) final String dateStart,
-      @RequestParam(value = "date-end", required = false) final String dateEnd) {
+      @Parameter(example = "2020-03-27") @RequestParam(value = "date-start", required = false)
+          final String dateStart,
+      @Parameter(example = "2020-03-30") @RequestParam(value = "date-end", required = false)
+          final String dateEnd) {
 
-    final LocalDate startDate =
-        Strings.isBlank(dateStart) ? null : LocalDate.parse(dateStart, YYYY_MM_DD);
+    final LocalDate startDate = isBlank(dateStart) ? null : LocalDate.parse(dateStart, YYYY_MM_DD);
 
-    final LocalDate endDate =
-        Strings.isBlank(dateEnd) ? null : LocalDate.parse(dateEnd, YYYY_MM_DD);
+    final LocalDate endDate = isBlank(dateEnd) ? null : LocalDate.parse(dateEnd, YYYY_MM_DD);
 
     final List<ExpenseDto> result =
         expenseRepository

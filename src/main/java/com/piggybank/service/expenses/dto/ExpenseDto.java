@@ -10,6 +10,8 @@ import com.google.auto.value.AutoValue;
 import javax.annotation.Nullable;
 import java.time.LocalDate;
 
+import static com.piggybank.config.Constants.INPUT_DATE_FORMAT;
+
 @AutoValue
 @JsonDeserialize(builder = ExpenseDto.Builder.class)
 public abstract class ExpenseDto {
@@ -26,7 +28,7 @@ public abstract class ExpenseDto {
   public abstract String description();
 
   @JsonProperty("date")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = INPUT_DATE_FORMAT)
   public abstract LocalDate date();
 
   @JsonProperty("amount")
@@ -49,7 +51,7 @@ public abstract class ExpenseDto {
     public abstract Builder setDescription(String description);
 
     @JsonProperty("date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = INPUT_DATE_FORMAT)
     public abstract Builder setDate(LocalDate date);
 
     @JsonProperty("amount")

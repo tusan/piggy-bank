@@ -6,7 +6,6 @@ import com.piggybank.service.auhtentication.dto.LoginRequestDto;
 import com.piggybank.service.auhtentication.dto.LogoutDto;
 import com.piggybank.service.auhtentication.dto.RegistrationDto;
 import com.piggybank.service.auhtentication.repository.PiggyBankUser;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
