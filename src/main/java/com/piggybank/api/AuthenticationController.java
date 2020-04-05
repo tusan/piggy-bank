@@ -12,6 +12,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import static com.piggybank.service.auhtentication.dto.LoggedUserDto.forUsernameAndToken;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping("api/v1/users")
@@ -42,12 +44,12 @@ class AuthenticationController {
 
     authenticationService.add(newPiggyBankUser);
 
-    return ResponseEntity.status(HttpStatus.CREATED).build();
+    return ResponseEntity.status(CREATED).build();
   }
 
   @PostMapping("revoke")
   public ResponseEntity<Void> revoke(@RequestBody final LogoutDto logoutDto) {
     authenticationService.revoke(logoutDto.username());
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    return ResponseEntity.status(NO_CONTENT).build();
   }
 }

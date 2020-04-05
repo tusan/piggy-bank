@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
+final class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
   private final AuthenticationService authenticationService;
 
   public TokenAuthenticationProvider(final AuthenticationService authenticationService) {

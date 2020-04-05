@@ -2,7 +2,6 @@ package com.piggybank.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -28,13 +27,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   private final AuthenticationProvider authenticationProvider;
 
-  public SecurityConfiguration(TokenAuthenticationProvider authenticationProvider) {
+  public SecurityConfiguration(AuthenticationProvider authenticationProvider) {
     this.authenticationProvider = authenticationProvider;
-  }
-
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth) {
-    auth.authenticationProvider(authenticationProvider);
   }
 
   @Override
@@ -53,19 +47,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
+    http.csrf().disable();
+
     http.sessionManagement()
         .sessionCreationPolicy(STATELESS)
         .and()
-        .exceptionHandling()
-        .and()
-        .addFilterBefore(
-            new TokenAuthenticationFilter(
-                authenticationProvider, SecurityContextHolder::getContext),
-            AnonymousAuthenticationFilter.class)
+        .addFilterBefore(tokenAuthenticationFilter(), AnonymousAuthenticationFilter.class)
         .authorizeRequests()
         .anyRequest()
         .authenticated();
+  }
 
-    http.csrf().disable();
+  private TokenAuthenticationFilter tokenAuthenticationFilter() {
+    return new TokenAuthenticationFilter(authenticationProvider, SecurityContextHolder::getContext);
   }
 }
