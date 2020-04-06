@@ -1,4 +1,4 @@
-package com.piggybank.service.auhtentication.repository;
+package com.piggybank.service.authentication.repository;
 
 import com.google.common.base.MoreObjects;
 

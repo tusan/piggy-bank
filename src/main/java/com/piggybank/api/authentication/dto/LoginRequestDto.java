@@ -1,4 +1,4 @@
-package com.piggybank.service.auhtentication.dto;
+package com.piggybank.api.authentication.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

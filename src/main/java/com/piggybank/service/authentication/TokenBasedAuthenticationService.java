@@ -1,16 +1,17 @@
-package com.piggybank.service.auhtentication;
+package com.piggybank.service.authentication;
 
 import com.piggybank.security.AuthenticationResolver;
 import com.piggybank.security.TokenGenerator;
-import com.piggybank.service.auhtentication.repository.JpaUserRepository;
-import com.piggybank.service.auhtentication.repository.PiggyBankUser;
+import com.piggybank.service.authentication.repository.JpaUserRepository;
+import com.piggybank.service.authentication.repository.PiggyBankUser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-final class TokenBasedAuthenticationService implements AuthenticationService, AuthenticationResolver {
+final class TokenBasedAuthenticationService
+    implements AuthenticationService, AuthenticationResolver {
   private final JpaUserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final TokenGenerator tokenGenerator;

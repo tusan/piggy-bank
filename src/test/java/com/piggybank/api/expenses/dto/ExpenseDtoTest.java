@@ -1,4 +1,4 @@
-package com.piggybank.service.expenses.dto;
+package com.piggybank.api.expenses.dto;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,8 +9,8 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.piggybank.service.expenses.dto.ExpenseType.HOUSE;
-import static com.piggybank.service.expenses.dto.ExpenseType.MOTORBIKE;
+import static com.piggybank.api.expenses.dto.ExpenseType.HOUSE;
+import static com.piggybank.api.expenses.dto.ExpenseType.MOTORBIKE;
 import static java.time.Month.NOVEMBER;
 import static org.junit.Assert.assertEquals;
 

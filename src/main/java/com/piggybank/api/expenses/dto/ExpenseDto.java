@@ -1,4 +1,4 @@
-package com.piggybank.service.expenses.dto;
+package com.piggybank.api.expenses.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;

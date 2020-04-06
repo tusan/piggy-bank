@@ -1,16 +1,16 @@
-package com.piggybank.api;
+package com.piggybank.api.authentication;
 
-import com.piggybank.service.auhtentication.AuthenticationService;
-import com.piggybank.service.auhtentication.dto.LoggedUserDto;
-import com.piggybank.service.auhtentication.dto.LoginRequestDto;
-import com.piggybank.service.auhtentication.dto.LogoutDto;
-import com.piggybank.service.auhtentication.dto.RegistrationDto;
-import com.piggybank.service.auhtentication.repository.PiggyBankUser;
+import com.piggybank.api.authentication.dto.LoggedUserDto;
+import com.piggybank.api.authentication.dto.LoginRequestDto;
+import com.piggybank.api.authentication.dto.LogoutDto;
+import com.piggybank.api.authentication.dto.RegistrationDto;
+import com.piggybank.service.authentication.AuthenticationService;
+import com.piggybank.service.authentication.repository.PiggyBankUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import static com.piggybank.service.auhtentication.dto.LoggedUserDto.forUsernameAndToken;
+import static com.piggybank.api.authentication.dto.LoggedUserDto.forUsernameAndToken;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 

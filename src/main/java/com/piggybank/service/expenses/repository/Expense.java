@@ -1,8 +1,8 @@
 package com.piggybank.service.expenses.repository;
 
 import com.google.common.base.MoreObjects;
-import com.piggybank.service.auhtentication.repository.PiggyBankUser;
-import com.piggybank.service.expenses.dto.ExpenseType;
+import com.piggybank.api.expenses.dto.ExpenseType;
+import com.piggybank.service.authentication.repository.PiggyBankUser;
 
 import javax.persistence.*;
 import java.time.LocalDate;

@@ -1,8 +1,8 @@
-package com.piggybank.api;
+package com.piggybank.api.expenses;
 
-import com.piggybank.service.auhtentication.repository.PiggyBankUser;
+import com.piggybank.api.expenses.dto.ExpenseDto;
+import com.piggybank.service.authentication.repository.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
-import com.piggybank.service.expenses.dto.ExpenseDto;
 import com.piggybank.service.expenses.repository.Expense;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -19,7 +19,7 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.piggybank.api.ExpensesController.ExpenseConverter.toEntity;
+import static com.piggybank.api.expenses.ExpenseConverter.toEntity;
 import static com.piggybank.config.Environment.DATE_TIME_FORMATTER;
 import static com.piggybank.config.Environment.INPUT_DATE_FORMAT;
 import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.HTTP;
@@ -109,28 +109,5 @@ class ExpensesController {
     final PiggyBankUser piggyBankUser = (PiggyBankUser) authenticationToken.getPrincipal();
 
     return Optional.ofNullable(piggyBankUser);
-  }
-
-  static final class ExpenseConverter {
-    static Expense toEntity(final ExpenseDto expenseDto, final PiggyBankUser owner) {
-      final Expense exp = new Expense();
-
-      exp.setType(expenseDto.type());
-      exp.setDate(expenseDto.date());
-      exp.setAmount(expenseDto.amount());
-      exp.setDescription(expenseDto.description());
-      exp.setOwner(owner);
-
-      return exp;
-    }
-
-    static ExpenseDto toDto(final Expense exp) {
-      return ExpenseDto.newBuilder()
-          .setAmount(exp.getAmount())
-          .setDate(exp.getDate())
-          .setDescription(exp.getDescription())
-          .setType(exp.getType())
-          .build();
-    }
   }
 }

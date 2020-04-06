@@ -1,4 +1,4 @@
-package com.piggybank.service.auhtentication.dto;
+package com.piggybank.api.authentication.dto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;

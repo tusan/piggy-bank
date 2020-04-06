@@ -1,4 +1,4 @@
-package com.piggybank.service.expenses.dto;
+package com.piggybank.api.expenses.dto;
 
 public enum ExpenseType {
   MOTORBIKE,

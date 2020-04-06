@@ -1,6 +1,6 @@
 package com.piggybank.security;
 
-import com.piggybank.service.auhtentication.repository.PiggyBankUser;
+import com.piggybank.service.authentication.repository.PiggyBankUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,8 +34,7 @@ public class BearerTokenAuthenticationServiceTest {
     when(request.getHeader(AUTHORIZATION)).thenReturn("a token");
 
     final Authentication actual = sut.autoLogin(request, response);
-    final BearerTokenAuthentication expected =
-        BearerTokenAuthentication.authorizedUser(testUser());
+    final BearerTokenAuthentication expected = BearerTokenAuthentication.authorizedUser(testUser());
 
     assertEquals(expected, actual);
   }

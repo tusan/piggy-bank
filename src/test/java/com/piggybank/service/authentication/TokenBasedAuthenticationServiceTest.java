@@ -1,8 +1,8 @@
-package com.piggybank.service.auhtentication;
+package com.piggybank.service.authentication;
 
 import com.piggybank.security.TokenGenerator;
-import com.piggybank.service.auhtentication.repository.JpaUserRepository;
-import com.piggybank.service.auhtentication.repository.PiggyBankUser;
+import com.piggybank.service.authentication.repository.JpaUserRepository;
+import com.piggybank.service.authentication.repository.PiggyBankUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

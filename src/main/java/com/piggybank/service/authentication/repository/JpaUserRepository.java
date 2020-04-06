@@ -1,4 +1,4 @@
-package com.piggybank.service.auhtentication.repository;
+package com.piggybank.service.authentication.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

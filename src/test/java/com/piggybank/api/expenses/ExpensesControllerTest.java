@@ -1,10 +1,10 @@
-package com.piggybank.api;
+package com.piggybank.api.expenses;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.piggybank.service.auhtentication.repository.PiggyBankUser;
+import com.piggybank.api.expenses.dto.ExpenseType;
+import com.piggybank.service.authentication.repository.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
-import com.piggybank.service.expenses.dto.ExpenseType;
 import com.piggybank.service.expenses.repository.Expense;
 import org.junit.Before;
 import org.junit.Test;

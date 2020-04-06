@@ -7,8 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class BearerTokenAuthenticationProviderTest {
-  private final BearerTokenAuthenticationProvider sut =
-      new BearerTokenAuthenticationProvider();
+  private final BearerTokenAuthenticationProvider sut = new BearerTokenAuthenticationProvider();
 
   @Test
   public void shouldReturnTrueForExpectedType() {

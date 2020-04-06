@@ -11,11 +11,10 @@ import java.util.logging.Logger;
 
 @Service
 public class BearerTokenAuthenticationService implements RememberMeServices {
-  private static final Logger LOGGER = Logger.getLogger(BearerTokenAuthenticationService.class.getName());
-
   static final String AUTHORIZATION = "Authorization";
   static final String BEARER = "Bearer";
-
+  private static final Logger LOGGER =
+      Logger.getLogger(BearerTokenAuthenticationService.class.getName());
   private final AuthenticationResolver authenticationResolver;
 
   BearerTokenAuthenticationService(final AuthenticationResolver authenticationResolver) {
