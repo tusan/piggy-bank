@@ -37,8 +37,9 @@ dependencies {
     
     testCompile "junit:junit:$junitVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
+
     testCompile "org.springframework.boot:spring-boot-starter-test"
-    compile "com.h2database:h2"
+    testCompile "org.springframework.security:spring-security-test"
 
     annotationProcessor "com.google.auto.value:auto-value:$autovalueVersion"
     compile "com.google.auto.value:auto-value-annotations:$autovalueVersion"
