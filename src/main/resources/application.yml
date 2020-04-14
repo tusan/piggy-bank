@@ -1,8 +1,10 @@
 spring:
+  h2:
+    console:
+      enabled: true
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5432/piggy_bank
-    username: postgres
-    password: password
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
   jpa:
     properties:
       hibernate:
@@ -10,3 +12,5 @@ spring:
           lob:
             non_contextual_creation: true
     generate-ddl: true
+
+    database-platform: org.hibernate.dialect.H2Dialect
