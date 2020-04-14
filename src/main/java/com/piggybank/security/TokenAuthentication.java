@@ -11,17 +11,17 @@ import java.util.Objects;
 
 import static java.util.Collections.singleton;
 
-final class BearerTokenAuthentication implements Authentication {
+final class TokenAuthentication implements Authentication {
   private static final GrantedAuthority USER_ROLE = new SimpleGrantedAuthority("USER");
 
   private final PiggyBankUser user;
 
-  private BearerTokenAuthentication(final PiggyBankUser user) {
+  private TokenAuthentication(final PiggyBankUser user) {
     this.user = user;
   }
 
-  static BearerTokenAuthentication authorizedUser(final PiggyBankUser user) {
-    return new BearerTokenAuthentication(user);
+  static TokenAuthentication authorizedUser(final PiggyBankUser user) {
+    return new TokenAuthentication(user);
   }
 
   @Override
@@ -61,7 +61,7 @@ final class BearerTokenAuthentication implements Authentication {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    BearerTokenAuthentication that = (BearerTokenAuthentication) o;
+    TokenAuthentication that = (TokenAuthentication) o;
     return Objects.equals(user, that.user);
   }
 

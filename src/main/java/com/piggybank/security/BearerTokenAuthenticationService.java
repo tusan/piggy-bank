@@ -27,7 +27,7 @@ public class BearerTokenAuthenticationService implements RememberMeServices {
     return Optional.ofNullable(request.getHeader(AUTHORIZATION))
         .map(v -> v.replace(BEARER, "").trim())
         .flatMap(authenticationResolver::retrieveForToken)
-        .map(BearerTokenAuthentication::authorizedUser)
+        .map(TokenAuthentication::authorizedUser)
         .orElse(null);
   }
 

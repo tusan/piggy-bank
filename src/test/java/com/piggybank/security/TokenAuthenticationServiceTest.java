@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BearerTokenAuthenticationServiceTest {
+public class TokenAuthenticationServiceTest {
   @InjectMocks private BearerTokenAuthenticationService sut;
 
   @Mock private HttpServletRequest request;
@@ -34,7 +34,7 @@ public class BearerTokenAuthenticationServiceTest {
     when(request.getHeader(AUTHORIZATION)).thenReturn("a token");
 
     final Authentication actual = sut.autoLogin(request, response);
-    final BearerTokenAuthentication expected = BearerTokenAuthentication.authorizedUser(testUser());
+    final TokenAuthentication expected = TokenAuthentication.authorizedUser(testUser());
 
     assertEquals(expected, actual);
   }
