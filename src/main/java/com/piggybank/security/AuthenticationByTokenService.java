@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 import static com.piggybank.security.RequestUtils.extractBearerToken;

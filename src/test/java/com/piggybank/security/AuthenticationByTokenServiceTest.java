@@ -30,8 +30,8 @@ public class AuthenticationByTokenServiceTest {
 
   @Test
   public void shouldAuthenticateUserIfValidTokenIsInRequestHeader() {
-    when(authenticationResolver.retrieveForToken("a token")).thenReturn(Optional.of(testUser()));
-    when(request.getHeader(AUTHORIZATION)).thenReturn("a token");
+    when(authenticationResolver.retrieveForToken("a_token")).thenReturn(Optional.of(testUser()));
+    when(request.getHeader(AUTHORIZATION)).thenReturn("Bearer a_token");
 
     final Authentication actual = sut.autoLogin(request, response);
     final TokenAuthentication expected = TokenAuthentication.authorizedUser(testUser());
