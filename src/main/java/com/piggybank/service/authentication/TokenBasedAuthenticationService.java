@@ -1,8 +1,6 @@
 package com.piggybank.service.authentication;
 
-import com.piggybank.security.AuthenticationResolver;
 import com.piggybank.security.TokenBuilder;
-import com.piggybank.security.TokenValidator;
 import com.piggybank.service.authentication.repository.JpaUserRepository;
 import com.piggybank.service.authentication.repository.PiggyBankUser;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,22 +9,18 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-final class TokenBasedAuthenticationService
-    implements AuthenticationService, AuthenticationResolver {
+final class TokenBasedAuthenticationService implements AuthenticationService {
   private final JpaUserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final TokenBuilder tokenBuilder;
-  private final TokenValidator tokenValidator;
 
   public TokenBasedAuthenticationService(
       final JpaUserRepository userRepository,
       final PasswordEncoder passwordEncoder,
-      final TokenBuilder tokenBuilder,
-      final TokenValidator tokenValidator) {
+      final TokenBuilder tokenBuilder) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.tokenBuilder = tokenBuilder;
-    this.tokenValidator = tokenValidator;
   }
 
   @Override
@@ -40,15 +34,6 @@ final class TokenBasedAuthenticationService
               userRepository.save(user);
               return user;
             });
-  }
-
-  @Override
-  @Deprecated
-  public Optional<PiggyBankUser> retrieveForToken(final String token) {
-    if (!tokenValidator.validate(token)) {
-      return Optional.empty();
-    }
-    return userRepository.findByToken(token);
   }
 
   @Override

@@ -2,7 +2,6 @@ package com.piggybank.security;
 
 import com.piggybank.service.authentication.repository.JpaUserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;

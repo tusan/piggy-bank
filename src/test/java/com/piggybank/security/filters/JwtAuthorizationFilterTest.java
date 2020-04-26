@@ -34,13 +34,15 @@ public class JwtAuthorizationFilterTest {
   @Mock private SecurityContextHolderFacade securityContextHolderFacade;
 
   @Mock private AuthenticationManager authenticationManager;
-  public static final PiggyBankUser USER = new PiggyBankUser();
-  public static final TokenAuthentication TOKEN_AUTHENTICATION =
+
+  private static final PiggyBankUser USER = new PiggyBankUser();
+  private static final TokenAuthentication TOKEN_AUTHENTICATION =
       TokenAuthentication.authorizedUser(USER);
 
   @Before
   public void setUp() {
-    when(authenticationManager.authenticate(any(Authentication.class))).thenReturn(TOKEN_AUTHENTICATION);
+    when(authenticationManager.authenticate(any(Authentication.class)))
+        .thenReturn(TOKEN_AUTHENTICATION);
     when(request.getHeader(AUTHORIZATION)).thenReturn("Bearer: token123");
   }
 
