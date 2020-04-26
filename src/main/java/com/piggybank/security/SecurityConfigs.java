@@ -1,5 +1,6 @@
 package com.piggybank.security;
 
+import com.piggybank.security.filters.JWTAuthorizationFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -13,15 +14,27 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 class SecurityConfigs extends WebSecurityConfigurerAdapter {
   private final RememberMeServices rememberMeServices;
+  private final AuthenticationResolver authenticationResolver;
+  private final SecurityContextHolderFacade securityContextHolderFacade;
 
-  public SecurityConfigs(final RememberMeServices rememberMeServices) {
+  public SecurityConfigs(
+      final RememberMeServices rememberMeServices,
+      final AuthenticationResolver authenticationResolver,
+      final SecurityContextHolderFacade securityContextHolderFacade) {
     this.rememberMeServices = rememberMeServices;
+    this.authenticationResolver = authenticationResolver;
+    this.securityContextHolderFacade = securityContextHolderFacade;
   }
 
   @Override
   public void configure(WebSecurity web) {
     web.ignoring()
-        .antMatchers("/api/v1/users/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**");
+        .antMatchers(
+            "/api/v1/users/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/h2-console/**");
   }
 
   @Override
@@ -31,9 +44,9 @@ class SecurityConfigs extends WebSecurityConfigurerAdapter {
     http.sessionManagement()
         .sessionCreationPolicy(STATELESS)
         .and()
-        .rememberMe()
-        .rememberMeServices(rememberMeServices)
-        .and()
+        .addFilter(
+            new JWTAuthorizationFilter(
+                authenticationManager(), authenticationResolver, securityContextHolderFacade))
         .authorizeRequests()
         .anyRequest()
         .authenticated();
