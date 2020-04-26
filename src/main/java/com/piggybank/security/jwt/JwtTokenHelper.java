@@ -1,6 +1,7 @@
 package com.piggybank.security.jwt;
 
 import com.piggybank.security.TokenBuilder;
+import com.piggybank.security.TokenValidator;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtParser;
@@ -13,7 +14,8 @@ import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 import static io.jsonwebtoken.security.Keys.secretKeyFor;
 import static java.time.temporal.ChronoUnit.DAYS;
 
-public class JwtTokenHelper implements TokenBuilder, JwtTokenParser {
+public class JwtTokenHelper implements TokenBuilder, TokenValidator {
+  public static final String ISSUER = "piggy-bank-app";
   private final JwtParser jwtParser;
   private final SecretKey key;
   private final InstantMarker instantMarker;
@@ -25,8 +27,8 @@ public class JwtTokenHelper implements TokenBuilder, JwtTokenParser {
   }
 
   @Override
-  public String resolveToken(final String jws) {
-    return parse(jws).getBody().getIssuer();
+  public boolean validate(final String jws) {
+    return ISSUER.equals(parse(jws).getBody().getIssuer());
   }
 
   @Override
@@ -34,7 +36,7 @@ public class JwtTokenHelper implements TokenBuilder, JwtTokenParser {
     return Jwts.builder()
         .signWith(key)
         .setExpiration(Date.from(instantMarker.getCurrent().plus(1, DAYS)))
-        .setIssuer("piggy-bank-app")
+        .setIssuer(ISSUER)
         .compact();
   }
 

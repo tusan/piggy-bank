@@ -22,6 +22,7 @@ class ApplicationContext {
   }
 
   @Bean
+  @ConditionalOnProperty(name = "authentication.token.type", havingValue = "uuid", matchIfMissing = true)
   TokenValidator noOpTokenValidator() {
     return TokenValidator.DEFAULT;
   }
@@ -29,13 +30,12 @@ class ApplicationContext {
   @Bean
   @ConditionalOnProperty(name = "authentication.token.type", havingValue = "uuid", matchIfMissing = true)
   TokenBuilder uuidTokenGenerator() {
-    LOGGER.info("Using uuidTokenGenerator");
     return () -> UUID.randomUUID().toString();
   }
 
   @Bean
   @ConditionalOnProperty(name = "authentication.token.type", havingValue = "jwt")
-  TokenBuilder jwtTokenGenerator() {
+  JwtTokenHelper jwtTokenHelper() {
     LOGGER.info("Using jwtTokenGenerator");
     return new JwtTokenHelper(Instant::now);
   }

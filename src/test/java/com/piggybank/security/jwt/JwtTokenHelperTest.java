@@ -12,6 +12,7 @@ import java.time.Instant;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,9 +31,7 @@ public class JwtTokenHelperTest {
   @Test
   public void shouldCreateAndResolveJwtTokenWithTheDefaultKey() {
     final String jws = sut.createNew();
-    final String actual = sut.resolveToken(jws);
-
-    assertEquals("piggy-bank-app", actual);
+    assertTrue(sut.validate(jws));
   }
 
   @Test
