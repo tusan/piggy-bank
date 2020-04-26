@@ -6,8 +6,8 @@ import org.springframework.security.authentication.RememberMeAuthenticationToken
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class TokenAuthenticationProviderTest {
-  private final BearerTokenAuthenticationProvider sut = new BearerTokenAuthenticationProvider();
+public class AuthenticationByTokenProviderTest {
+  private final AuthenticationByTokenProvider sut = new AuthenticationByTokenProvider();
 
   @Test
   public void shouldReturnTrueForExpectedType() {
