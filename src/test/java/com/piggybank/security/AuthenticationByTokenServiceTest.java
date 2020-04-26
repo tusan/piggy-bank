@@ -12,15 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-import static com.piggybank.security.BearerTokenAuthenticationService.AUTHORIZATION;
+import static com.piggybank.security.AuthenticationByTokenService.AUTHORIZATION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TokenAuthenticationServiceTest {
-  @InjectMocks private BearerTokenAuthenticationService sut;
+public class AuthenticationByTokenServiceTest {
+  @InjectMocks private AuthenticationByTokenService sut;
 
   @Mock private HttpServletRequest request;
 
