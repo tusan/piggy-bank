@@ -13,7 +13,7 @@ import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 import static io.jsonwebtoken.security.Keys.secretKeyFor;
 import static java.time.temporal.ChronoUnit.DAYS;
 
-class JwtTokenHelper implements TokenBuilder, JwtTokenParser {
+public class JwtTokenHelper implements TokenBuilder, JwtTokenParser {
   private final JwtParser jwtParser;
   private final SecretKey key;
   private final InstantMarker instantMarker;

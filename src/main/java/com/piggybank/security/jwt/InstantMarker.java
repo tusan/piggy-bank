@@ -2,6 +2,6 @@ package com.piggybank.security.jwt;
 
 import java.time.Instant;
 
-interface InstantMarker {
+public interface InstantMarker {
   Instant getCurrent();
 }
