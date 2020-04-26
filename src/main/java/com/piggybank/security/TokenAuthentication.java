@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import static java.util.Collections.singleton;
 
-final class TokenAuthentication implements Authentication {
+public final class TokenAuthentication implements Authentication {
   private static final GrantedAuthority USER_ROLE = new SimpleGrantedAuthority("USER");
 
   private final PiggyBankUser user;
@@ -20,7 +20,7 @@ final class TokenAuthentication implements Authentication {
     this.user = user;
   }
 
-  static TokenAuthentication authorizedUser(final PiggyBankUser user) {
+  public static TokenAuthentication authorizedUser(final PiggyBankUser user) {
     return new TokenAuthentication(user);
   }
 

@@ -1,27 +1,37 @@
 package com.piggybank.security;
 
+import com.piggybank.security.filters.JWTAuthorizationFilter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.authentication.RememberMeServices;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfigs extends WebSecurityConfigurerAdapter {
-  private final RememberMeServices rememberMeServices;
+  private final AuthenticationManager authenticationManager;
+  private final SecurityContextHolderFacade securityContextHolderFacade;
 
-  public SecurityConfigs(final RememberMeServices rememberMeServices) {
-    this.rememberMeServices = rememberMeServices;
+  public SecurityConfigs(
+      final AuthenticationManager authenticationManager,
+      final SecurityContextHolderFacade securityContextHolderFacade) {
+    this.authenticationManager = authenticationManager;
+    this.securityContextHolderFacade = securityContextHolderFacade;
   }
 
   @Override
   public void configure(WebSecurity web) {
     web.ignoring()
-        .antMatchers("/api/v1/users/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/h2-console/**");
+        .antMatchers(
+            "/api/v1/users/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/h2-console/**");
   }
 
   @Override
@@ -31,9 +41,7 @@ class SecurityConfigs extends WebSecurityConfigurerAdapter {
     http.sessionManagement()
         .sessionCreationPolicy(STATELESS)
         .and()
-        .rememberMe()
-        .rememberMeServices(rememberMeServices)
-        .and()
+        .addFilter(new JWTAuthorizationFilter(authenticationManager, securityContextHolderFacade))
         .authorizeRequests()
         .anyRequest()
         .authenticated();

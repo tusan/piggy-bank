@@ -27,11 +27,8 @@ public class TokenBasedAuthenticationServiceTest {
 
   @Mock private TokenBuilder tokenBuilder;
 
-  @Mock private TokenValidator tokenValidator;
-
   @Before
   public void setUp() {
-    when(tokenValidator.validate(anyString())).thenReturn(true);
     when(tokenBuilder.createNew()).thenReturn("token");
   }
 
@@ -68,39 +65,6 @@ public class TokenBasedAuthenticationServiceTest {
     when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
 
     Optional<PiggyBankUser> user = sut.authenticate("wrong_username", "password");
-
-    assertFalse(user.isPresent());
-  }
-
-  @Test
-  public void shouldReturnTheUserIfFoundByToken() {
-    when(userRepository.findByToken(anyString())).thenReturn(Optional.of(testUser()));
-
-    Optional<PiggyBankUser> user = sut.retrieveForToken("token");
-
-    assertTrue(user.isPresent());
-    user.ifPresent(
-        u -> {
-          assertEquals("username", u.getUsername());
-          assertEquals("password", u.getPassword());
-          assertEquals("token", u.getToken());
-        });
-  }
-
-  @Test
-  public void shouldReturnEmptyWhenTokenValidationFails() {
-    when(tokenValidator.validate(anyString())).thenReturn(false);
-
-    Optional<PiggyBankUser> user = sut.retrieveForToken("token");
-
-    assertFalse(user.isPresent());
-  }
-
-  @Test
-  public void shouldReturnEmptyIfNoUserFoundByToken() {
-    when(userRepository.findByToken(anyString())).thenReturn(Optional.empty());
-
-    Optional<PiggyBankUser> user = sut.retrieveForToken("token");
 
     assertFalse(user.isPresent());
   }
