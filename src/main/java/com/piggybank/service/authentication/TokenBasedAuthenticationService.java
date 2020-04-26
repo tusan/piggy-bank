@@ -43,6 +43,7 @@ final class TokenBasedAuthenticationService
   }
 
   @Override
+  @Deprecated
   public Optional<PiggyBankUser> retrieveForToken(final String token) {
     if (!tokenValidator.validate(token)) {
       return Optional.empty();

@@ -1,6 +1,5 @@
 package com.piggybank.security.filters;
 
-import com.piggybank.security.AuthenticationResolver;
 import com.piggybank.security.SecurityContextHolderFacade;
 import com.piggybank.security.TokenAuthentication;
 import com.piggybank.service.authentication.repository.PiggyBankUser;
@@ -11,16 +10,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
 import static com.piggybank.security.RequestUtils.AUTHORIZATION;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,8 +31,6 @@ public class JwtAuthorizationFilterTest {
 
   @Mock private FilterChain filterChain;
 
-  @Mock private AuthenticationResolver authenticationResolver;
-
   @Mock private SecurityContextHolderFacade securityContextHolderFacade;
 
   @Mock private AuthenticationManager authenticationManager;
@@ -44,7 +40,7 @@ public class JwtAuthorizationFilterTest {
 
   @Before
   public void setUp() {
-    when(authenticationResolver.retrieveForToken(anyString())).thenReturn(Optional.of(USER));
+    when(authenticationManager.authenticate(any(Authentication.class))).thenReturn(TOKEN_AUTHENTICATION);
     when(request.getHeader(AUTHORIZATION)).thenReturn("Bearer: token123");
   }
 
@@ -70,7 +66,7 @@ public class JwtAuthorizationFilterTest {
 
   @Test
   public void shouldNotModifySessionWhenNoUserIsResolved() throws IOException, ServletException {
-    when(authenticationResolver.retrieveForToken(anyString())).thenReturn(Optional.empty());
+    when(authenticationManager.authenticate(any(Authentication.class))).thenReturn(null);
 
     sut.doFilterInternal(request, response, filterChain);
 

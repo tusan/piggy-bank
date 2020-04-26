@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import static com.piggybank.security.RequestUtils.extractBearerToken;
 
 @Service
+@Deprecated
 public class AuthenticationByTokenService implements RememberMeServices {
   private static final Logger LOGGER =
       Logger.getLogger(AuthenticationByTokenService.class.getName());

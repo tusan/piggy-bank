@@ -2,27 +2,24 @@ package com.piggybank.security;
 
 import com.piggybank.security.filters.JWTAuthorizationFilter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.authentication.RememberMeServices;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfigs extends WebSecurityConfigurerAdapter {
-  private final RememberMeServices rememberMeServices;
-  private final AuthenticationResolver authenticationResolver;
+  private final AuthenticationManager authenticationManager;
   private final SecurityContextHolderFacade securityContextHolderFacade;
 
   public SecurityConfigs(
-      final RememberMeServices rememberMeServices,
-      final AuthenticationResolver authenticationResolver,
+      final AuthenticationManager authenticationManager,
       final SecurityContextHolderFacade securityContextHolderFacade) {
-    this.rememberMeServices = rememberMeServices;
-    this.authenticationResolver = authenticationResolver;
+    this.authenticationManager = authenticationManager;
     this.securityContextHolderFacade = securityContextHolderFacade;
   }
 
@@ -44,9 +41,7 @@ class SecurityConfigs extends WebSecurityConfigurerAdapter {
     http.sessionManagement()
         .sessionCreationPolicy(STATELESS)
         .and()
-        .addFilter(
-            new JWTAuthorizationFilter(
-                authenticationManager(), authenticationResolver, securityContextHolderFacade))
+        .addFilter(new JWTAuthorizationFilter(authenticationManager, securityContextHolderFacade))
         .authorizeRequests()
         .anyRequest()
         .authenticated();

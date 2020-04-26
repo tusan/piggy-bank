@@ -6,6 +6,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 @Component
+@Deprecated
 class AuthenticationByTokenProvider implements AuthenticationProvider {
 
   @Override
