@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+import static com.piggybank.security.RequestUtils.extractBearerToken;
+
 @Service
 public class AuthenticationByTokenService implements RememberMeServices {
-  static final String AUTHORIZATION = "Authorization";
-  static final String BEARER = "Bearer";
   private static final Logger LOGGER =
       Logger.getLogger(AuthenticationByTokenService.class.getName());
   private final AuthenticationResolver authenticationResolver;
@@ -24,12 +24,12 @@ public class AuthenticationByTokenService implements RememberMeServices {
   @Override
   public Authentication autoLogin(
       final HttpServletRequest request, final HttpServletResponse response) {
-    return Optional.ofNullable(request.getHeader(AUTHORIZATION))
-        .map(v -> v.replace(BEARER, "").trim())
+    return extractBearerToken(request)
         .flatMap(authenticationResolver::retrieveForToken)
         .map(TokenAuthentication::authorizedUser)
         .orElse(null);
   }
+
 
   @Override
   public void loginFail(HttpServletRequest request, HttpServletResponse response) {
