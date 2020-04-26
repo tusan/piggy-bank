@@ -1,6 +1,6 @@
 package com.piggybank.config;
 
-import com.piggybank.security.TokenGenerator;
+import com.piggybank.security.TokenBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,7 +16,7 @@ class ApplicationContext {
   }
 
   @Bean
-  TokenGenerator tokenGenerator() {
+  TokenBuilder tokenGenerator() {
     return () -> UUID.randomUUID().toString();
   }
 }

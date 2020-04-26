@@ -1,6 +1,6 @@
 package com.piggybank.service.authentication;
 
-import com.piggybank.security.TokenGenerator;
+import com.piggybank.security.TokenBuilder;
 import com.piggybank.service.authentication.repository.JpaUserRepository;
 import com.piggybank.service.authentication.repository.PiggyBankUser;
 import org.junit.Before;
@@ -24,11 +24,11 @@ public class TokenBasedAuthenticationServiceTest {
 
   @Mock private PasswordEncoder passwordEncoder;
 
-  @Mock private TokenGenerator tokenGenerator;
+  @Mock private TokenBuilder tokenBuilder;
 
   @Before
   public void setUp() {
-    when(tokenGenerator.newToken()).thenReturn("token");
+    when(tokenBuilder.createNew()).thenReturn("token");
   }
 
   @Test

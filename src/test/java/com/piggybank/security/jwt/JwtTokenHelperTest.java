@@ -1,6 +1,5 @@
 package com.piggybank.security.jwt;
 
-import com.piggybank.service.authentication.repository.PiggyBankUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,21 +29,15 @@ public class JwtTokenHelperTest {
 
   @Test
   public void shouldCreateAndResolveJwtTokenWithTheDefaultKey() {
-    final PiggyBankUser expectedUser = new PiggyBankUser();
-    expectedUser.setUsername("username");
-    expectedUser.setPassword("password");
+    final String jws = sut.createNew();
+    final String actual = sut.resolveToken(jws);
 
-    final String jws = sut.create(expectedUser);
-    final PiggyBankUser actual = sut.resolveToken(jws);
-
-    assertEquals(expectedUser, actual);
+    assertEquals("piggy-bank-app", actual);
   }
 
   @Test
   public void shouldSetASingleDayDurationOfTheToken() {
-    final PiggyBankUser expectedUser = new PiggyBankUser();
-
-    final String jws = sut.create(expectedUser);
+    final String jws = sut.createNew();
 
     assertEquals(
         Date.from(NOW.plus(1, DAYS)),

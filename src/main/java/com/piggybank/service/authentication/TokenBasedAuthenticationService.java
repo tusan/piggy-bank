@@ -1,7 +1,7 @@
 package com.piggybank.service.authentication;
 
 import com.piggybank.security.AuthenticationResolver;
-import com.piggybank.security.TokenGenerator;
+import com.piggybank.security.TokenBuilder;
 import com.piggybank.service.authentication.repository.JpaUserRepository;
 import com.piggybank.service.authentication.repository.PiggyBankUser;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,15 +14,15 @@ final class TokenBasedAuthenticationService
     implements AuthenticationService, AuthenticationResolver {
   private final JpaUserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
-  private final TokenGenerator tokenGenerator;
+  private final TokenBuilder tokenBuilder;
 
   public TokenBasedAuthenticationService(
       final JpaUserRepository userRepository,
       final PasswordEncoder passwordEncoder,
-      final TokenGenerator tokenGenerator) {
+      final TokenBuilder tokenBuilder) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
-    this.tokenGenerator = tokenGenerator;
+    this.tokenBuilder = tokenBuilder;
   }
 
   @Override
@@ -32,7 +32,7 @@ final class TokenBasedAuthenticationService
         .filter(user -> passwordEncoder.matches(password, user.getPassword()))
         .map(
             user -> {
-              user.setToken(tokenGenerator.newToken());
+              user.setToken(tokenBuilder.createNew());
               userRepository.save(user);
               return user;
             });
