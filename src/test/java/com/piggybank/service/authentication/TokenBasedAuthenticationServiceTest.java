@@ -1,6 +1,7 @@
 package com.piggybank.service.authentication;
 
 import com.piggybank.security.TokenBuilder;
+import com.piggybank.security.TokenValidator;
 import com.piggybank.service.authentication.repository.JpaUserRepository;
 import com.piggybank.service.authentication.repository.PiggyBankUser;
 import org.junit.Before;
@@ -26,8 +27,11 @@ public class TokenBasedAuthenticationServiceTest {
 
   @Mock private TokenBuilder tokenBuilder;
 
+  @Mock private TokenValidator tokenValidator;
+
   @Before
   public void setUp() {
+    when(tokenValidator.validate(anyString())).thenReturn(true);
     when(tokenBuilder.createNew()).thenReturn("token");
   }
 
@@ -81,6 +85,15 @@ public class TokenBasedAuthenticationServiceTest {
           assertEquals("password", u.getPassword());
           assertEquals("token", u.getToken());
         });
+  }
+
+  @Test
+  public void shouldReturnEmptyWhenTokenValidationFails() {
+    when(tokenValidator.validate(anyString())).thenReturn(false);
+
+    Optional<PiggyBankUser> user = sut.retrieveForToken("token");
+
+    assertFalse(user.isPresent());
   }
 
   @Test

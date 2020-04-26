@@ -1,6 +1,7 @@
 package com.piggybank.config;
 
 import com.piggybank.security.TokenBuilder;
+import com.piggybank.security.TokenValidator;
 import com.piggybank.security.jwt.JwtTokenHelper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,11 @@ class ApplicationContext {
   @Bean
   PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  TokenValidator noOpTokenValidator() {
+    return TokenValidator.DEFAULT;
   }
 
   @Bean
