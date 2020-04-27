@@ -11,7 +11,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public final class JwtTokenBuilder implements TokenBuilder {
   private final InstantMarker instantMarker;
 
-  private JwtTokenBuilder(InstantMarker instantMarker) {
+  public JwtTokenBuilder(InstantMarker instantMarker) {
     this.instantMarker = instantMarker;
   }
 

@@ -3,10 +3,13 @@ package com.piggybank.config;
 import com.piggybank.security.SecurityContextHolderFacade;
 import com.piggybank.security.TokenBuilder;
 import com.piggybank.security.TokenValidator;
+import com.piggybank.security.jwt.JwtTokenBuilder;
 import com.piggybank.security.jwt.JwtTokenHelper;
+import com.piggybank.security.jwt.JwtTokenValidator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -52,5 +55,21 @@ class ApplicationContext {
   JwtTokenHelper jwtTokenHelper() {
     LOGGER.info("Using jwtTokenGenerator");
     return new JwtTokenHelper(Instant::now);
+  }
+
+  @Bean
+  @Primary
+  @ConditionalOnProperty(name = "piggy_bank.features.issuer_to_resolve_user", havingValue = "true")
+  TokenValidator jwtTokenValidator() {
+    LOGGER.info("Using jwtTokenValidator");
+    return new JwtTokenValidator();
+  }
+
+  @Bean
+  @Primary
+  @ConditionalOnProperty(name = "piggy_bank.features.issuer_to_resolve_user", havingValue = "true")
+  TokenBuilder jwtTokenBuilder() {
+    LOGGER.info("Using jwtTokenValidator");
+    return new JwtTokenBuilder(Instant::now);
   }
 }

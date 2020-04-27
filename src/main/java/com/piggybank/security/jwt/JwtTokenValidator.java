@@ -5,7 +5,7 @@ import com.piggybank.security.TokenValidator;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 
-final class JwtTokenValidator implements TokenValidator {
+public final class JwtTokenValidator implements TokenValidator {
   private final JwtParser jwtParser;
 
   public JwtTokenValidator() {
