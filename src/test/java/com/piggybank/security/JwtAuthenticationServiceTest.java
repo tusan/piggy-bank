@@ -8,13 +8,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
 
 import static com.piggybank.security.TokenAuthentication.authorizedUser;
-import static org.junit.Assert.*;
+import static com.piggybank.security.TokenAuthentication.unauthorizedUser;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -34,7 +35,7 @@ public class JwtAuthenticationServiceTest {
 
   @Test
   public void shouldReturnTheUserIfFoundByToken() {
-    final Authentication actual = sut.authenticate(new UsernamePasswordAuthenticationToken(null, "token"));
+    final Authentication actual = sut.authenticate(unauthorizedUser("token"));
 
     assertEquals(authorizedUser(USER), actual);
   }
@@ -43,7 +44,7 @@ public class JwtAuthenticationServiceTest {
   public void shouldReturnEmptyWhenTokenValidationFails() {
     when(tokenValidator.validate(anyString())).thenReturn(false);
 
-    final Authentication actual = sut.authenticate(new UsernamePasswordAuthenticationToken(null, "token"));
+    final Authentication actual = sut.authenticate(unauthorizedUser("token"));
 
     assertNull(actual);
   }
@@ -52,7 +53,7 @@ public class JwtAuthenticationServiceTest {
   public void shouldReturnEmptyIfNoUserFoundByToken() {
     when(userRepository.findByToken(anyString())).thenReturn(Optional.empty());
 
-    final Authentication actual = sut.authenticate(new UsernamePasswordAuthenticationToken(null, ""));
+    final Authentication actual = sut.authenticate(unauthorizedUser("token"));
 
     assertNull(actual);
   }

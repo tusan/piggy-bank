@@ -22,4 +22,8 @@ public final class TokenAuthentication extends UsernamePasswordAuthenticationTok
   public static TokenAuthentication authorizedUser(final PiggyBankUser user) {
     return new TokenAuthentication(user, user.getToken(), singleton(USER_ROLE));
   }
+
+  public static TokenAuthentication unauthorizedUser(final String token) {
+    return new TokenAuthentication(null, token, null);
+  }
 }
