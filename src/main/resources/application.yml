@@ -18,3 +18,7 @@ spring:
 authentication:
   token:
     type: jwt
+
+piggy_bank:
+  features:
+    issuer_to_resolve_user: true

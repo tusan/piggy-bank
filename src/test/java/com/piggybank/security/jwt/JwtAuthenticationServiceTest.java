@@ -1,5 +1,6 @@
 package com.piggybank.security.jwt;
 
+import com.piggybank.config.FeatureFlags;
 import com.piggybank.security.TokenValidator;
 import com.piggybank.service.authentication.repository.JpaUserRepository;
 import com.piggybank.service.authentication.repository.PiggyBankUser;
@@ -27,6 +28,7 @@ public class JwtAuthenticationServiceTest {
   @InjectMocks private JwtAuthenticationService sut;
   @Mock private JpaUserRepository userRepository;
   @Mock private TokenValidator tokenValidator;
+  @Mock private FeatureFlags featureFlags;
 
   @Before
   public void setUp() {
@@ -57,5 +59,16 @@ public class JwtAuthenticationServiceTest {
     final Authentication actual = sut.authenticate(unauthorizedUser("token"));
 
     assertNull(actual);
+  }
+
+  @Test
+  public void shouldResolveTheUserByUsernameWhen_issuer_to_resolve_user_FeatureIsEnabled() {
+    when(featureFlags.useIssuerToResolveUser()).thenReturn(true);
+    when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(USER));
+    when(tokenValidator.validateAndGetIssuer(anyString())).thenReturn("issuer");
+
+    final Authentication actual = sut.authenticate(unauthorizedUser("token"));
+
+    assertEquals(authorizedUser(USER), actual);
   }
 }
