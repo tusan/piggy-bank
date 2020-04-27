@@ -16,10 +16,10 @@ import java.util.Optional;
 import static com.piggybank.security.RequestUtils.extractBearerToken;
 import static com.piggybank.security.TokenAuthentication.unauthorizedUser;
 
-public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
   private final SecurityContextHolderFacade securityContextHolderFacade;
 
-  public JWTAuthorizationFilter(
+  public JwtAuthorizationFilter(
       final AuthenticationManager authenticationManager,
       final SecurityContextHolderFacade securityContextHolderFacade) {
     super(authenticationManager);

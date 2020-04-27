@@ -1,5 +1,7 @@
-package com.piggybank.security;
+package com.piggybank.security.jwt;
 
+import com.piggybank.security.TokenAuthentication;
+import com.piggybank.security.TokenValidator;
 import com.piggybank.service.authentication.repository.JpaUserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;

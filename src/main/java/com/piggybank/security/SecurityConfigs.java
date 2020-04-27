@@ -1,6 +1,6 @@
 package com.piggybank.security;
 
-import com.piggybank.security.filters.JWTAuthorizationFilter;
+import com.piggybank.security.filters.JwtAuthorizationFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -41,7 +41,7 @@ class SecurityConfigs extends WebSecurityConfigurerAdapter {
     http.sessionManagement()
         .sessionCreationPolicy(STATELESS)
         .and()
-        .addFilter(new JWTAuthorizationFilter(authenticationManager, securityContextHolderFacade))
+        .addFilter(new JwtAuthorizationFilter(authenticationManager, securityContextHolderFacade))
         .authorizeRequests()
         .anyRequest()
         .authenticated();

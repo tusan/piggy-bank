@@ -1,5 +1,6 @@
-package com.piggybank.security;
+package com.piggybank.security.jwt;
 
+import com.piggybank.security.TokenValidator;
 import com.piggybank.service.authentication.repository.JpaUserRepository;
 import com.piggybank.service.authentication.repository.PiggyBankUser;
 import org.junit.Before;

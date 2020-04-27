@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JwtAuthorizationFilterTest {
-  @InjectMocks JWTAuthorizationFilter sut;
+  @InjectMocks private JwtAuthorizationFilter sut;
 
   @Mock private HttpServletRequest request;
 
