@@ -22,10 +22,10 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class JwtAuthenticationServiceTest {
-  private static final PiggyBankUser USER = new PiggyBankUser();
+public class JwtAuthenticationManagerTest {
+  private static final PiggyBankUser USER = piggyBankUser();
 
-  @InjectMocks private JwtAuthenticationService sut;
+  @InjectMocks private JwtAuthenticationManager sut;
   @Mock private JpaUserRepository userRepository;
   @Mock private TokenValidator tokenValidator;
   @Mock private FeatureFlags featureFlags;
@@ -70,5 +70,26 @@ public class JwtAuthenticationServiceTest {
     final Authentication actual = sut.authenticate(unauthorizedUser("token"));
 
     assertEquals(authorizedUser(USER), actual);
+  }
+
+  @Test
+  public void shouldReturnEmptyWhen_issuer_to_resolve_user_FeatureIsEnabledAndUserHasNoTokenInDatabase() {
+    when(featureFlags.useIssuerToResolveUser()).thenReturn(true);
+    when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(piggyBankUser(null)));
+    when(tokenValidator.validateAndGetIssuer(anyString())).thenReturn("issuer");
+
+    final Authentication actual = sut.authenticate(unauthorizedUser("token"));
+
+    assertNull(actual);
+  }
+
+  private static PiggyBankUser piggyBankUser() {
+    return piggyBankUser("token");
+  }
+
+  private static PiggyBankUser piggyBankUser(final String token) {
+    final PiggyBankUser user = new PiggyBankUser();
+    user.setToken(token);
+    return user;
   }
 }

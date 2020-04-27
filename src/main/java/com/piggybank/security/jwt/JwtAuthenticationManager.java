@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class JwtAuthenticationService implements AuthenticationManager {
+public class JwtAuthenticationManager implements AuthenticationManager {
   private final TokenValidator tokenValidator;
   private final JpaUserRepository userRepository;
   private final FeatureFlags featureFlags;
 
-  public JwtAuthenticationService(
+  public JwtAuthenticationManager(
       final TokenValidator tokenValidator,
       final JpaUserRepository userRepository,
       final FeatureFlags featureFlags) {
@@ -34,19 +34,20 @@ public class JwtAuthenticationService implements AuthenticationManager {
     return validateAndRetrieve(token).map(TokenAuthentication::authorizedUser).orElse(null);
   }
 
+  private Optional<PiggyBankUser> validateAndRetrieve(String token) {
+    if (featureFlags.useIssuerToResolveUser()) {
+      return resolveUserByIssuer(tokenValidator.validateAndGetIssuer(token))
+          .filter(user -> token.equals(user.getToken()));
+    } else {
+      return tokenValidator.validate(token) ? resolveUserByToken(token) : Optional.empty();
+    }
+  }
+
   private Optional<PiggyBankUser> resolveUserByIssuer(String issuer) {
     return userRepository.findByUsername(issuer);
   }
 
   private Optional<PiggyBankUser> resolveUserByToken(String token) {
     return userRepository.findByToken(token);
-  }
-
-  private Optional<PiggyBankUser> validateAndRetrieve(String token) {
-    if (featureFlags.useIssuerToResolveUser()) {
-      return resolveUserByIssuer(tokenValidator.validateAndGetIssuer(token));
-    } else {
-      return tokenValidator.validate(token) ? resolveUserByToken(token) : Optional.empty();
-    }
   }
 }

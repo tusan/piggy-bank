@@ -62,13 +62,34 @@ public class AuthenticationE2ETest {
     final String token = givenAnAuthenticationTokenForALoggedUser();
     whenRequestingAllUserExpenses(token);
 
+    final List<ExpenseDto> expected = givenAListOfExpensesForTheGivenAuthenticatedUser(token);
+
+    final List<ExpenseDto> result = whenRequestingAllUserExpenses(token);
+
+    assertEquals(expected, result);
+  }
+
+  @Test
+  public void shouldLogoutALoggedUser() throws Exception {
+    final String token = givenAnAuthenticationTokenForALoggedUser();
+
     thenLogoutTheUser();
 
-    shouldBeNotAuthorized();
+    shouldBeNotAuthorized(token);
+  }
+
+  private void shouldBeNotAuthorized(String token) throws Exception {
+    mvc.perform(
+            get("/api/v1/expenses")
+                .header("Authorization", String.format("Bearer %s", token))
+                .contentType(APPLICATION_JSON))
+        .andExpect(status().isForbidden());
   }
 
   private void shouldBeNotAuthorized() throws Exception {
-    mvc.perform(get("/api/v1/expenses").contentType(APPLICATION_JSON))
+    mvc.perform(
+        get("/api/v1/expenses")
+            .contentType(APPLICATION_JSON))
         .andExpect(status().isForbidden());
   }
 
@@ -86,16 +107,6 @@ public class AuthenticationE2ETest {
     return objectMapper.readValue(
         expensesResponse,
         TypeFactory.defaultInstance().constructCollectionType(List.class, ExpenseDto.class));
-  }
-
-  @Test
-  public void shouldLogoutALoggedUser() throws Exception {
-    final String token = givenAnAuthenticationTokenForALoggedUser();
-    final List<ExpenseDto> expected = givenAListOfExpensesForTheGivenAuthenticatedUser(token);
-
-    final List<ExpenseDto> result = whenRequestingAllUserExpenses(token);
-
-    assertEquals(expected, result);
   }
 
   private List<ExpenseDto> givenAListOfExpensesForTheGivenAuthenticatedUser(String token) {
