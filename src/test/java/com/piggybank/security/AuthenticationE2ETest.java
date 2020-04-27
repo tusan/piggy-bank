@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.piggybank.api.authentication.dto.LoggedUserDto;
 import com.piggybank.api.authentication.dto.LoginRequestDto;
+import com.piggybank.api.authentication.dto.LogoutDto;
 import com.piggybank.api.expenses.dto.ExpenseDto;
 import com.piggybank.api.expenses.dto.ExpenseType;
 import org.junit.Before;
@@ -53,18 +54,22 @@ public class AuthenticationE2ETest {
 
   @Test
   public void shouldReturnForbiddenForUnauthenticatedUsers() throws Exception {
-    mvc.perform(get("/api/v1/expenses").contentType(APPLICATION_JSON))
-        .andExpect(status().isForbidden());
+    shouldBeNotAuthorized();
   }
 
   @Test
   public void shouldReturn200ForAuthenticatedUser() throws Exception {
     final String token = givenAnAuthenticationTokenForALoggedUser();
-    final List<ExpenseDto> expected = givenAListOfExpensesForTheGivenAuthenticatedUser(token);
+    whenRequestingAllUserExpenses(token);
 
-    final List<ExpenseDto> result = whenRequestingAllUserExpenses(token);
+    thenLogoutTheUser();
 
-    assertEquals(expected, result);
+    shouldBeNotAuthorized();
+  }
+
+  private void shouldBeNotAuthorized() throws Exception {
+    mvc.perform(get("/api/v1/expenses").contentType(APPLICATION_JSON))
+        .andExpect(status().isForbidden());
   }
 
   private List<ExpenseDto> whenRequestingAllUserExpenses(String token) throws Exception {
@@ -81,6 +86,16 @@ public class AuthenticationE2ETest {
     return objectMapper.readValue(
         expensesResponse,
         TypeFactory.defaultInstance().constructCollectionType(List.class, ExpenseDto.class));
+  }
+
+  @Test
+  public void shouldLogoutALoggedUser() throws Exception {
+    final String token = givenAnAuthenticationTokenForALoggedUser();
+    final List<ExpenseDto> expected = givenAListOfExpensesForTheGivenAuthenticatedUser(token);
+
+    final List<ExpenseDto> result = whenRequestingAllUserExpenses(token);
+
+    assertEquals(expected, result);
   }
 
   private List<ExpenseDto> givenAListOfExpensesForTheGivenAuthenticatedUser(String token) {
@@ -129,5 +144,16 @@ public class AuthenticationE2ETest {
             .getContentAsByteArray();
 
     return objectMapper.readValue(authResponse, LoggedUserDto.class).token();
+  }
+
+  private void thenLogoutTheUser() throws Exception {
+    final LogoutDto logoutDto = LogoutDto.forUsername("username");
+
+    LOGGER.info(String.format("Revoke authentication for user [logoutRequest=%s]", logoutDto));
+    mvc.perform(
+            MockMvcRequestBuilders.post("/api/v1/users/revoke")
+                .content(objectMapper.writeValueAsString(logoutDto))
+                .contentType(APPLICATION_JSON))
+        .andExpect(status().isNoContent());
   }
 }

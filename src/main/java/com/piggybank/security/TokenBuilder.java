@@ -2,4 +2,8 @@ package com.piggybank.security;
 
 public interface TokenBuilder {
   String createNew();
+
+  default String createNew(String issuer) {
+    throw new UnsupportedOperationException();
+  }
 }
