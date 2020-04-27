@@ -11,6 +11,9 @@ public interface Environment {
 
   DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(INPUT_DATE_FORMAT);
 
-  //TODO use KeyStore to load the SecretKey
+  // TODO use KeyStore to load the SecretKey
   Key SECRET_KEY = secretKeyFor(HS256);
+
+  // TODO to be removed, issuer must be only the username
+  String ISSUER = "piggy-bank-app";
 }
