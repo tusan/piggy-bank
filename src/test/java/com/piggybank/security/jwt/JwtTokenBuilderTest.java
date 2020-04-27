@@ -12,14 +12,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.sql.Date;
 import java.time.Instant;
 
-import static com.piggybank.security.jwt.JwtTokenBuilderImpl.SECRET_KEY;
+import static com.piggybank.config.Environment.SECRET_KEY;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class JwtTokenBuilderImplTest {
-  @InjectMocks private JwtTokenBuilderImpl sut;
+public class JwtTokenBuilderTest {
+  @InjectMocks private JwtTokenBuilder sut;
 
   @Mock private InstantMarker instantMarker;
 
@@ -32,7 +32,7 @@ public class JwtTokenBuilderImplTest {
 
   @Test
   public void shouldCreateAJwtTokenWithTheGivenIssuer() {
-    final String jws = sut.newToken("issuer");
+    final String jws = sut.createNew("issuer");
     String actual = parseJwtToken(jws).getIssuer();
 
     assertEquals("issuer", actual);
@@ -40,7 +40,7 @@ public class JwtTokenBuilderImplTest {
 
   @Test
   public void shouldSetASingleDayDurationOfTheToken() {
-    final String jws = sut.newToken("issuer");
+    final String jws = sut.createNew("issuer");
 
     assertEquals(Date.from(NOW.plus(1, DAYS)), parseJwtToken(jws).getExpiration());
   }
