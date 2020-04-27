@@ -1,5 +1,6 @@
 package com.piggybank.service.authentication;
 
+import com.piggybank.config.FeatureFlags;
 import com.piggybank.security.TokenBuilder;
 import com.piggybank.service.authentication.repository.JpaUserRepository;
 import com.piggybank.service.authentication.repository.PiggyBankUser;
@@ -25,6 +26,8 @@ public class TokenBasedAuthenticationServiceTest {
   @Mock private PasswordEncoder passwordEncoder;
 
   @Mock private TokenBuilder tokenBuilder;
+
+  @Mock private FeatureFlags featureFlags;
 
   @Before
   public void setUp() {
@@ -95,18 +98,49 @@ public class TokenBasedAuthenticationServiceTest {
   public void shouldEncodePasswordAndSaveNewUser() {
     when(passwordEncoder.encode("password")).thenReturn("encoded-password");
     sut.add(testUser());
-    verify(userRepository).save(testUser("encoded-password"));
+    verify(userRepository).save(testUserWithDifferentPassword());
+  }
+
+  @Test
+  public void shouldSaveTheAuthenticationTokenUsingTheUserIssuedWhenFeatureIsEnabled() {
+    when(featureFlags.useIssuerToResolveUser()).thenReturn(true);
+    when(tokenBuilder.createNew(anyString())).thenReturn("token_with_issuer");
+
+    when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
+    when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(testUser()));
+
+    Optional<PiggyBankUser> user = sut.authenticate("username", "password");
+
+    assertTrue(user.isPresent());
+    user.ifPresent(
+        u -> {
+          assertEquals("username", u.getUsername());
+          assertEquals("password", u.getPassword());
+          assertEquals("token_with_issuer", u.getToken());
+        });
+
+    verify(userRepository).save(testUserWithDifferentToken());
   }
 
   private PiggyBankUser testUser() {
-    return testUser("password");
+    return testUser("password", "token");
   }
 
-  private PiggyBankUser testUser(final String password) {
+  private PiggyBankUser testUserWithDifferentToken() {
+    return testUser("password", "token_with_issuer");
+  }
+
+  private PiggyBankUser testUserWithDifferentPassword() {
+    return testUser("encoded-password", "token");
+  }
+
+
+  private PiggyBankUser testUser(final String password, final String token) {
     PiggyBankUser expectedPiggyBankUser = new PiggyBankUser();
     expectedPiggyBankUser.setUsername("username");
     expectedPiggyBankUser.setPassword(password);
-    expectedPiggyBankUser.setToken("token");
+    expectedPiggyBankUser.setToken(token);
     return expectedPiggyBankUser;
   }
+
 }

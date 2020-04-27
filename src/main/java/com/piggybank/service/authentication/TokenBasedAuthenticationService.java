@@ -1,5 +1,6 @@
 package com.piggybank.service.authentication;
 
+import com.piggybank.config.FeatureFlags;
 import com.piggybank.security.TokenBuilder;
 import com.piggybank.service.authentication.repository.JpaUserRepository;
 import com.piggybank.service.authentication.repository.PiggyBankUser;
@@ -13,14 +14,17 @@ final class TokenBasedAuthenticationService implements AuthenticationService {
   private final JpaUserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final TokenBuilder tokenBuilder;
+  private final FeatureFlags featureFlags;
 
   public TokenBasedAuthenticationService(
       final JpaUserRepository userRepository,
       final PasswordEncoder passwordEncoder,
-      final TokenBuilder tokenBuilder) {
+      final TokenBuilder tokenBuilder,
+      final FeatureFlags featureFlags) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.tokenBuilder = tokenBuilder;
+    this.featureFlags = featureFlags;
   }
 
   @Override
@@ -28,12 +32,7 @@ final class TokenBasedAuthenticationService implements AuthenticationService {
     return userRepository
         .findByUsername(username)
         .filter(user -> passwordEncoder.matches(password, user.getPassword()))
-        .map(
-            user -> {
-              user.setToken(tokenBuilder.createNew());
-              userRepository.save(user);
-              return user;
-            });
+        .map(this::saveUserToken);
   }
 
   @Override
@@ -51,5 +50,16 @@ final class TokenBasedAuthenticationService implements AuthenticationService {
   public void add(final PiggyBankUser addedUser) {
     addedUser.setPassword(passwordEncoder.encode(addedUser.getPassword()));
     userRepository.save(addedUser);
+  }
+
+  private PiggyBankUser saveUserToken(PiggyBankUser user) {
+    if (featureFlags.useIssuerToResolveUser()) {
+      user.setToken(tokenBuilder.createNew(user.getUsername()));
+    } else {
+      user.setToken(tokenBuilder.createNew());
+    }
+
+    userRepository.save(user);
+    return user;
   }
 }
