@@ -14,7 +14,22 @@ public final class PiggyBankUser {
   private String password;
   private String token;
 
-  public PiggyBankUser() {}
+  @Deprecated
+  private PiggyBankUser() {}
+
+  public static PiggyBankUser forUsernameAndPassword(final String username, final String password) {
+    return forUsernamePasswordAndToken(username, password, null);
+  }
+
+  public static PiggyBankUser forUsernamePasswordAndToken(
+      final String username, final String password, final String token) {
+    final PiggyBankUser user = new PiggyBankUser();
+    user.setUsername(username);
+    user.setPassword(password);
+    user.setToken(token);
+
+    return user;
+  }
 
   public String getUsername() {
     return username;

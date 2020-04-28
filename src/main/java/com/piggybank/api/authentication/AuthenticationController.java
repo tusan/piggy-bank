@@ -5,12 +5,12 @@ import com.piggybank.api.authentication.dto.LoginRequestDto;
 import com.piggybank.api.authentication.dto.LogoutDto;
 import com.piggybank.api.authentication.dto.RegistrationDto;
 import com.piggybank.service.authentication.AuthenticationService;
-import com.piggybank.service.authentication.repository.PiggyBankUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import static com.piggybank.api.authentication.dto.LoggedUserDto.forUsernameAndToken;
+import static com.piggybank.service.authentication.repository.PiggyBankUser.forUsernameAndPassword;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
@@ -40,11 +40,8 @@ class AuthenticationController {
 
   @PostMapping("register")
   public ResponseEntity<Void> register(@RequestBody final RegistrationDto registrationDto) {
-    final PiggyBankUser newPiggyBankUser = new PiggyBankUser();
-    newPiggyBankUser.setUsername(registrationDto.username());
-    newPiggyBankUser.setPassword(registrationDto.password());
-
-    authenticationService.add(newPiggyBankUser);
+    authenticationService.add(
+        forUsernameAndPassword(registrationDto.username(), registrationDto.password()));
 
     return ResponseEntity.status(CREATED).build();
   }

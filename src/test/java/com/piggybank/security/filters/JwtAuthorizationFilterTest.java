@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.piggybank.security.RequestUtils.AUTHORIZATION;
+import static com.piggybank.service.authentication.repository.PiggyBankUser.forUsernameAndPassword;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -35,7 +36,7 @@ public class JwtAuthorizationFilterTest {
 
   @Mock private AuthenticationManager authenticationManager;
 
-  private static final PiggyBankUser USER = new PiggyBankUser();
+  private static final PiggyBankUser USER = forUsernameAndPassword("usrname", "password");
   private static final TokenAuthentication TOKEN_AUTHENTICATION =
       TokenAuthentication.authorizedUser(USER);
 

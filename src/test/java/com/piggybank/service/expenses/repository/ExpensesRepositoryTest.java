@@ -18,6 +18,7 @@ import java.time.Month;
 import java.util.List;
 
 import static com.piggybank.api.expenses.dto.ExpenseType.*;
+import static com.piggybank.service.authentication.repository.PiggyBankUser.forUsernamePasswordAndToken;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -28,6 +29,8 @@ public class ExpensesRepositoryTest {
   private static final LocalDate JANUARY = LocalDate.of(2018, Month.JANUARY, 1);
   private static final LocalDate FEBRUARY = LocalDate.of(2018, Month.FEBRUARY, 1);
   private static final LocalDate MARCH = LocalDate.of(2018, Month.MARCH, 1);
+  public static final String DEFAULT_USER = "test_user";
+  public static final String OTHER_OWNER = "other_owner";
 
   @Autowired private TestEntityManager testEntityManager;
 
@@ -35,24 +38,16 @@ public class ExpensesRepositoryTest {
 
   @MockBean private Principal principal;
 
-  private static PiggyBankUser fakeUser(final String username) {
-    final PiggyBankUser piggyBankUser = new PiggyBankUser();
-    piggyBankUser.setPassword("password");
-    piggyBankUser.setToken("token");
-    piggyBankUser.setUsername(username);
-    return piggyBankUser;
-  }
-
   private static Expense expenseJanuary() {
-    return fakeExpense(HOUSE, "description1", JANUARY, loggedUser());
+    return fakeExpense(HOUSE, "description1", JANUARY, createUser(DEFAULT_USER));
   }
 
   private static Expense expenseFebruary() {
-    return fakeExpense(MOTORBIKE, "description2", FEBRUARY, loggedUser());
+    return fakeExpense(MOTORBIKE, "description2", FEBRUARY, createUser(DEFAULT_USER));
   }
 
   private static Expense expenseMarch() {
-    return fakeExpense(BILLS, "description3", MARCH, loggedUser());
+    return fakeExpense(BILLS, "description3", MARCH, createUser(DEFAULT_USER));
   }
 
   private static Expense fakeExpense(
@@ -71,15 +66,11 @@ public class ExpensesRepositoryTest {
     return expense;
   }
 
-  private static PiggyBankUser loggedUser() {
-    return fakeUser("test_user");
-  }
-
   @Before
   public void setUp() {
-    final PiggyBankUser otherOwner = fakeUser("other_owner");
+    final PiggyBankUser otherOwner = createUser(OTHER_OWNER);
 
-    testEntityManager.persist(loggedUser());
+    testEntityManager.persist(createUser(DEFAULT_USER));
     testEntityManager.flush();
 
     final Expense otherExpense =
@@ -103,33 +94,41 @@ public class ExpensesRepositoryTest {
 
   @Test
   public void shouldCallFilterByDateStartAndDateEnd() {
-    List<Expense> result = sut.findByDateBetweenAndOwner(JANUARY, FEBRUARY, loggedUser());
+    List<Expense> result =
+        sut.findByDateBetweenAndOwner(JANUARY, FEBRUARY, createUser(DEFAULT_USER));
 
     assertEquals(asList(expenseJanuary(), expenseFebruary()), result);
   }
 
   @Test
   public void shouldCallFilterByDateStartOnly() {
-    List<Expense> result = sut.findByDateGreaterThanEqualAndOwner(FEBRUARY, loggedUser());
+    List<Expense> result =
+        sut.findByDateGreaterThanEqualAndOwner(FEBRUARY, createUser(DEFAULT_USER));
 
     assertEquals(asList(expenseFebruary(), expenseMarch()), result);
   }
 
   @Test
   public void shouldCallFilterByDateEndOnly() {
-    final List<Expense> result = sut.findByDateLessThanEqualAndOwner(FEBRUARY, loggedUser());
+    final List<Expense> result =
+        sut.findByDateLessThanEqualAndOwner(FEBRUARY, createUser(DEFAULT_USER));
 
     assertEquals(asList(expenseJanuary(), expenseFebruary()), result);
   }
 
   @Test
   public void shouldSaveTheExpense() {
-    assertNotNull(sut.save(fakeExpense(HOUSE, "description", LocalDate.now(), loggedUser())));
+    assertNotNull(
+        sut.save(fakeExpense(HOUSE, "description", LocalDate.now(), createUser(DEFAULT_USER))));
   }
 
   @Test
   public void shouldReturnOnlyExpensesAssociatedWithLoggedUser() {
-    final List<Expense> result = sut.findByOwner(loggedUser());
+    final List<Expense> result = sut.findByOwner(createUser(DEFAULT_USER));
     assertEquals(asList(expenseJanuary(), expenseFebruary(), expenseMarch()), result);
+  }
+
+  private static PiggyBankUser createUser(final String username) {
+    return forUsernamePasswordAndToken(username, "password", "token");
   }
 }
