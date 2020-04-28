@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Optional;
 
+import static com.piggybank.service.authentication.repository.PiggyBankUser.forUsernameAndPassword;
+import static com.piggybank.service.authentication.repository.PiggyBankUser.forUsernamePasswordAndToken;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -30,6 +32,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @RunWith(MockitoJUnitRunner.class)
 public class AuthenticationControllerTest {
 
+  public static final String USERNAME = "username";
+  public static final String PASSWORD = "password";
   private final ObjectMapper mapper = new ObjectMapper();
   @InjectMocks private AuthenticationController sut;
   @Mock private AuthenticationService authenticationService;
@@ -47,10 +51,7 @@ public class AuthenticationControllerTest {
 
   @Test
   public void shouldReturn200IfLoginSucceed() throws Exception {
-    final PiggyBankUser piggyBankUser = new PiggyBankUser();
-    piggyBankUser.setUsername("username");
-    piggyBankUser.setPassword("password");
-    piggyBankUser.setToken("token");
+    final PiggyBankUser piggyBankUser = forUsernamePasswordAndToken(USERNAME, PASSWORD, "token");
 
     final String requestBody =
         "{\n" + "    \"username\": \"username\",\n" + "    \"password\": \"password\"\n" + "}";
@@ -67,11 +68,11 @@ public class AuthenticationControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn();
 
-    verify(authenticationService).authenticate("username", "password");
+    verify(authenticationService).authenticate(USERNAME, PASSWORD);
 
     final LoggedUserDto actual =
         mapper.readValue(response.getResponse().getContentAsByteArray(), LoggedUserDto.class);
-    final LoggedUserDto expected = LoggedUserDto.forUsernameAndToken("username", "token");
+    final LoggedUserDto expected = LoggedUserDto.forUsernameAndToken(USERNAME, "token");
 
     assertEquals(expected, actual);
   }
@@ -108,9 +109,7 @@ public class AuthenticationControllerTest {
                 .content(requestBody))
         .andExpect(MockMvcResultMatchers.status().isCreated());
 
-    PiggyBankUser addedUser = new PiggyBankUser();
-    addedUser.setUsername("username");
-    addedUser.setPassword("password");
+    PiggyBankUser addedUser = forUsernameAndPassword(USERNAME, PASSWORD);
 
     verify(authenticationService).add(addedUser);
   }
@@ -126,6 +125,6 @@ public class AuthenticationControllerTest {
                 .content(requestBody))
         .andExpect(MockMvcResultMatchers.status().isNoContent());
 
-    verify(authenticationService).revoke("username");
+    verify(authenticationService).revoke(USERNAME);
   }
 }

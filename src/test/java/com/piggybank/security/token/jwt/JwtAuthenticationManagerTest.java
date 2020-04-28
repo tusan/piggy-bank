@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import static com.piggybank.security.token.TokenAuthentication.authorizedUser;
 import static com.piggybank.security.token.TokenAuthentication.unauthorizedUser;
+import static com.piggybank.service.authentication.repository.PiggyBankUser.forUsernamePasswordAndToken;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -23,7 +24,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JwtAuthenticationManagerTest {
-  private static final PiggyBankUser USER = piggyBankUser();
+  public static final String TOKEN = "token";
+  private static final PiggyBankUser USER = piggyBankUser(TOKEN);
 
   @InjectMocks private JwtAuthenticationManager sut;
   @Mock private JpaUserRepository userRepository;
@@ -38,7 +40,7 @@ public class JwtAuthenticationManagerTest {
 
   @Test
   public void shouldReturnTheUserIfFoundByToken() {
-    final Authentication actual = sut.authenticate(unauthorizedUser("token"));
+    final Authentication actual = sut.authenticate(unauthorizedUser(TOKEN));
 
     assertEquals(authorizedUser(USER), actual);
   }
@@ -47,7 +49,7 @@ public class JwtAuthenticationManagerTest {
   public void shouldReturnEmptyWhenTokenValidationFails() {
     when(tokenValidator.validate(anyString())).thenReturn(false);
 
-    final Authentication actual = sut.authenticate(unauthorizedUser("token"));
+    final Authentication actual = sut.authenticate(unauthorizedUser(TOKEN));
 
     assertNull(actual);
   }
@@ -56,7 +58,7 @@ public class JwtAuthenticationManagerTest {
   public void shouldReturnEmptyIfNoUserFoundByToken() {
     when(userRepository.findByToken(anyString())).thenReturn(Optional.empty());
 
-    final Authentication actual = sut.authenticate(unauthorizedUser("token"));
+    final Authentication actual = sut.authenticate(unauthorizedUser(TOKEN));
 
     assertNull(actual);
   }
@@ -67,29 +69,24 @@ public class JwtAuthenticationManagerTest {
     when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(USER));
     when(tokenValidator.validateAndGetIssuer(anyString())).thenReturn("issuer");
 
-    final Authentication actual = sut.authenticate(unauthorizedUser("token"));
+    final Authentication actual = sut.authenticate(unauthorizedUser(TOKEN));
 
     assertEquals(authorizedUser(USER), actual);
   }
 
   @Test
-  public void shouldReturnEmptyWhen_issuer_to_resolve_user_FeatureIsEnabledAndUserHasNoTokenInDatabase() {
+  public void
+      shouldReturnEmptyWhen_issuer_to_resolve_user_FeatureIsEnabledAndUserHasNoTokenInDatabase() {
     when(featureFlags.useIssuerToResolveUser()).thenReturn(true);
     when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(piggyBankUser(null)));
     when(tokenValidator.validateAndGetIssuer(anyString())).thenReturn("issuer");
 
-    final Authentication actual = sut.authenticate(unauthorizedUser("token"));
+    final Authentication actual = sut.authenticate(unauthorizedUser(TOKEN));
 
     assertNull(actual);
   }
 
-  private static PiggyBankUser piggyBankUser() {
-    return piggyBankUser("token");
-  }
-
   private static PiggyBankUser piggyBankUser(final String token) {
-    final PiggyBankUser user = new PiggyBankUser();
-    user.setToken(token);
-    return user;
+    return forUsernamePasswordAndToken("username", "password", token);
   }
 }

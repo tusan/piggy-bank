@@ -9,38 +9,29 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
+import static com.piggybank.service.authentication.repository.PiggyBankUser.forUsernamePasswordAndToken;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class JpaPiggyBankRegistrationDtoRepositoryTest {
+public class JpaPiggyBankUserRepositoryTest {
   @Autowired private TestEntityManager testEntityManager;
 
   @Autowired private JpaUserRepository sut;
 
   @Test
   public void shouldReturnCorrectUserWhenPassingUsername() {
-    final PiggyBankUser piggyBankUser1 = new PiggyBankUser();
-    piggyBankUser1.setPassword("password1");
-    piggyBankUser1.setToken("token1");
-    piggyBankUser1.setUsername("username1");
-
-    final PiggyBankUser piggyBankUser2 = new PiggyBankUser();
-    piggyBankUser2.setPassword("password2");
-    piggyBankUser2.setToken("token2");
-    piggyBankUser2.setUsername("username2");
+    final PiggyBankUser piggyBankUser1 =
+        forUsernamePasswordAndToken("username1", "password1", "token1");
+    final PiggyBankUser piggyBankUser2 =
+        forUsernamePasswordAndToken("username2", "password2", "token2");
 
     testEntityManager.persistAndFlush(piggyBankUser1);
     testEntityManager.persistAndFlush(piggyBankUser2);
 
-    final PiggyBankUser expected = new PiggyBankUser();
-    expected.setPassword("password1");
-    expected.setToken("token1");
-    expected.setUsername("username1");
-
     Optional<PiggyBankUser> user = sut.findByUsername("username1");
     assertTrue(user.isPresent());
-    assertEquals(expected, user.get());
+    assertEquals(piggyBankUser1, user.get());
   }
 }

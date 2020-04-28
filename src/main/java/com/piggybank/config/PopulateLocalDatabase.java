@@ -16,6 +16,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import static com.piggybank.api.expenses.dto.ExpenseType.BANK_ACCOUNT;
+import static com.piggybank.service.authentication.repository.PiggyBankUser.forUsernameAndPassword;
 
 @Profile("default")
 @ConditionalOnProperty(name = "piggy_bank.features.populate_db_with_dummy_data")
@@ -30,17 +31,16 @@ public class PopulateLocalDatabase implements ApplicationListener<ApplicationRea
   public void onApplicationEvent(ApplicationReadyEvent event) {
     LOGGER.info("START POPULATING DATABASE");
 
-    addExpenses(createUser(authenticationService));
+    final PiggyBankUser user = forUsernameAndPassword("username", "password");
+    authenticationService.add(user);
 
-    LOGGER.info("FINISHED POPULATING DATABASE");
-  }
-
-  private void addExpenses(PiggyBankUser owner) {
     new Random()
         .ints(0, 100)
-        .mapToObj(i -> singleExpense(owner, i, 1000d / i * 100))
+        .mapToObj(i -> singleExpense(user, i, 1000d / i * 100))
         .limit(10)
         .forEach(expensesService::save);
+
+    LOGGER.info("FINISHED POPULATING DATABASE");
   }
 
   private static Expense singleExpense(PiggyBankUser owner, long id, double amount) {
@@ -52,14 +52,5 @@ public class PopulateLocalDatabase implements ApplicationListener<ApplicationRea
     expense.setType(BANK_ACCOUNT);
 
     return expense;
-  }
-
-  private static PiggyBankUser createUser(final AuthenticationService authenticationService) {
-    final PiggyBankUser user = new PiggyBankUser();
-    user.setUsername("username");
-    user.setPassword("password");
-
-    authenticationService.add(user);
-    return user;
   }
 }

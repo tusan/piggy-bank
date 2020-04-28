@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.logging.Logger;
 
+import static com.piggybank.service.authentication.repository.PiggyBankUser.forUsernameAndPassword;
+
 @Component
 @Profile("integration")
 public class PopulateIntegTestDatabase implements ApplicationListener<ApplicationReadyEvent> {
@@ -29,9 +31,7 @@ public class PopulateIntegTestDatabase implements ApplicationListener<Applicatio
   }
 
   private static PiggyBankUser createUser(final AuthenticationService authenticationService) {
-    final PiggyBankUser user = new PiggyBankUser();
-    user.setUsername("username");
-    user.setPassword("password");
+    final PiggyBankUser user = forUsernameAndPassword("username", "password");
 
     authenticationService.add(user);
     return user;

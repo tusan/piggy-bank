@@ -14,11 +14,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
+import static com.piggybank.service.authentication.repository.PiggyBankUser.forUsernamePasswordAndToken;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TokenBasedAuthenticationServiceTest {
+  public static final String USERNAME = "username";
+  public static final String PASSWORD = "password";
+  public static final String TOKEN = "token";
   @InjectMocks private TokenBasedAuthenticationService sut;
 
   @Mock private JpaUserRepository userRepository;
@@ -31,33 +35,35 @@ public class TokenBasedAuthenticationServiceTest {
 
   @Before
   public void setUp() {
-    when(tokenBuilder.createNew()).thenReturn("token");
+    when(tokenBuilder.createNew()).thenReturn(TOKEN);
   }
 
   @Test
   public void shouldReturnTheAuthenticatedUserWhenSuccessfullyLogin() {
     when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
-    when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(testUser()));
+    when(userRepository.findByUsername(any(String.class)))
+        .thenReturn(Optional.of(testUser(PASSWORD, TOKEN)));
 
-    Optional<PiggyBankUser> user = sut.authenticate("username", "password");
+    Optional<PiggyBankUser> user = sut.authenticate(USERNAME, PASSWORD);
 
     assertTrue(user.isPresent());
     user.ifPresent(
         u -> {
-          assertEquals("username", u.getUsername());
-          assertEquals("password", u.getPassword());
-          assertEquals("token", u.getToken());
+          assertEquals(USERNAME, u.getUsername());
+          assertEquals(PASSWORD, u.getPassword());
+          assertEquals(TOKEN, u.getToken());
         });
 
-    verify(userRepository).save(testUser());
+    verify(userRepository).save(testUser(PASSWORD, TOKEN));
   }
 
   @Test
   public void shouldReturnEmptyWhenPasswordIsWrong() {
     when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
-    when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(testUser()));
+    when(userRepository.findByUsername(any(String.class)))
+        .thenReturn(Optional.of(testUser(PASSWORD, TOKEN)));
 
-    Optional<PiggyBankUser> user = sut.authenticate("username", "wrong_password");
+    Optional<PiggyBankUser> user = sut.authenticate(USERNAME, "wrong_password");
 
     assertFalse(user.isPresent());
   }
@@ -66,20 +72,20 @@ public class TokenBasedAuthenticationServiceTest {
   public void shouldReturnEmptyWhenUsernameIsWrong() {
     when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
 
-    Optional<PiggyBankUser> user = sut.authenticate("wrong_username", "password");
+    Optional<PiggyBankUser> user = sut.authenticate("wrong_username", PASSWORD);
 
     assertFalse(user.isPresent());
   }
 
   @Test
   public void shouldRemoveSessionFromUserWhenLoggingOut() {
-    when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(testUser()));
+    when(userRepository.findByUsername(anyString()))
+        .thenReturn(Optional.of(testUser(PASSWORD, TOKEN)));
 
-    PiggyBankUser expectedPiggyBankUser = new PiggyBankUser();
-    expectedPiggyBankUser.setUsername("username");
-    expectedPiggyBankUser.setPassword("password");
+    final PiggyBankUser expectedPiggyBankUser =
+        PiggyBankUser.forUsernameAndPassword(USERNAME, PASSWORD);
 
-    sut.revoke("username");
+    sut.revoke(USERNAME);
 
     verify(userRepository).save(expectedPiggyBankUser);
   }
@@ -88,17 +94,17 @@ public class TokenBasedAuthenticationServiceTest {
   public void shouldDoNothingWhenLoggingOutButUserIsMissing() {
     when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
 
-    sut.revoke("username");
+    sut.revoke(USERNAME);
 
-    verify(userRepository).findByUsername("username");
+    verify(userRepository).findByUsername(USERNAME);
     verify(userRepository, never()).save(any());
   }
 
   @Test
   public void shouldEncodePasswordAndSaveNewUser() {
-    when(passwordEncoder.encode("password")).thenReturn("encoded-password");
-    sut.add(testUser());
-    verify(userRepository).save(testUserWithDifferentPassword());
+    when(passwordEncoder.encode(PASSWORD)).thenReturn("encoded-password");
+    sut.add(testUser(PASSWORD, TOKEN));
+    verify(userRepository).save(testUser("encoded-password", TOKEN));
   }
 
   @Test
@@ -107,40 +113,23 @@ public class TokenBasedAuthenticationServiceTest {
     when(tokenBuilder.createNew(anyString())).thenReturn("token_with_issuer");
 
     when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
-    when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(testUser()));
+    when(userRepository.findByUsername(any(String.class)))
+        .thenReturn(Optional.of(testUser(PASSWORD, TOKEN)));
 
-    Optional<PiggyBankUser> user = sut.authenticate("username", "password");
+    Optional<PiggyBankUser> user = sut.authenticate(USERNAME, PASSWORD);
 
     assertTrue(user.isPresent());
     user.ifPresent(
         u -> {
-          assertEquals("username", u.getUsername());
-          assertEquals("password", u.getPassword());
+          assertEquals(USERNAME, u.getUsername());
+          assertEquals(PASSWORD, u.getPassword());
           assertEquals("token_with_issuer", u.getToken());
         });
 
-    verify(userRepository).save(testUserWithDifferentToken());
+    verify(userRepository).save(testUser(PASSWORD, "token_with_issuer"));
   }
-
-  private PiggyBankUser testUser() {
-    return testUser("password", "token");
-  }
-
-  private PiggyBankUser testUserWithDifferentToken() {
-    return testUser("password", "token_with_issuer");
-  }
-
-  private PiggyBankUser testUserWithDifferentPassword() {
-    return testUser("encoded-password", "token");
-  }
-
 
   private PiggyBankUser testUser(final String password, final String token) {
-    PiggyBankUser expectedPiggyBankUser = new PiggyBankUser();
-    expectedPiggyBankUser.setUsername("username");
-    expectedPiggyBankUser.setPassword(password);
-    expectedPiggyBankUser.setToken(token);
-    return expectedPiggyBankUser;
+    return forUsernamePasswordAndToken(USERNAME, password, token);
   }
-
 }

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.piggybank.api.expenses.dto.ExpenseType.*;
+import static com.piggybank.service.authentication.repository.PiggyBankUser.forUsernameAndPassword;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -28,13 +29,16 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ExpensesServiceImplTest {
+  private static final PiggyBankUser LOGGED_USER = forUsernameAndPassword("username", "password");
+
   private static final LocalDate JANUARY = LocalDate.of(2018, Month.JANUARY, 1);
   private static final LocalDate FEBRUARY = LocalDate.of(2018, Month.FEBRUARY, 1);
   private static final LocalDate MARCH = LocalDate.of(2018, Month.MARCH, 1);
-  private static final PiggyBankUser LOGGED_USER = new PiggyBankUser();
+
   private static final Expense EXPENSE_JANUARY = fakeExpense(HOUSE, "description1", JANUARY);
   private static final Expense EXPENSE_FEBRUARY = fakeExpense(MOTORBIKE, "description2", FEBRUARY);
   private static final Expense EXPENSE_MARCH = fakeExpense(BILLS, "description3", MARCH);
+
   @Mock private JpaExpensesRepository repository;
 
   @InjectMocks private ExpensesServiceImpl sut;
