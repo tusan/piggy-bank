@@ -2,7 +2,6 @@ package com.piggybank.security.token.jwt.simple;
 
 import com.piggybank.config.Environment;
 import com.piggybank.security.InstantMarker;
-import com.piggybank.security.token.jwt.JwtTokenToolkit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.sql.Date;
 import java.time.Instant;
 
-import static com.piggybank.security.token.jwt.JwtTokenToolkit.parseJwtToken;
+import static com.piggybank.security.token.jwt.JwtTokenTestHelper.parseJwtToken;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
