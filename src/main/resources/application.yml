@@ -20,7 +20,8 @@ piggy_bank:
     issuer_to_resolve_user: true
     jwt_token_type: true
 
+####### CONSIDERED FOR LOCAL DEVELOPMENT ONLY ########
 security:
   keystore:
-    location: classpath:piggybank-test.p12
+    location: classpath:piggybank-local.p12
     password: testpwd

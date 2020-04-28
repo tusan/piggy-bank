@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
@@ -31,31 +30,29 @@ class SecurityConfigs extends WebSecurityConfigurerAdapter {
   private String keystorePassword;
 
   @Override
-  public void configure(WebSecurity web) {
-    web.ignoring()
-        .antMatchers(
-            "/api/v1/users/**",
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            "/swagger-ui.html",
-            "/h2-console/**");
-  }
-
-  @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.csrf().disable();
 
     http.sessionManagement()
         .sessionCreationPolicy(STATELESS)
         .and()
-        .addFilter(new JwtAuthorizationFilter(authenticationManager, securityContextHolderFacade))
-        .authorizeRequests()
+        .addFilter(new JwtAuthorizationFilter(authenticationManager, securityContextHolderFacade));
+
+    http.authorizeRequests()
+        .antMatchers(
+            "/api/v1/users/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/h2-console/**")
+        .permitAll()
         .anyRequest()
         .authenticated();
   }
 
   @Bean(name = "jwtKey")
   public Key jwtKey() throws Exception {
+    System.out.println("USING " + keystore.getFilename());
     final KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
     ks.load(keystore.getInputStream(), keystorePassword.toCharArray());
 
