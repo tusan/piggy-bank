@@ -1,3 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://db:5432/piggy_bank
+
+piggy_bank:
+  features:
+    issuer_to_resolve_user: true
+    jwt_token_type: true

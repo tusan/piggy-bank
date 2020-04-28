@@ -19,3 +19,8 @@ piggy_bank:
   features:
     issuer_to_resolve_user: true
     jwt_token_type: true
+
+security:
+  keystore:
+    location: classpath:piggybank-test.p12
+    password: testpwd
