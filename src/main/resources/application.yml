@@ -19,6 +19,7 @@ piggy_bank:
   features:
     issuer_to_resolve_user: true
     jwt_token_type: true
+    populate_db_with_dummy_data: true
 
 ####### CONSIDERED FOR LOCAL DEVELOPMENT ONLY ########
 security:

@@ -52,7 +52,6 @@ class SecurityConfigs extends WebSecurityConfigurerAdapter {
 
   @Bean(name = "jwtKey")
   public Key jwtKey() throws Exception {
-    System.out.println("USING " + keystore.getFilename());
     final KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
     ks.load(keystore.getInputStream(), keystorePassword.toCharArray());
 

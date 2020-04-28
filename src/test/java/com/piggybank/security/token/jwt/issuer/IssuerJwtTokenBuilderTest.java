@@ -11,7 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.sql.Date;
 import java.time.Instant;
 
-import static com.piggybank.security.token.jwt.JwtTokenToolkit.parseJwtToken;
+import static com.piggybank.security.token.jwt.JwtTokenTestHelper.parseJwtToken;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
