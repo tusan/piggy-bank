@@ -35,8 +35,8 @@ class ApplicationContext {
 
   @Bean
   @ConditionalOnProperty(
-      name = "authentication.token.type",
-      havingValue = "uuid",
+      name = "piggy_bank.features.jwt_token_type",
+      havingValue = "false",
       matchIfMissing = true)
   TokenValidator noOpTokenValidator() {
     return TokenValidator.DEFAULT;
@@ -44,8 +44,8 @@ class ApplicationContext {
 
   @Bean
   @ConditionalOnProperty(
-      name = "authentication.token.type",
-      havingValue = "uuid",
+      name = "piggy_bank.features.jwt_token_type",
+      havingValue = "true",
       matchIfMissing = true)
   TokenBuilder uuidTokenGenerator() {
     return () -> UUID.randomUUID().toString();
@@ -54,20 +54,20 @@ class ApplicationContext {
   @Bean
   @ConditionalOnProperty(name = "piggy_bank.features.issuer_to_resolve_user", havingValue = "true")
   TokenValidator simpleJwtTokenValidator() {
-    LOGGER.info("Using jwtTokenValidator");
+    LOGGER.info("Using simpleJwtTokenValidator");
     return new SimpleJwtTokenValidator();
   }
 
   @Bean
   @ConditionalOnProperty(name = "piggy_bank.features.issuer_to_resolve_user", havingValue = "true")
   TokenBuilder simpleJwtTokenBuilder() {
-    LOGGER.info("Using jwtTokenValidator");
+    LOGGER.info("Using simpleJwtTokenBuilder");
     return new SimpleJwtTokenBuilder(Instant::now);
   }
 
   @Bean
   @Primary
-  @ConditionalOnProperty(name = "piggy_bank.features.issuer_to_resolve_user", havingValue = "true")
+  @ConditionalOnProperty(name = "piggy_bank.features.jwt_token_type", havingValue = "true")
   TokenValidator jwtTokenValidator() {
     LOGGER.info("Using jwtTokenValidator");
     return new JwtTokenValidator();
@@ -75,7 +75,7 @@ class ApplicationContext {
 
   @Bean
   @Primary
-  @ConditionalOnProperty(name = "piggy_bank.features.issuer_to_resolve_user", havingValue = "true")
+  @ConditionalOnProperty(name = "piggy_bank.features.jwt_token_type", havingValue = "true")
   TokenBuilder jwtTokenBuilder() {
     LOGGER.info("Using jwtTokenValidator");
     return new JwtTokenBuilder(Instant::now);
