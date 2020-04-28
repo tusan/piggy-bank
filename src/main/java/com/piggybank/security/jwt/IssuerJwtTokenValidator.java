@@ -5,10 +5,10 @@ import com.piggybank.security.TokenValidator;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 
-public final class JwtTokenValidator implements TokenValidator {
+public final class IssuerJwtTokenValidator implements TokenValidator {
   private final JwtParser jwtParser;
 
-  public JwtTokenValidator() {
+  public IssuerJwtTokenValidator() {
     this.jwtParser = createJwtParser();
   }
 

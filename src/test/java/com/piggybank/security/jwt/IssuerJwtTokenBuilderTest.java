@@ -1,6 +1,5 @@
 package com.piggybank.security.jwt;
 
-import com.piggybank.config.Environment;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,12 +15,12 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SimpleJwtTokenBuilderTest {
-  @InjectMocks private SimpleJwtTokenBuilder sut;
+public class IssuerJwtTokenBuilderTest {
+  @InjectMocks private IssuerJwtTokenBuilder sut;
 
   @Mock private InstantMarker instantMarker;
 
-  private static final Instant NOW = Instant.parse("3007-12-03T10:15:30.00Z");
+  public static final Instant NOW = Instant.parse("3007-12-03T10:15:30.00Z");
 
   @Before
   public void setUp() {
@@ -29,17 +28,18 @@ public class SimpleJwtTokenBuilderTest {
   }
 
   @Test
-  public void shouldCreateAndResolveJwtTokenWithTheDefaultKey() {
-    final String jws = sut.createNew();
+  public void shouldCreateAJwtTokenWithTheGivenIssuer() {
+    final String jws = sut.createNew("issuer");
     String actual = JwtTokenToolkit.parseJwtToken(jws).getIssuer();
 
-    assertEquals(Environment.ISSUER, actual);
+    assertEquals("issuer", actual);
   }
 
   @Test
   public void shouldSetASingleDayDurationOfTheToken() {
-    final String jws = sut.createNew();
+    final String jws = sut.createNew("issuer");
 
     assertEquals(Date.from(NOW.plus(1, DAYS)), JwtTokenToolkit.parseJwtToken(jws).getExpiration());
   }
+
 }

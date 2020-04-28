@@ -8,7 +8,7 @@ import static com.piggybank.config.Environment.SECRET_KEY;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class SimpleJwtTokenValidatorTest {
+public class SimpleIssuerJwtTokenValidatorTest {
   private final SimpleJwtTokenValidator sut =
       new SimpleJwtTokenValidator();
 

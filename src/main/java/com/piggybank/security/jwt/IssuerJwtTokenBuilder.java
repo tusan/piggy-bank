@@ -8,10 +8,10 @@ import java.util.Date;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
-public final class JwtTokenBuilder implements TokenBuilder {
+public final class IssuerJwtTokenBuilder implements TokenBuilder {
   private final InstantMarker instantMarker;
 
-  public JwtTokenBuilder(InstantMarker instantMarker) {
+  public IssuerJwtTokenBuilder(InstantMarker instantMarker) {
     this.instantMarker = instantMarker;
   }
 
