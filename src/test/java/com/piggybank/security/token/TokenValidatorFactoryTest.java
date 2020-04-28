@@ -1,8 +1,8 @@
-package com.piggybank.security;
+package com.piggybank.security.token;
 
 import com.piggybank.config.FeatureFlags;
-import com.piggybank.security.jwt.IssuerJwtTokenValidator;
-import com.piggybank.security.jwt.SimpleJwtTokenValidator;
+import com.piggybank.security.token.jwt.issuer.IssuerJwtTokenValidator;
+import com.piggybank.security.token.jwt.simple.SimpleJwtTokenValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

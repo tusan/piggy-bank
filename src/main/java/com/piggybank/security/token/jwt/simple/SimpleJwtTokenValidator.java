@@ -1,6 +1,6 @@
-package com.piggybank.security.jwt;
+package com.piggybank.security.token.jwt.simple;
 
-import com.piggybank.security.TokenValidator;
+import com.piggybank.security.token.TokenValidator;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 

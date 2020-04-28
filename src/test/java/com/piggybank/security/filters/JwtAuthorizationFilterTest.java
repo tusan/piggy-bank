@@ -1,7 +1,7 @@
 package com.piggybank.security.filters;
 
 import com.piggybank.security.SecurityContextHolderFacade;
-import com.piggybank.security.TokenAuthentication;
+import com.piggybank.security.token.TokenAuthentication;
 import com.piggybank.service.authentication.repository.PiggyBankUser;
 import org.junit.Before;
 import org.junit.Test;

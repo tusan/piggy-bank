@@ -2,7 +2,7 @@ package com.piggybank.security;
 
 import org.junit.Test;
 
-import static com.piggybank.security.TokenValidator.DEFAULT;
+import static com.piggybank.security.token.TokenValidator.DEFAULT;
 import static org.junit.Assert.*;
 
 public class TokenValidatorTest {

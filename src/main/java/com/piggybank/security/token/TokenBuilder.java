@@ -1,4 +1,4 @@
-package com.piggybank.security;
+package com.piggybank.security.token;
 
 import java.util.UUID;
 

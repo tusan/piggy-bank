@@ -1,4 +1,4 @@
-package com.piggybank.security;
+package com.piggybank.security.token;
 
 import com.piggybank.service.authentication.repository.PiggyBankUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

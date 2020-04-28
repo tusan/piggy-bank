@@ -1,7 +1,7 @@
-package com.piggybank.security.jwt;
+package com.piggybank.security.token.jwt;
 
 import com.piggybank.config.FeatureFlags;
-import com.piggybank.security.TokenValidator;
+import com.piggybank.security.token.TokenValidator;
 import com.piggybank.service.authentication.repository.JpaUserRepository;
 import com.piggybank.service.authentication.repository.PiggyBankUser;
 import org.junit.Before;
@@ -14,8 +14,8 @@ import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
 
-import static com.piggybank.security.TokenAuthentication.authorizedUser;
-import static com.piggybank.security.TokenAuthentication.unauthorizedUser;
+import static com.piggybank.security.token.TokenAuthentication.authorizedUser;
+import static com.piggybank.security.token.TokenAuthentication.unauthorizedUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;

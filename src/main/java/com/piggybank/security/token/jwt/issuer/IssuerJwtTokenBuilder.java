@@ -1,7 +1,8 @@
-package com.piggybank.security.jwt;
+package com.piggybank.security.token.jwt.issuer;
 
 import com.piggybank.config.Environment;
-import com.piggybank.security.TokenBuilder;
+import com.piggybank.security.InstantMarker;
+import com.piggybank.security.token.TokenBuilder;
 import io.jsonwebtoken.Jwts;
 
 import java.util.Date;

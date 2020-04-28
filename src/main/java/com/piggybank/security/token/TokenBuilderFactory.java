@@ -1,9 +1,9 @@
-package com.piggybank.security;
+package com.piggybank.security.token;
 
 import com.piggybank.config.FeatureFlags;
-import com.piggybank.security.jwt.InstantMarker;
-import com.piggybank.security.jwt.IssuerJwtTokenBuilder;
-import com.piggybank.security.jwt.SimpleJwtTokenBuilder;
+import com.piggybank.security.InstantMarker;
+import com.piggybank.security.token.jwt.issuer.IssuerJwtTokenBuilder;
+import com.piggybank.security.token.jwt.simple.SimpleJwtTokenBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.stereotype.Component;

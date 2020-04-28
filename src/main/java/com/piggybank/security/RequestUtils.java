@@ -3,7 +3,7 @@ package com.piggybank.security;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
-public class RequestUtils {
+public final class RequestUtils {
   public static final String AUTHORIZATION = "Authorization";
   public static final String BEARER = "Bearer";
 

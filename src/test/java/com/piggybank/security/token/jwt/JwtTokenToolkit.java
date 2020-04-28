@@ -1,4 +1,4 @@
-package com.piggybank.security.jwt;
+package com.piggybank.security.token.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,9 +1,9 @@
-package com.piggybank.security.jwt;
+package com.piggybank.security.token.jwt.simple;
 
 import com.piggybank.config.Environment;
-import com.piggybank.security.TokenBuilder;
+import com.piggybank.security.InstantMarker;
+import com.piggybank.security.token.TokenBuilder;
 import io.jsonwebtoken.Jwts;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
