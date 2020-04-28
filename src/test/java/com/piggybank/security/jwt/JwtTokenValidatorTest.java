@@ -7,7 +7,7 @@ import static com.piggybank.config.Environment.SECRET_KEY;
 import static org.junit.Assert.assertEquals;
 
 public class JwtTokenValidatorTest {
-  private JwtTokenValidator sut = new JwtTokenValidator();
+  private final JwtTokenValidator sut = new JwtTokenValidator();
 
   @Test
   public void shouldRetrieveIssuerFromAValidToken() {

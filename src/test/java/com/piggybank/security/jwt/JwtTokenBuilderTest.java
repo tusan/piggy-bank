@@ -1,7 +1,5 @@
 package com.piggybank.security.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +10,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.sql.Date;
 import java.time.Instant;
 
-import static com.piggybank.config.Environment.SECRET_KEY;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -33,7 +30,7 @@ public class JwtTokenBuilderTest {
   @Test
   public void shouldCreateAJwtTokenWithTheGivenIssuer() {
     final String jws = sut.createNew("issuer");
-    String actual = parseJwtToken(jws).getIssuer();
+    String actual = JwtTokenToolkit.parseJwtToken(jws).getIssuer();
 
     assertEquals("issuer", actual);
   }
@@ -42,10 +39,7 @@ public class JwtTokenBuilderTest {
   public void shouldSetASingleDayDurationOfTheToken() {
     final String jws = sut.createNew("issuer");
 
-    assertEquals(Date.from(NOW.plus(1, DAYS)), parseJwtToken(jws).getExpiration());
+    assertEquals(Date.from(NOW.plus(1, DAYS)), JwtTokenToolkit.parseJwtToken(jws).getExpiration());
   }
 
-  private Claims parseJwtToken(String jws) {
-    return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(jws).getBody();
-  }
 }
