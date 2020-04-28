@@ -1,4 +1,4 @@
-package com.piggybank.security.jwt;
+package com.piggybank.security;
 
 import java.time.Instant;
 

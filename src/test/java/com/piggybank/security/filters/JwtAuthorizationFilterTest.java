@@ -1,7 +1,7 @@
 package com.piggybank.security.filters;
 
 import com.piggybank.security.SecurityContextHolderFacade;
-import com.piggybank.security.TokenAuthentication;
+import com.piggybank.security.token.TokenAuthentication;
 import com.piggybank.service.authentication.repository.PiggyBankUser;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JwtAuthorizationFilterTest {
-  @InjectMocks JWTAuthorizationFilter sut;
+  @InjectMocks private JwtAuthorizationFilter sut;
 
   @Mock private HttpServletRequest request;
 

@@ -15,6 +15,7 @@ spring:
 
     database-platform: org.hibernate.dialect.H2Dialect
 
-authentication:
-  token:
-    type: jwt
+piggy_bank:
+  features:
+    issuer_to_resolve_user: true
+    jwt_token_type: true
