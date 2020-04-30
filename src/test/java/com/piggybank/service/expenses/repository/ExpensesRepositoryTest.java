@@ -1,7 +1,7 @@
 package com.piggybank.service.expenses.repository;
 
-import com.piggybank.api.expenses.dto.ExpenseType;
-import com.piggybank.service.authentication.repository.PiggyBankUser;
+import com.piggybank.api.expenses.ExpenseType;
+import com.piggybank.service.users.repository.PiggyBankUser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +17,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 
-import static com.piggybank.api.expenses.dto.ExpenseType.*;
-import static com.piggybank.service.authentication.repository.PiggyBankUser.forUsernamePasswordAndToken;
+import static com.piggybank.api.expenses.ExpenseType.*;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -129,6 +128,6 @@ public class ExpensesRepositoryTest {
   }
 
   private static PiggyBankUser createUser(final String username) {
-    return forUsernamePasswordAndToken(username, "password", "token");
+    return PiggyBankUser.forUsernamePasswordAndToken(username, "password", "token");
   }
 }

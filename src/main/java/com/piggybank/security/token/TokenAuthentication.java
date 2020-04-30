@@ -1,6 +1,6 @@
 package com.piggybank.security.token;
 
-import com.piggybank.service.authentication.repository.PiggyBankUser;
+import com.piggybank.service.users.repository.PiggyBankUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,5 +25,10 @@ public final class TokenAuthentication extends UsernamePasswordAuthenticationTok
 
   public static TokenAuthentication unauthorizedUser(final String token) {
     return new TokenAuthentication(null, token, null);
+  }
+
+  @Override
+  public String getName() {
+    return ((PiggyBankUser) getPrincipal()).getUsername();
   }
 }

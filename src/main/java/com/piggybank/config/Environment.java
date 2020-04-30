@@ -16,5 +16,5 @@ public interface Environment {
 
   // TODO to be removed, issuer must be only the username
   String ISSUER = "piggy-bank-app";
-  String JWT_KEY_ALIAS = "piggybank.com";
+  String JWT_KEY_ALIAS = "piggybank-local.com";
 }

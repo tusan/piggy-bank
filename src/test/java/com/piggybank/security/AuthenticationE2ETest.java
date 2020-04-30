@@ -2,11 +2,11 @@ package com.piggybank.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.piggybank.api.authentication.dto.LoggedUserDto;
-import com.piggybank.api.authentication.dto.LoginRequestDto;
-import com.piggybank.api.authentication.dto.LogoutDto;
-import com.piggybank.api.expenses.dto.ExpenseDto;
-import com.piggybank.api.expenses.dto.ExpenseType;
+import com.piggybank.security.authentication.LoggedUserDto;
+import com.piggybank.security.authentication.LoginRequestDto;
+import com.piggybank.security.authentication.LogoutDto;
+import com.piggybank.api.expenses.ExpenseDto;
+import com.piggybank.api.expenses.ExpenseType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
