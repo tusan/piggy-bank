@@ -2,10 +2,9 @@ package com.piggybank.api.expenses;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.piggybank.api.expenses.dto.ExpenseType;
-import com.piggybank.service.authentication.repository.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
 import com.piggybank.service.expenses.repository.Expense;
+import com.piggybank.service.users.repository.PiggyBankUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
 
-import static com.piggybank.service.authentication.repository.PiggyBankUser.forUsernameAndPassword;
+import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAndPassword;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -31,7 +30,7 @@ public class ExpensesControllerTest {
   private static final ObjectMapper mapper = new ObjectMapper();
   private static final MappingJackson2HttpMessageConverter messageConverter =
       new MappingJackson2HttpMessageConverter(mapper);
-  private static final PiggyBankUser LOGGER_USER = forUsernameAndPassword("usrname", "password");
+  private static final PiggyBankUser LOGGER_USER = forUsernameAndPassword("username", "password");
 
   static {
     mapper.registerModule(new JavaTimeModule());

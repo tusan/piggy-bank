@@ -1,9 +1,9 @@
 package com.piggybank.service.expenses;
 
-import com.piggybank.api.expenses.dto.ExpenseType;
-import com.piggybank.service.authentication.repository.PiggyBankUser;
+import com.piggybank.api.expenses.ExpenseType;
 import com.piggybank.service.expenses.repository.Expense;
 import com.piggybank.service.expenses.repository.JpaExpensesRepository;
+import com.piggybank.service.users.repository.PiggyBankUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.piggybank.api.expenses.dto.ExpenseType.*;
-import static com.piggybank.service.authentication.repository.PiggyBankUser.forUsernameAndPassword;
+import static com.piggybank.api.expenses.ExpenseType.*;
+import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAndPassword;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

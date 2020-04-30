@@ -1,7 +1,7 @@
 package com.piggybank.config;
 
-import com.piggybank.service.authentication.AuthenticationService;
-import com.piggybank.service.authentication.repository.PiggyBankUser;
+import com.piggybank.service.users.AuthenticationService;
+import com.piggybank.service.users.repository.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
 import com.piggybank.service.expenses.repository.Expense;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,8 @@ import java.time.LocalDate;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import static com.piggybank.api.expenses.dto.ExpenseType.BANK_ACCOUNT;
-import static com.piggybank.service.authentication.repository.PiggyBankUser.forUsernameAndPassword;
+import static com.piggybank.api.expenses.ExpenseType.BANK_ACCOUNT;
+import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAndPassword;
 
 @Profile("default")
 @ConditionalOnProperty(name = "piggy_bank.features.populate_db_with_dummy_data")

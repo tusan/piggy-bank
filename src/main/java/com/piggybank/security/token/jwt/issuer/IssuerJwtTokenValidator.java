@@ -1,14 +1,18 @@
 package com.piggybank.security.token.jwt.issuer;
 
-import com.piggybank.config.Environment;
 import com.piggybank.security.token.TokenValidator;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.security.Key;
 
 public final class IssuerJwtTokenValidator implements TokenValidator {
   private final JwtParser jwtParser;
+  private final Key securityKey;
 
-  public IssuerJwtTokenValidator() {
+  public IssuerJwtTokenValidator(final @Qualifier("jwtKey") Key securityKey) {
+    this.securityKey = securityKey;
     this.jwtParser = createJwtParser();
   }
 
@@ -23,6 +27,6 @@ public final class IssuerJwtTokenValidator implements TokenValidator {
   }
 
   private JwtParser createJwtParser() {
-    return Jwts.parserBuilder().setSigningKey(Environment.SECRET_KEY).build();
+    return Jwts.parserBuilder().setSigningKey(securityKey).build();
   }
 }

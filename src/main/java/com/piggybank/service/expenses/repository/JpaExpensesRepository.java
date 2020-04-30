@@ -1,6 +1,6 @@
 package com.piggybank.service.expenses.repository;
 
-import com.piggybank.service.authentication.repository.PiggyBankUser;
+import com.piggybank.service.users.repository.PiggyBankUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

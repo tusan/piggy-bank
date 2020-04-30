@@ -7,19 +7,27 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import javax.crypto.SecretKey;
+import java.security.Key;
 import java.sql.Date;
 import java.time.Instant;
 
-import static com.piggybank.security.token.jwt.JwtTokenTestHelper.parseJwtToken;
+import static com.piggybank.helpers.JwtTokenTestHelper.parseJwtToken;
+import static io.jsonwebtoken.SignatureAlgorithm.HS256;
+import static io.jsonwebtoken.security.Keys.secretKeyFor;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleIssuerJwtTokenBuilderTest {
+  public static final SecretKey SECRET_KEY = secretKeyFor(HS256);
   @InjectMocks private SimpleJwtTokenBuilder sut;
+
+  @Spy private Key secretKey = SECRET_KEY;
 
   @Mock private InstantMarker instantMarker;
 
@@ -33,7 +41,7 @@ public class SimpleIssuerJwtTokenBuilderTest {
   @Test
   public void shouldCreateAndResolveJwtTokenWithTheDefaultKey() {
     final String jws = sut.createNew();
-    String actual = parseJwtToken(jws).getIssuer();
+    String actual = parseJwtToken(jws, SECRET_KEY).getIssuer();
 
     assertEquals(Environment.ISSUER, actual);
   }
@@ -42,6 +50,6 @@ public class SimpleIssuerJwtTokenBuilderTest {
   public void shouldSetASingleDayDurationOfTheToken() {
     final String jws = sut.createNew();
 
-    assertEquals(Date.from(NOW.plus(1, DAYS)), parseJwtToken(jws).getExpiration());
+    assertEquals(Date.from(NOW.plus(1, DAYS)), parseJwtToken(jws, SECRET_KEY).getExpiration());
   }
 }
