@@ -29,14 +29,10 @@ final class TokenBuilderFactory extends AbstractFactoryBean<TokenBuilder> {
 
   @Override
   protected TokenBuilder createInstance() {
-    if (featureFlags.useJwtToken() && featureFlags.useIssuerToResolveUser()) {
+    if (featureFlags.useIssuerToResolveUser()) {
       return new IssuerJwtTokenBuilder(instantMarker, securityKey);
     }
 
-    if (featureFlags.useJwtToken()) {
-      return new SimpleJwtTokenBuilder(instantMarker, securityKey);
-    }
-
-    return TokenBuilder.DEFAULT;
+    return new SimpleJwtTokenBuilder(instantMarker, securityKey);
   }
 }

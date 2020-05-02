@@ -27,14 +27,10 @@ final class TokenValidatorFactory extends AbstractFactoryBean<TokenValidator> {
 
   @Override
   protected TokenValidator createInstance() {
-    if (featureFlags.useJwtToken() && featureFlags.useIssuerToResolveUser()) {
+    if (featureFlags.useIssuerToResolveUser()) {
       return new IssuerJwtTokenValidator(securityKey);
     }
 
-    if (featureFlags.useJwtToken()) {
-      return new SimpleJwtTokenValidator(securityKey);
-    }
-
-    return TokenValidator.DEFAULT;
+    return new SimpleJwtTokenValidator(securityKey);
   }
 }

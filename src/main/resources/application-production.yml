@@ -5,7 +5,6 @@ spring:
 piggy_bank:
   features:
     issuer_to_resolve_user: ${PIGGY_BANK_FEATURES_ISSUER_TO_RESOLVE_USER}
-    jwt_token_type: ${PIGGY_BANK_FEATURES_JWT_TOKEN_TYPE}
 
 security:
   keystore:
