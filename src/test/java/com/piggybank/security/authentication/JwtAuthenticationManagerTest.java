@@ -1,10 +1,8 @@
 package com.piggybank.security.authentication;
 
-import com.piggybank.config.FeatureFlags;
 import com.piggybank.security.token.TokenValidator;
 import com.piggybank.service.users.repository.JpaUserRepository;
 import com.piggybank.service.users.repository.PiggyBankUser;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,47 +23,15 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class JwtAuthenticationManagerTest {
   public static final String TOKEN = "token";
-  private static final PiggyBankUser USER = piggyBankUser(TOKEN);
+  private static final PiggyBankUser USER =
+      forUsernamePasswordAndToken("username", "password", TOKEN);
 
   @InjectMocks private JwtAuthenticationManager sut;
   @Mock private JpaUserRepository userRepository;
   @Mock private TokenValidator tokenValidator;
-  @Mock private FeatureFlags featureFlags;
-
-  @Before
-  public void setUp() {
-    when(userRepository.findByToken(anyString())).thenReturn(Optional.of(USER));
-    when(tokenValidator.validate(anyString())).thenReturn(true);
-  }
 
   @Test
-  public void shouldReturnTheUserIfFoundByToken() {
-    final Authentication actual = sut.authenticate(unauthorizedUser(TOKEN));
-
-    assertEquals(authorizedUser(USER), actual);
-  }
-
-  @Test
-  public void shouldReturnEmptyWhenTokenValidationFails() {
-    when(tokenValidator.validate(anyString())).thenReturn(false);
-
-    final Authentication actual = sut.authenticate(unauthorizedUser(TOKEN));
-
-    assertNull(actual);
-  }
-
-  @Test
-  public void shouldReturnEmptyIfNoUserFoundByToken() {
-    when(userRepository.findByToken(anyString())).thenReturn(Optional.empty());
-
-    final Authentication actual = sut.authenticate(unauthorizedUser(TOKEN));
-
-    assertNull(actual);
-  }
-
-  @Test
-  public void shouldResolveTheUserByUsernameWhen_issuer_to_resolve_user_FeatureIsEnabled() {
-    when(featureFlags.useIssuerToResolveUser()).thenReturn(true);
+  public void shouldResolveTheUserByUsername() {
     when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(USER));
     when(tokenValidator.validateAndGetIssuer(anyString())).thenReturn("issuer");
 
@@ -75,18 +41,21 @@ public class JwtAuthenticationManagerTest {
   }
 
   @Test
-  public void
-      shouldReturnEmptyWhen_issuer_to_resolve_user_FeatureIsEnabledAndUserHasNoTokenInDatabase() {
-    when(featureFlags.useIssuerToResolveUser()).thenReturn(true);
-    when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(piggyBankUser(null)));
-    when(tokenValidator.validateAndGetIssuer(anyString())).thenReturn("issuer");
+  public void shouldReturnEmptyWhenTokenValidationFails() {
+    when(tokenValidator.validateAndGetIssuer(anyString())).thenReturn(null);
 
     final Authentication actual = sut.authenticate(unauthorizedUser(TOKEN));
 
     assertNull(actual);
   }
 
-  private static PiggyBankUser piggyBankUser(final String token) {
-    return forUsernamePasswordAndToken("username", "password", token);
+  @Test
+  public void shouldReturnEmptyIfNoUserFound() {
+    when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+    when(tokenValidator.validateAndGetIssuer(anyString())).thenReturn("issuer");
+
+    final Authentication actual = sut.authenticate(unauthorizedUser(TOKEN));
+
+    assertNull(actual);
   }
 }

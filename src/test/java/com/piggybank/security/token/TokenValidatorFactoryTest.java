@@ -1,13 +1,9 @@
 package com.piggybank.security.token;
 
-import com.piggybank.config.FeatureFlags;
-import com.piggybank.security.token.jwt.issuer.IssuerJwtTokenValidator;
-import com.piggybank.security.token.jwt.simple.SimpleJwtTokenValidator;
+import com.piggybank.security.token.jwt.IssuerJwtTokenValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -23,16 +19,8 @@ public class TokenValidatorFactoryTest {
 
   @Spy private final Key secretKey = secretKeyFor(HS256);
 
-  @Mock private FeatureFlags featureFlags;
-
   @Test
-  public void shouldReturnSimpleJwtTokenValidator() {
-    assertEquals(SimpleJwtTokenValidator.class, sut.createInstance().getClass());
-  }
-
-  @Test
-  public void shouldReturnIssuerJwtTokenValidatorWhenIssuerEnabled() {
-    Mockito.when(featureFlags.useIssuerToResolveUser()).thenReturn(true);
+  public void shouldReturnIssuerJwtTokenValidator() {
     assertEquals(IssuerJwtTokenValidator.class, sut.createInstance().getClass());
   }
 }

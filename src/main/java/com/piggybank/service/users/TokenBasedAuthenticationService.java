@@ -1,32 +1,26 @@
 package com.piggybank.service.users;
 
-import com.piggybank.config.FeatureFlags;
 import com.piggybank.security.token.TokenBuilder;
 import com.piggybank.service.users.repository.JpaUserRepository;
 import com.piggybank.service.users.repository.PiggyBankUser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
 import java.util.Optional;
-import java.util.zip.GZIPInputStream;
 
 @Service
 final class TokenBasedAuthenticationService implements AuthenticationService {
   private final JpaUserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final TokenBuilder tokenBuilder;
-  private final FeatureFlags featureFlags;
 
   public TokenBasedAuthenticationService(
       final JpaUserRepository userRepository,
       final PasswordEncoder passwordEncoder,
-      final TokenBuilder tokenBuilder,
-      final FeatureFlags featureFlags) {
+      final TokenBuilder tokenBuilder) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.tokenBuilder = tokenBuilder;
-    this.featureFlags = featureFlags;
   }
 
   @Override
@@ -55,11 +49,7 @@ final class TokenBasedAuthenticationService implements AuthenticationService {
   }
 
   private PiggyBankUser saveUserToken(PiggyBankUser user) {
-    if (featureFlags.useIssuerToResolveUser()) {
-      user.setToken(tokenBuilder.createNew(user.getUsername()));
-    } else {
-      user.setToken(tokenBuilder.createNew());
-    }
+    user.setToken(tokenBuilder.createNew(user.getUsername()));
 
     userRepository.save(user);
     return user;

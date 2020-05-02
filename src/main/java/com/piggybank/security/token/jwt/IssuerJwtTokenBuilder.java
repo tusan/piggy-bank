@@ -1,6 +1,5 @@
-package com.piggybank.security.token.jwt.issuer;
+package com.piggybank.security.token.jwt;
 
-import com.piggybank.config.Environment;
 import com.piggybank.security.InstantMarker;
 import com.piggybank.security.token.TokenBuilder;
 import io.jsonwebtoken.Jwts;
@@ -19,11 +18,6 @@ public final class IssuerJwtTokenBuilder implements TokenBuilder {
       final InstantMarker instantMarker, @Qualifier("jwtKey") final Key securityKey) {
     this.instantMarker = instantMarker;
     this.securityKey = securityKey;
-  }
-
-  @Override
-  public String createNew() {
-    throw new UnsupportedOperationException();
   }
 
   @Override

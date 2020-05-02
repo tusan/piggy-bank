@@ -1,8 +1,6 @@
 package com.piggybank.security.token;
 
-import com.piggybank.config.FeatureFlags;
-import com.piggybank.security.token.jwt.issuer.IssuerJwtTokenValidator;
-import com.piggybank.security.token.jwt.simple.SimpleJwtTokenValidator;
+import com.piggybank.security.token.jwt.IssuerJwtTokenValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
@@ -14,8 +12,6 @@ import java.security.Key;
 @Component
 @DependsOn("jwtKey")
 final class TokenValidatorFactory extends AbstractFactoryBean<TokenValidator> {
-  @Autowired private FeatureFlags featureFlags;
-
   @Autowired
   @Qualifier("jwtKey")
   private Key securityKey;
@@ -27,10 +23,6 @@ final class TokenValidatorFactory extends AbstractFactoryBean<TokenValidator> {
 
   @Override
   protected TokenValidator createInstance() {
-    if (featureFlags.useIssuerToResolveUser()) {
-      return new IssuerJwtTokenValidator(securityKey);
-    }
-
-    return new SimpleJwtTokenValidator(securityKey);
+    return new IssuerJwtTokenValidator(securityKey);
   }
 }
