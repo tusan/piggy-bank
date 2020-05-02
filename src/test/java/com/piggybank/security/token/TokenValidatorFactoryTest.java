@@ -21,25 +21,17 @@ import static org.junit.Assert.assertEquals;
 public class TokenValidatorFactoryTest {
   @InjectMocks private TokenValidatorFactory sut;
 
-  @Spy
-  private final Key secretKey = secretKeyFor(HS256);
+  @Spy private final Key secretKey = secretKeyFor(HS256);
 
   @Mock private FeatureFlags featureFlags;
 
   @Test
-  public void shouldReturnUuidTokenValidatorWhenAllFlagsAreOff() {
-    assertEquals(TokenValidator.DEFAULT, sut.createInstance());
-  }
-
-  @Test
-  public void shouldReturnSimpleJwtTokenValidatorWhenJwtEnabledAndIssuerDisabled() {
-    Mockito.when(featureFlags.useJwtToken()).thenReturn(true);
+  public void shouldReturnSimpleJwtTokenValidator() {
     assertEquals(SimpleJwtTokenValidator.class, sut.createInstance().getClass());
   }
 
   @Test
-  public void shouldReturnIssuerJwtTokenValidatorWhenJwtEnabledAndIssuerEnabled() {
-    Mockito.when(featureFlags.useJwtToken()).thenReturn(true);
+  public void shouldReturnIssuerJwtTokenValidatorWhenIssuerEnabled() {
     Mockito.when(featureFlags.useIssuerToResolveUser()).thenReturn(true);
     assertEquals(IssuerJwtTokenValidator.class, sut.createInstance().getClass());
   }

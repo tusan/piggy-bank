@@ -6,6 +6,4 @@ public interface TokenValidator {
   default String validateAndGetIssuer(String token) {
     throw new UnsupportedOperationException();
   }
-
-  TokenValidator DEFAULT = token -> token != null && !token.isEmpty() && token.trim().length() > 0;
 }

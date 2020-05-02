@@ -15,26 +15,17 @@ import static org.junit.Assert.assertEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class TokenBuilderFactoryTest {
 
-  @InjectMocks
-  private TokenBuilderFactory sut;
+  @InjectMocks private TokenBuilderFactory sut;
 
-  @Mock
-  private FeatureFlags featureFlags;
+  @Mock private FeatureFlags featureFlags;
 
   @Test
-  public void shouldReturnUuidTokenBuilderWhenAllFlagsAreOff() {
-    assertEquals(TokenBuilder.DEFAULT, sut.createInstance());
-  }
-
-  @Test
-  public void shouldReturnSimpleJwtTokenValidatorWhenJwtEnabledAndIssuerDisabled() {
-    Mockito.when(featureFlags.useJwtToken()).thenReturn(true);
+  public void shouldReturnSimpleJwtTokenValidator() {
     assertEquals(SimpleJwtTokenBuilder.class, sut.createInstance().getClass());
   }
 
   @Test
-  public void shouldReturnIssuerJwtTokenValidatorWhenJwtEnabledAndIssuerEnabled() {
-    Mockito.when(featureFlags.useJwtToken()).thenReturn(true);
+  public void shouldReturnIssuerJwtTokenValidatorWhenIssuerEnabled() {
     Mockito.when(featureFlags.useIssuerToResolveUser()).thenReturn(true);
     assertEquals(IssuerJwtTokenBuilder.class, sut.createInstance().getClass());
   }
