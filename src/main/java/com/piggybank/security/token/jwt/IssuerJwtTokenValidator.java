@@ -1,4 +1,4 @@
-package com.piggybank.security.token.jwt.issuer;
+package com.piggybank.security.token.jwt;
 
 import com.piggybank.security.token.TokenValidator;
 import io.jsonwebtoken.JwtParser;
@@ -14,11 +14,6 @@ public final class IssuerJwtTokenValidator implements TokenValidator {
   public IssuerJwtTokenValidator(final @Qualifier("jwtKey") Key securityKey) {
     this.securityKey = securityKey;
     this.jwtParser = createJwtParser();
-  }
-
-  @Override
-  public boolean validate(String token) {
-    throw new UnsupportedOperationException();
   }
 
   @Override

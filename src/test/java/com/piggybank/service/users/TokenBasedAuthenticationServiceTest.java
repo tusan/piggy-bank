@@ -1,10 +1,8 @@
 package com.piggybank.service.users;
 
-import com.piggybank.config.FeatureFlags;
 import com.piggybank.security.token.TokenBuilder;
 import com.piggybank.service.users.repository.JpaUserRepository;
 import com.piggybank.service.users.repository.PiggyBankUser;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,15 +30,10 @@ public class TokenBasedAuthenticationServiceTest {
 
   @Mock private TokenBuilder tokenBuilder;
 
-  @Mock private FeatureFlags featureFlags;
-
-  @Before
-  public void setUp() {
-    when(tokenBuilder.createNew()).thenReturn(TOKEN);
-  }
-
   @Test
   public void shouldReturnTheAuthenticatedUserWhenSuccessfullyLogin() {
+    when(tokenBuilder.createNew(anyString())).thenReturn("token_with_issuer");
+
     when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
     when(userRepository.findByUsername(any(String.class)))
         .thenReturn(Optional.of(testUser(PASSWORD, TOKEN)));
@@ -52,10 +45,10 @@ public class TokenBasedAuthenticationServiceTest {
         u -> {
           assertEquals(USERNAME, u.getUsername());
           assertEquals(PASSWORD, u.getPassword());
-          assertEquals(TOKEN, u.getToken());
+          assertEquals("token_with_issuer", u.getToken());
         });
 
-    verify(userRepository).save(testUser(PASSWORD, TOKEN));
+    verify(userRepository).save(testUser(PASSWORD, "token_with_issuer"));
   }
 
   @Test
@@ -105,28 +98,6 @@ public class TokenBasedAuthenticationServiceTest {
     when(passwordEncoder.encode(PASSWORD)).thenReturn("encoded-password");
     sut.add(testUser(PASSWORD, TOKEN));
     verify(userRepository).save(testUser("encoded-password", TOKEN));
-  }
-
-  @Test
-  public void shouldSaveTheAuthenticationTokenUsingTheUserIssuedWhenFeatureIsEnabled() {
-    when(featureFlags.useIssuerToResolveUser()).thenReturn(true);
-    when(tokenBuilder.createNew(anyString())).thenReturn("token_with_issuer");
-
-    when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
-    when(userRepository.findByUsername(any(String.class)))
-        .thenReturn(Optional.of(testUser(PASSWORD, TOKEN)));
-
-    Optional<PiggyBankUser> user = sut.authenticate(USERNAME, PASSWORD);
-
-    assertTrue(user.isPresent());
-    user.ifPresent(
-        u -> {
-          assertEquals(USERNAME, u.getUsername());
-          assertEquals(PASSWORD, u.getPassword());
-          assertEquals("token_with_issuer", u.getToken());
-        });
-
-    verify(userRepository).save(testUser(PASSWORD, "token_with_issuer"));
   }
 
   private PiggyBankUser testUser(final String password, final String token) {

@@ -1,4 +1,4 @@
-package com.piggybank.security.token.jwt.issuer;
+package com.piggybank.security.token.jwt;
 
 import io.jsonwebtoken.Jwts;
 import org.junit.Test;
