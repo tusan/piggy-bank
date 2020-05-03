@@ -1,8 +1,6 @@
 package com.piggybank.security.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.piggybank.security.authentication.JwtLogoutHandler;
-import com.piggybank.service.users.AuthenticationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

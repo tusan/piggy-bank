@@ -1,4 +1,4 @@
-package com.piggybank.service.users;
+package com.piggybank.security.authentication;
 
 import com.piggybank.security.token.TokenBuilder;
 import com.piggybank.service.users.repository.JpaUserRepository;

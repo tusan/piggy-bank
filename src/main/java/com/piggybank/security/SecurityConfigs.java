@@ -4,12 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.piggybank.security.authentication.JwtAuthenticationFilter;
 import com.piggybank.security.authentication.JwtAuthorizationFilter;
 import com.piggybank.security.authentication.JwtLogoutHandler;
-import com.piggybank.service.users.AuthenticationService;
+import com.piggybank.security.authentication.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,10 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.servlet.Filter;
-import java.security.Key;
-import java.security.KeyStore;
 
-import static com.piggybank.config.Environment.JWT_KEY_ALIAS;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration

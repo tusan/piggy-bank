@@ -1,7 +1,6 @@
 package com.piggybank.security.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.piggybank.service.users.AuthenticationService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
