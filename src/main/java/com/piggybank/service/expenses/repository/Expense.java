@@ -2,7 +2,7 @@ package com.piggybank.service.expenses.repository;
 
 import com.google.common.base.MoreObjects;
 import com.piggybank.api.expenses.ExpenseType;
-import com.piggybank.service.users.repository.PiggyBankUser;
+import com.piggybank.service.users.PiggyBankUser;
 
 import javax.persistence.*;
 import java.time.LocalDate;

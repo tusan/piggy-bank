@@ -1,4 +1,4 @@
-package com.piggybank.service.users.repository;
+package com.piggybank.service.users;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
-import static com.piggybank.service.users.repository.PiggyBankUser.forUsernamePasswordAndToken;
+import static com.piggybank.service.users.PiggyBankUser.forUsernamePasswordAndToken;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

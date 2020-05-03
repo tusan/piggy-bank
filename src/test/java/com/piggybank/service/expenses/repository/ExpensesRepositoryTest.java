@@ -1,7 +1,7 @@
 package com.piggybank.service.expenses.repository;
 
 import com.piggybank.api.expenses.ExpenseType;
-import com.piggybank.service.users.repository.PiggyBankUser;
+import com.piggybank.service.users.PiggyBankUser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

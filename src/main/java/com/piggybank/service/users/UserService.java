@@ -1,7 +1,8 @@
 package com.piggybank.service.users;
 
-import com.piggybank.service.users.repository.PiggyBankUser;
+import java.util.Optional;
 
 public interface UserService {
-    void add(PiggyBankUser addedUser);
+    void addOrReplace(PiggyBankUser addedUser);
+    Optional<PiggyBankUser> findByUsername(final String username);
 }

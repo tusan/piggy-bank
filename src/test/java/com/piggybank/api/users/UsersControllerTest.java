@@ -3,7 +3,7 @@ package com.piggybank.api.users;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.piggybank.service.users.UserService;
-import com.piggybank.service.users.repository.PiggyBankUser;
+import com.piggybank.service.users.PiggyBankUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAndPassword;
+import static com.piggybank.service.users.PiggyBankUser.forUsernameAndPassword;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -53,6 +53,6 @@ public class UsersControllerTest {
 
     PiggyBankUser addedUser = forUsernameAndPassword(USERNAME, PASSWORD);
 
-    verify(userService).add(addedUser);
+    verify(userService).addOrReplace(addedUser);
   }
 }

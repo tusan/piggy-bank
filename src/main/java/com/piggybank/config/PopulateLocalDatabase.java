@@ -3,7 +3,7 @@ package com.piggybank.config;
 import com.piggybank.service.expenses.ExpensesService;
 import com.piggybank.service.expenses.repository.Expense;
 import com.piggybank.service.users.UserService;
-import com.piggybank.service.users.repository.PiggyBankUser;
+import com.piggybank.service.users.PiggyBankUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -16,7 +16,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import static com.piggybank.api.expenses.ExpenseType.BANK_ACCOUNT;
-import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAndPassword;
+import static com.piggybank.service.users.PiggyBankUser.forUsernameAndPassword;
 
 @Profile("default")
 @ConditionalOnProperty(name = "piggy_bank.features.populate_db_with_dummy_data")
@@ -32,7 +32,7 @@ public class PopulateLocalDatabase implements ApplicationListener<ApplicationRea
     LOGGER.info("START POPULATING DATABASE");
 
     final PiggyBankUser user = forUsernameAndPassword("username", "password");
-    userService.add(user);
+    userService.addOrReplace(user);
 
     new Random()
         .ints(0, 100)

@@ -1,6 +1,6 @@
 package com.piggybank.security.token;
 
-import com.piggybank.service.users.repository.PiggyBankUser;
+import com.piggybank.service.users.PiggyBankUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

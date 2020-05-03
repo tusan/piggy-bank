@@ -1,4 +1,4 @@
-package com.piggybank.service.users.repository;
+package com.piggybank.service.users;
 
 import com.google.common.base.MoreObjects;
 

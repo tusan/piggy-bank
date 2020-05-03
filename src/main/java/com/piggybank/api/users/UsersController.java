@@ -4,7 +4,7 @@ import com.piggybank.service.users.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAndPassword;
+import static com.piggybank.service.users.PiggyBankUser.forUsernameAndPassword;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
@@ -20,7 +20,7 @@ class UsersController {
 
   @PostMapping("register")
   public ResponseEntity<Void> register(@RequestBody final RegistrationDto registrationDto) {
-    userService.add(forUsernameAndPassword(registrationDto.username(), registrationDto.password()));
+    userService.addOrReplace(forUsernameAndPassword(registrationDto.username(), registrationDto.password()));
 
     return ResponseEntity.status(CREATED).build();
   }

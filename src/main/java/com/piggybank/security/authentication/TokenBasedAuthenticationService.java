@@ -2,8 +2,7 @@ package com.piggybank.security.authentication;
 
 import com.piggybank.security.token.TokenBuilder;
 import com.piggybank.service.users.UserService;
-import com.piggybank.service.users.repository.JpaUserRepository;
-import com.piggybank.service.users.repository.PiggyBankUser;
+import com.piggybank.service.users.PiggyBankUser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,22 +10,22 @@ import java.util.Optional;
 
 @Service
 final class TokenBasedAuthenticationService implements AuthenticationService {
-  private final JpaUserRepository userRepository;
+  private final UserService userService;
   private final PasswordEncoder passwordEncoder;
   private final TokenBuilder tokenBuilder;
 
   public TokenBasedAuthenticationService(
-      final JpaUserRepository userRepository,
+      final UserService userService,
       final PasswordEncoder passwordEncoder,
       final TokenBuilder tokenBuilder) {
-    this.userRepository = userRepository;
+    this.userService = userService;
     this.passwordEncoder = passwordEncoder;
     this.tokenBuilder = tokenBuilder;
   }
 
   @Override
   public Optional<PiggyBankUser> authenticate(final String username, final String password) {
-    return userRepository
+    return userService
         .findByUsername(username)
         .filter(user -> passwordEncoder.matches(password, user.getPassword()))
         .map(this::saveUserToken);
@@ -34,19 +33,19 @@ final class TokenBasedAuthenticationService implements AuthenticationService {
 
   @Override
   public void revoke(final String username) {
-    userRepository
+    userService
         .findByUsername(username)
         .ifPresent(
             user -> {
               user.setToken(null);
-              userRepository.save(user);
+              userService.addOrReplace(user);
             });
   }
 
   private PiggyBankUser saveUserToken(PiggyBankUser user) {
     user.setToken(tokenBuilder.createNew(user.getUsername()));
 
-    userRepository.save(user);
+    userService.addOrReplace(user);
     return user;
   }
 }

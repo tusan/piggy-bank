@@ -1,6 +1,6 @@
 package com.piggybank.api.expenses;
 
-import com.piggybank.service.users.repository.PiggyBankUser;
+import com.piggybank.service.users.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
 import com.piggybank.service.expenses.repository.Expense;
 import io.swagger.v3.oas.annotations.Parameter;

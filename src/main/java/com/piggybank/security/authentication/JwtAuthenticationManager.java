@@ -2,8 +2,8 @@ package com.piggybank.security.authentication;
 
 import com.piggybank.security.token.TokenAuthentication;
 import com.piggybank.security.token.TokenValidator;
-import com.piggybank.service.users.repository.JpaUserRepository;
-import com.piggybank.service.users.repository.PiggyBankUser;
+import com.piggybank.service.users.UserService;
+import com.piggybank.service.users.PiggyBankUser;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -14,12 +14,12 @@ import java.util.Optional;
 @Service
 final class JwtAuthenticationManager implements AuthenticationManager {
   private final TokenValidator tokenValidator;
-  private final JpaUserRepository userRepository;
+  private final UserService userService;
 
   public JwtAuthenticationManager(
-      final TokenValidator tokenValidator, final JpaUserRepository userRepository) {
+      final TokenValidator tokenValidator, final UserService userService) {
     this.tokenValidator = tokenValidator;
-    this.userRepository = userRepository;
+    this.userService = userService;
   }
 
   @Override
@@ -34,6 +34,6 @@ final class JwtAuthenticationManager implements AuthenticationManager {
   }
 
   private Optional<PiggyBankUser> resolveUserByIssuer(String issuer) {
-    return userRepository.findByUsername(issuer);
+    return userService.findByUsername(issuer);
   }
 }

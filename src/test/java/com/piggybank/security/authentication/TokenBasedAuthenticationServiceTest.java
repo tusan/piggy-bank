@@ -1,8 +1,8 @@
 package com.piggybank.security.authentication;
 
 import com.piggybank.security.token.TokenBuilder;
-import com.piggybank.service.users.repository.JpaUserRepository;
-import com.piggybank.service.users.repository.PiggyBankUser;
+import com.piggybank.service.users.UserService;
+import com.piggybank.service.users.PiggyBankUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,8 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAndPassword;
-import static com.piggybank.service.users.repository.PiggyBankUser.forUsernamePasswordAndToken;
+import static com.piggybank.service.users.PiggyBankUser.forUsernameAndPassword;
+import static com.piggybank.service.users.PiggyBankUser.forUsernamePasswordAndToken;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -25,7 +25,7 @@ public class TokenBasedAuthenticationServiceTest {
 
   @InjectMocks private TokenBasedAuthenticationService sut;
 
-  @Mock private JpaUserRepository userRepository;
+  @Mock private UserService userRepository;
 
   @Mock private PasswordEncoder passwordEncoder;
 
@@ -48,7 +48,7 @@ public class TokenBasedAuthenticationServiceTest {
           assertEquals("token_with_issuer", u.getToken());
         });
 
-    verify(userRepository).save(testUser("token_with_issuer"));
+    verify(userRepository).addOrReplace(testUser("token_with_issuer"));
   }
 
   @Test
@@ -78,7 +78,7 @@ public class TokenBasedAuthenticationServiceTest {
 
     sut.revoke(USERNAME);
 
-    verify(userRepository).save(expectedPiggyBankUser);
+    verify(userRepository).addOrReplace(expectedPiggyBankUser);
   }
 
   @Test
@@ -88,7 +88,7 @@ public class TokenBasedAuthenticationServiceTest {
     sut.revoke(USERNAME);
 
     verify(userRepository).findByUsername(USERNAME);
-    verify(userRepository, never()).save(any());
+    verify(userRepository, never()).addOrReplace(any());
   }
 
   private PiggyBankUser testUser(final String token) {

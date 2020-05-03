@@ -3,7 +3,7 @@ package com.piggybank.security.authentication;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.piggybank.security.token.TokenAuthentication;
-import com.piggybank.service.users.repository.PiggyBankUser;
+import com.piggybank.service.users.PiggyBankUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +27,7 @@ import java.util.Optional;
 
 import static com.piggybank.security.authentication.LoggedUserDto.forUsernameAndToken;
 import static com.piggybank.security.authentication.LoginRequestDto.forUsernameAndPassword;
-import static com.piggybank.service.users.repository.PiggyBankUser.forUsernamePasswordAndToken;
+import static com.piggybank.service.users.PiggyBankUser.forUsernamePasswordAndToken;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

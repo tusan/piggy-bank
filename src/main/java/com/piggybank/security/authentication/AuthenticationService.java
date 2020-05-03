@@ -1,6 +1,6 @@
 package com.piggybank.security.authentication;
 
-import com.piggybank.service.users.repository.PiggyBankUser;
+import com.piggybank.service.users.PiggyBankUser;
 
 import java.util.Optional;
 
