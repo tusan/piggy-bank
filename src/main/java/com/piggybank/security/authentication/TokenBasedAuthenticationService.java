@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-final class TokenBasedAuthenticationService implements AuthenticationService, UserService {
+final class TokenBasedAuthenticationService implements AuthenticationService {
   private final JpaUserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final TokenBuilder tokenBuilder;
@@ -41,12 +41,6 @@ final class TokenBasedAuthenticationService implements AuthenticationService, Us
               user.setToken(null);
               userRepository.save(user);
             });
-  }
-
-  @Override
-  public void add(final PiggyBankUser addedUser) {
-    addedUser.setPassword(passwordEncoder.encode(addedUser.getPassword()));
-    userRepository.save(addedUser);
   }
 
   private PiggyBankUser saveUserToken(PiggyBankUser user) {

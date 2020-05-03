@@ -19,9 +19,10 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TokenBasedAuthenticationServiceTest {
-  public static final String USERNAME = "username";
-  public static final String PASSWORD = "password";
-  public static final String TOKEN = "token";
+  private static final String USERNAME = "username";
+  private static final String PASSWORD = "password";
+  private static final String TOKEN = "token";
+
   @InjectMocks private TokenBasedAuthenticationService sut;
 
   @Mock private JpaUserRepository userRepository;
@@ -35,8 +36,7 @@ public class TokenBasedAuthenticationServiceTest {
     when(tokenBuilder.createNew(anyString())).thenReturn("token_with_issuer");
 
     when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
-    when(userRepository.findByUsername(any(String.class)))
-        .thenReturn(Optional.of(testUser(PASSWORD, TOKEN)));
+    when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(testUser(TOKEN)));
 
     Optional<PiggyBankUser> user = sut.authenticate(USERNAME, PASSWORD);
 
@@ -48,14 +48,13 @@ public class TokenBasedAuthenticationServiceTest {
           assertEquals("token_with_issuer", u.getToken());
         });
 
-    verify(userRepository).save(testUser(PASSWORD, "token_with_issuer"));
+    verify(userRepository).save(testUser("token_with_issuer"));
   }
 
   @Test
   public void shouldReturnEmptyWhenPasswordIsWrong() {
     when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
-    when(userRepository.findByUsername(any(String.class)))
-        .thenReturn(Optional.of(testUser(PASSWORD, TOKEN)));
+    when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(testUser(TOKEN)));
 
     Optional<PiggyBankUser> user = sut.authenticate(USERNAME, "wrong_password");
 
@@ -73,8 +72,7 @@ public class TokenBasedAuthenticationServiceTest {
 
   @Test
   public void shouldRemoveSessionFromUserWhenLoggingOut() {
-    when(userRepository.findByUsername(anyString()))
-        .thenReturn(Optional.of(testUser(PASSWORD, TOKEN)));
+    when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(testUser(TOKEN)));
 
     final PiggyBankUser expectedPiggyBankUser = forUsernameAndPassword(USERNAME, PASSWORD);
 
@@ -93,14 +91,7 @@ public class TokenBasedAuthenticationServiceTest {
     verify(userRepository, never()).save(any());
   }
 
-  @Test
-  public void shouldEncodePasswordAndSaveNewUser() {
-    when(passwordEncoder.encode(PASSWORD)).thenReturn("encoded-password");
-    sut.add(testUser(PASSWORD, TOKEN));
-    verify(userRepository).save(testUser("encoded-password", TOKEN));
-  }
-
-  private PiggyBankUser testUser(final String password, final String token) {
-    return forUsernamePasswordAndToken(USERNAME, password, token);
+  private PiggyBankUser testUser(final String token) {
+    return forUsernamePasswordAndToken(USERNAME, PASSWORD, token);
   }
 }
