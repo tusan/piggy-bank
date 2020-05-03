@@ -42,7 +42,7 @@ public class ExpensesServiceImplTest {
   @InjectMocks private ExpensesServiceImpl sut;
 
   private static Expense fakeExpense(
-      final ExpenseType expenseType, final String description, final LocalDate date) {
+          final ExpenseType expenseType, final String description, final LocalDate date) {
     final Expense expense = new Expense();
 
     expense.setId(1L);

@@ -22,7 +22,7 @@ final class JpaUserService implements UserService {
   }
 
   @Override
-  public Optional<PiggyBankUser> findByUsername(String username) {
+  public Optional<PiggyBankUser> findByUsername(final String username) {
     return userRepository.findByUsername(username);
   }
 }

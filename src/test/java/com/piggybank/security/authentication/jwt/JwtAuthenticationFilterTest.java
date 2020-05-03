@@ -1,7 +1,9 @@
-package com.piggybank.security.authentication;
+package com.piggybank.security.authentication.jwt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.piggybank.security.authentication.AuthenticationService;
+import com.piggybank.security.authentication.jwt.JwtAuthenticationFilter;
 import com.piggybank.security.token.TokenAuthentication;
 import com.piggybank.service.users.PiggyBankUser;
 import org.junit.Before;

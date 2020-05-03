@@ -1,6 +1,9 @@
-package com.piggybank.security.authentication;
+package com.piggybank.security.authentication.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.piggybank.security.authentication.AuthenticationService;
+import com.piggybank.security.authentication.LoggedUserDto;
+import com.piggybank.security.authentication.LoginRequestDto;
 import com.piggybank.security.token.TokenAuthentication;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -20,15 +23,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   private final AuthenticationService authenticationService;
 
   public JwtAuthenticationFilter(
-      final ObjectMapper objectMapper,
-      final AuthenticationService authenticationService) {
+          final ObjectMapper objectMapper,
+          final AuthenticationService authenticationService) {
     this.objectMapper = objectMapper;
     this.authenticationService = authenticationService;
   }
 
   @Override
   public Authentication attemptAuthentication(
-      final HttpServletRequest request, final HttpServletResponse response)
+          final HttpServletRequest request, final HttpServletResponse response)
       throws AuthenticationException {
     return readDtoFromRequest(request)
         .flatMap(r -> authenticationService.authorize(r.username(), r.password()))
@@ -36,23 +39,23 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         .orElseThrow(() -> new BadCredentialsException("Invalid User Provided"));
   }
 
-  private Optional<LoginRequestDto> readDtoFromRequest(HttpServletRequest request) {
+  private Optional<LoginRequestDto> readDtoFromRequest(final HttpServletRequest request) {
     try {
       if (request.getContentLength() == 0) {
         return Optional.empty();
       }
       return Optional.of(objectMapper.readValue(request.getInputStream(), LoginRequestDto.class));
-    } catch (IOException e) {
+    } catch (final IOException e) {
       return Optional.empty();
     }
   }
 
   @Override
   protected void successfulAuthentication(
-      final HttpServletRequest request,
-      final HttpServletResponse response,
-      final FilterChain chain,
-      final Authentication authResult)
+          final HttpServletRequest request,
+          final HttpServletResponse response,
+          final FilterChain chain,
+          final Authentication authResult)
       throws IOException {
     final LoggedUserDto output =
         forUsernameAndToken(authResult.getName(), authResult.getCredentials().toString());

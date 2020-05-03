@@ -1,4 +1,4 @@
-package com.piggybank.security.authentication;
+package com.piggybank.security.authentication.jwt;
 
 import com.piggybank.security.token.TokenAuthentication;
 import com.piggybank.security.token.TokenValidator;
@@ -17,23 +17,23 @@ final class JwtAuthenticationManager implements AuthenticationManager {
   private final UserService userService;
 
   public JwtAuthenticationManager(
-      final TokenValidator tokenValidator, final UserService userService) {
+          final TokenValidator tokenValidator, final UserService userService) {
     this.tokenValidator = tokenValidator;
     this.userService = userService;
   }
 
   @Override
-  public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+  public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
     final String token = authentication.getCredentials().toString();
     return validateAndRetrieve(token).map(TokenAuthentication::authorizedUser).orElse(null);
   }
 
-  private Optional<PiggyBankUser> validateAndRetrieve(String token) {
+  private Optional<PiggyBankUser> validateAndRetrieve(final String token) {
     return resolveUserByIssuer(tokenValidator.validateAndGetIssuer(token))
         .filter(user -> token.equals(user.getToken()));
   }
 
-  private Optional<PiggyBankUser> resolveUserByIssuer(String issuer) {
+  private Optional<PiggyBankUser> resolveUserByIssuer(final String issuer) {
     return userService.findByUsername(issuer);
   }
 }

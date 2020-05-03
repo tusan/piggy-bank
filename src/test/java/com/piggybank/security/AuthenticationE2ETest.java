@@ -83,7 +83,7 @@ public class AuthenticationE2ETest {
     shouldBeNotAuthorized(token);
   }
 
-  private void shouldBeNotAuthorized(String token) throws Exception {
+  private void shouldBeNotAuthorized(final String token) throws Exception {
     mvc.perform(
             get("/api/v1/expenses")
                 .header("Authorization", String.format("Bearer %s", token))
@@ -96,8 +96,8 @@ public class AuthenticationE2ETest {
         .andExpect(status().isForbidden());
   }
 
-  private List<ExpenseDto> whenRequestingAllUserExpenses(String token) throws Exception {
-    byte[] expensesResponse =
+  private List<ExpenseDto> whenRequestingAllUserExpenses(final String token) throws Exception {
+    final byte[] expensesResponse =
         mvc.perform(
                 get("/api/v1/expenses")
                     .header("Authorization", String.format("Bearer %s", token))
@@ -112,7 +112,7 @@ public class AuthenticationE2ETest {
         TypeFactory.defaultInstance().constructCollectionType(List.class, ExpenseDto.class));
   }
 
-  private List<ExpenseDto> givenAListOfExpensesForTheGivenAuthenticatedUser(String token) {
+  private List<ExpenseDto> givenAListOfExpensesForTheGivenAuthenticatedUser(final String token) {
     return RANDOM_GENERATOR
         .ints(0, 100)
         .mapToObj(
@@ -136,7 +136,7 @@ public class AuthenticationE2ETest {
                   .contentType(APPLICATION_JSON)
                   .content(objectMapper.writeValueAsBytes(expenseDto)))
           .andExpect(status().isCreated());
-    } catch (Exception e) {
+    } catch (final Exception e) {
       e.printStackTrace();
       fail(e.getMessage());
     }

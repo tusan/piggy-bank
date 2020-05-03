@@ -1,5 +1,6 @@
-package com.piggybank.security.authentication;
+package com.piggybank.security.authentication.jwt;
 
+import com.piggybank.security.authentication.jwt.JwtAuthenticationManager;
 import com.piggybank.security.token.TokenValidator;
 import com.piggybank.service.users.UserService;
 import com.piggybank.service.users.PiggyBankUser;

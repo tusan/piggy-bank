@@ -15,13 +15,13 @@ public final class IssuerJwtTokenBuilder implements TokenBuilder {
   private final Key securityKey;
 
   public IssuerJwtTokenBuilder(
-      final InstantMarker instantMarker, @Qualifier("jwtKey") final Key securityKey) {
+          final InstantMarker instantMarker, @Qualifier("jwtKey") final Key securityKey) {
     this.instantMarker = instantMarker;
     this.securityKey = securityKey;
   }
 
   @Override
-  public String createNew(String issuer) {
+  public String createNew(final String issuer) {
     return Jwts.builder()
         .signWith(securityKey)
         .setExpiration(Date.from(instantMarker.getCurrent().plus(1, DAYS)))

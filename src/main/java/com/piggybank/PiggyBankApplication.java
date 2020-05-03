@@ -7,7 +7,7 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 @EntityScan(basePackageClasses = {PiggyBankApplication.class, Jsr310JpaConverters.class})
 @SpringBootApplication
-public class PiggyBankApplication {
+public final class PiggyBankApplication {
   public static void main(final String[] args) {
     SpringApplication.run(PiggyBankApplication.class, args);
   }

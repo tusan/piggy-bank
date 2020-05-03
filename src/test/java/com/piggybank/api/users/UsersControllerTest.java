@@ -41,7 +41,7 @@ public class UsersControllerTest {
 
   @Test
   public void shouldReturnAcceptedWhenAddingNewUserProperly() throws Exception {
-    String requestBody =
+    final String requestBody =
         "{\n" + "    \"username\": \"username\",\n" + "    \"password\": \"password\"\n" + "}";
 
     mockMvc
@@ -51,7 +51,7 @@ public class UsersControllerTest {
                 .content(requestBody))
         .andExpect(MockMvcResultMatchers.status().isCreated());
 
-    PiggyBankUser addedUser = forUsernameAndPassword(USERNAME, PASSWORD);
+    final PiggyBankUser addedUser = forUsernameAndPassword(USERNAME, PASSWORD);
 
     verify(userService).addOrReplace(addedUser);
   }

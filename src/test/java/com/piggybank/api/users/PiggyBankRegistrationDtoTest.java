@@ -10,7 +10,7 @@ public class PiggyBankRegistrationDtoTest {
 
   @Test
   public void shouldBuildAnUserWithAllFields() throws Exception {
-    String json =
+    final String json =
         "{\n" + "    \"username\": \"username\",\n" + "    \"password\": \"password\"\n" + "}";
 
     final RegistrationDto expected = RegistrationDto.forUsernameAndPassword("username", "password");
@@ -20,7 +20,7 @@ public class PiggyBankRegistrationDtoTest {
 
   @Test
   public void shouldBuildAnUserWithoutToken() throws Exception {
-    String json =
+    final String json =
         "{\n" + "    \"username\": \"username\",\n" + "    \"password\": \"password\"\n" + "}";
 
     final RegistrationDto expected = RegistrationDto.forUsernameAndPassword("username", "password");

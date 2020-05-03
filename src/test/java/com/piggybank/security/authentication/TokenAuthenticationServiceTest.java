@@ -18,12 +18,12 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TokenBasedAuthenticationServiceTest {
+public class TokenAuthenticationServiceTest {
   private static final String USERNAME = "username";
   private static final String PASSWORD = "password";
   private static final String TOKEN = "token";
 
-  @InjectMocks private TokenBasedAuthenticationService sut;
+  @InjectMocks private TokenAuthenticationService sut;
 
   @Mock private UserService userRepository;
 
@@ -38,7 +38,7 @@ public class TokenBasedAuthenticationServiceTest {
     when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
     when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(testUser(TOKEN)));
 
-    Optional<PiggyBankUser> user = sut.authorize(USERNAME, PASSWORD);
+    final Optional<PiggyBankUser> user = sut.authorize(USERNAME, PASSWORD);
 
     assertTrue(user.isPresent());
     user.ifPresent(
@@ -56,7 +56,7 @@ public class TokenBasedAuthenticationServiceTest {
     when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
     when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(testUser(TOKEN)));
 
-    Optional<PiggyBankUser> user = sut.authorize(USERNAME, "wrong_password");
+    final Optional<PiggyBankUser> user = sut.authorize(USERNAME, "wrong_password");
 
     assertFalse(user.isPresent());
   }
@@ -65,7 +65,7 @@ public class TokenBasedAuthenticationServiceTest {
   public void shouldReturnEmptyWhenUsernameIsWrong() {
     when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
 
-    Optional<PiggyBankUser> user = sut.authorize("wrong_username", PASSWORD);
+    final Optional<PiggyBankUser> user = sut.authorize("wrong_username", PASSWORD);
 
     assertFalse(user.isPresent());
   }

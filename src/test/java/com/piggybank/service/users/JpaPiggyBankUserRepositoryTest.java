@@ -30,7 +30,7 @@ public class JpaPiggyBankUserRepositoryTest {
     testEntityManager.persistAndFlush(piggyBankUser1);
     testEntityManager.persistAndFlush(piggyBankUser2);
 
-    Optional<PiggyBankUser> user = sut.findByUsername("username1");
+    final Optional<PiggyBankUser> user = sut.findByUsername("username1");
     assertTrue(user.isPresent());
     assertEquals(piggyBankUser1, user.get());
   }

@@ -28,7 +28,7 @@ public class PopulateLocalDatabase implements ApplicationListener<ApplicationRea
   @Autowired private ExpensesService expensesService;
 
   @Override
-  public void onApplicationEvent(ApplicationReadyEvent event) {
+  public void onApplicationEvent(final ApplicationReadyEvent event) {
     LOGGER.info("START POPULATING DATABASE");
 
     final PiggyBankUser user = forUsernameAndPassword("username", "password");
@@ -43,7 +43,7 @@ public class PopulateLocalDatabase implements ApplicationListener<ApplicationRea
     LOGGER.info("FINISHED POPULATING DATABASE");
   }
 
-  private static Expense singleExpense(PiggyBankUser owner, long id, double amount) {
+  private static Expense singleExpense(final PiggyBankUser owner, final long id, final double amount) {
     final Expense expense = new Expense();
     expense.setOwner(owner);
     expense.setId(id);

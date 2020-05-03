@@ -9,7 +9,7 @@ public final class RequestUtils {
 
   private RequestUtils() {}
 
-  public static Optional<String> extractBearerToken(HttpServletRequest request) {
+  public static Optional<String> extractBearerToken(final HttpServletRequest request) {
     return Optional.ofNullable(request.getHeader(AUTHORIZATION))
         .filter(header -> header.startsWith(BEARER))
         .map(v -> v.replace(BEARER, "").trim())

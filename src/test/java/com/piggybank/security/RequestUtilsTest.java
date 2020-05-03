@@ -20,7 +20,7 @@ public class RequestUtilsTest {
   @Test
   public void shouldReturnTheBearerTokenIfPresentInTheRequest() {
     Mockito.when(request.getHeader(AUTHORIZATION)).thenReturn("Bearer token_123");
-    Optional<String> result = extractBearerToken(request);
+    final Optional<String> result = extractBearerToken(request);
 
     assertTrue(result.isPresent());
     result.ifPresent(r -> assertEquals("token_123", r));

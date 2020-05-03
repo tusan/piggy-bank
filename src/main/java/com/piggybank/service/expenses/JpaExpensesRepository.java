@@ -9,12 +9,12 @@ import java.util.List;
 
 interface JpaExpensesRepository
     extends JpaRepository<Expense, Long>, JpaSpecificationExecutor<Expense> {
-  List<Expense> findByOwner(final PiggyBankUser owner);
+  List<Expense> findByOwner(PiggyBankUser owner);
 
-  List<Expense> findByDateLessThanEqualAndOwner(final LocalDate date, final PiggyBankUser owner);
+  List<Expense> findByDateLessThanEqualAndOwner(LocalDate date, PiggyBankUser owner);
 
-  List<Expense> findByDateGreaterThanEqualAndOwner(final LocalDate date, final PiggyBankUser owner);
+  List<Expense> findByDateGreaterThanEqualAndOwner(LocalDate date, PiggyBankUser owner);
 
   List<Expense> findByDateBetweenAndOwner(
-      final LocalDate dateStart, final LocalDate dateEnd, final PiggyBankUser owner);
+      LocalDate dateStart, LocalDate dateEnd, PiggyBankUser owner);
 }

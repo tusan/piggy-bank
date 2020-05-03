@@ -30,11 +30,11 @@ public interface ExpensesService {
 
     @AutoValue.Builder
     public abstract static class Builder {
-      public abstract Builder setDateStart(final LocalDate dateStart);
+      public abstract Builder setDateStart(LocalDate dateStart);
 
-      public abstract Builder setDateEnd(final LocalDate dateEnd);
+      public abstract Builder setDateEnd(LocalDate dateEnd);
 
-      public abstract Builder setOwner(final PiggyBankUser owner);
+      public abstract Builder setOwner(PiggyBankUser owner);
 
       public abstract Query build();
     }

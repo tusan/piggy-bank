@@ -27,7 +27,7 @@ public final class Expense {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(final Long id) {
     this.id = id;
   }
 
@@ -35,7 +35,7 @@ public final class Expense {
     return type;
   }
 
-  public void setType(ExpenseType type) {
+  public void setType(final ExpenseType type) {
     this.type = type;
   }
 
@@ -43,7 +43,7 @@ public final class Expense {
     return description;
   }
 
-  public void setDescription(String description) {
+  public void setDescription(final String description) {
     this.description = description;
   }
 
@@ -51,7 +51,7 @@ public final class Expense {
     return date;
   }
 
-  public void setDate(LocalDate date) {
+  public void setDate(final LocalDate date) {
     this.date = date;
   }
 
@@ -59,11 +59,11 @@ public final class Expense {
     return amount;
   }
 
-  public void setAmount(double amount) {
+  public void setAmount(final double amount) {
     this.amount = amount;
   }
 
-  public void setOwner(PiggyBankUser owner) {
+  public void setOwner(final PiggyBankUser owner) {
     this.owner = owner;
   }
 
@@ -79,10 +79,10 @@ public final class Expense {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    Expense expense = (Expense) o;
+    final Expense expense = (Expense) o;
     return Double.compare(expense.amount, amount) == 0
         && type == expense.type
         && Objects.equals(description, expense.description)

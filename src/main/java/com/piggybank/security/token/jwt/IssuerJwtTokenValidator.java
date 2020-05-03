@@ -11,13 +11,13 @@ public final class IssuerJwtTokenValidator implements TokenValidator {
   private final JwtParser jwtParser;
   private final Key securityKey;
 
-  public IssuerJwtTokenValidator(final @Qualifier("jwtKey") Key securityKey) {
+  public IssuerJwtTokenValidator(@Qualifier("jwtKey") final Key securityKey) {
     this.securityKey = securityKey;
     this.jwtParser = createJwtParser();
   }
 
   @Override
-  public String validateAndGetIssuer(String token) {
+  public String validateAndGetIssuer(final String token) {
     return jwtParser.parseClaimsJws(token).getBody().getIssuer();
   }
 

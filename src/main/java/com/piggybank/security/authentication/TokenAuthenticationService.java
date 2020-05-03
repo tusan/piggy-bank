@@ -9,15 +9,15 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-final class TokenBasedAuthenticationService implements AuthenticationService {
+final class TokenAuthenticationService implements AuthenticationService {
   private final UserService userService;
   private final PasswordEncoder passwordEncoder;
   private final TokenBuilder tokenBuilder;
 
-  public TokenBasedAuthenticationService(
-      final UserService userService,
-      final PasswordEncoder passwordEncoder,
-      final TokenBuilder tokenBuilder) {
+  public TokenAuthenticationService(
+          final UserService userService,
+          final PasswordEncoder passwordEncoder,
+          final TokenBuilder tokenBuilder) {
     this.userService = userService;
     this.passwordEncoder = passwordEncoder;
     this.tokenBuilder = tokenBuilder;
@@ -42,7 +42,7 @@ final class TokenBasedAuthenticationService implements AuthenticationService {
             });
   }
 
-  private PiggyBankUser saveUserToken(PiggyBankUser user) {
+  private PiggyBankUser saveUserToken(final PiggyBankUser user) {
     user.setToken(tokenBuilder.createNew(user.getUsername()));
 
     userService.addOrReplace(user);

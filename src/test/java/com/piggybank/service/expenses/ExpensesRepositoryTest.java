@@ -50,10 +50,10 @@ public class ExpensesRepositoryTest {
   }
 
   private static Expense fakeExpense(
-      final ExpenseType expenseType,
-      final String description,
-      final LocalDate date,
-      final PiggyBankUser owner) {
+          final ExpenseType expenseType,
+          final String description,
+          final LocalDate date,
+          final PiggyBankUser owner) {
     final Expense expense = new Expense();
 
     expense.setType(expenseType);
@@ -93,7 +93,7 @@ public class ExpensesRepositoryTest {
 
   @Test
   public void shouldCallFilterByDateStartAndDateEnd() {
-    List<Expense> result =
+    final List<Expense> result =
         sut.findByDateBetweenAndOwner(JANUARY, FEBRUARY, createUser(DEFAULT_USER));
 
     assertEquals(asList(expenseJanuary(), expenseFebruary()), result);
@@ -101,7 +101,7 @@ public class ExpensesRepositoryTest {
 
   @Test
   public void shouldCallFilterByDateStartOnly() {
-    List<Expense> result =
+    final List<Expense> result =
         sut.findByDateGreaterThanEqualAndOwner(FEBRUARY, createUser(DEFAULT_USER));
 
     assertEquals(asList(expenseFebruary(), expenseMarch()), result);

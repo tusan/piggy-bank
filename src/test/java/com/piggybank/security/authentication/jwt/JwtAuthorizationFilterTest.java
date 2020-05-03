@@ -1,6 +1,7 @@
-package com.piggybank.security.authentication;
+package com.piggybank.security.authentication.jwt;
 
 import com.piggybank.security.SecurityContextHolderFacade;
+import com.piggybank.security.authentication.jwt.JwtAuthorizationFilter;
 import com.piggybank.security.token.TokenAuthentication;
 import com.piggybank.service.users.PiggyBankUser;
 import org.junit.Before;

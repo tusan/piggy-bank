@@ -1,9 +1,9 @@
 package com.piggybank.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.piggybank.security.authentication.JwtAuthenticationFilter;
-import com.piggybank.security.authentication.JwtAuthorizationFilter;
-import com.piggybank.security.authentication.JwtLogoutHandler;
+import com.piggybank.security.authentication.jwt.JwtAuthenticationFilter;
+import com.piggybank.security.authentication.jwt.JwtAuthorizationFilter;
+import com.piggybank.security.authentication.jwt.JwtLogoutHandler;
 import com.piggybank.security.authentication.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +29,7 @@ class SecurityConfigs extends WebSecurityConfigurerAdapter {
   @Autowired private ObjectMapper objectMapper;
 
   @Override
-  protected void configure(HttpSecurity http) throws Exception {
+  protected void configure(final HttpSecurity http) throws Exception {
     http.csrf().disable();
 
     http.sessionManagement()
