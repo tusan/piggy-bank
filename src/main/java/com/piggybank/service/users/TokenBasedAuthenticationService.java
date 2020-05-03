@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-final class TokenBasedAuthenticationService implements AuthenticationService {
+final class TokenBasedAuthenticationService implements AuthenticationService, UserService {
   private final JpaUserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final TokenBuilder tokenBuilder;

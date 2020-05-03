@@ -1,9 +1,9 @@
 package com.piggybank.config;
 
-import com.piggybank.service.users.AuthenticationService;
-import com.piggybank.service.users.repository.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
 import com.piggybank.service.expenses.repository.Expense;
+import com.piggybank.service.users.UserService;
+import com.piggybank.service.users.repository.PiggyBankUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -24,7 +24,7 @@ import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAn
 public class PopulateLocalDatabase implements ApplicationListener<ApplicationReadyEvent> {
   private static final Logger LOGGER = Logger.getLogger(PopulateLocalDatabase.class.getName());
 
-  @Autowired private AuthenticationService authenticationService;
+  @Autowired private UserService userService;
   @Autowired private ExpensesService expensesService;
 
   @Override
@@ -32,7 +32,7 @@ public class PopulateLocalDatabase implements ApplicationListener<ApplicationRea
     LOGGER.info("START POPULATING DATABASE");
 
     final PiggyBankUser user = forUsernameAndPassword("username", "password");
-    authenticationService.add(user);
+    userService.add(user);
 
     new Random()
         .ints(0, 100)

@@ -2,7 +2,7 @@ package com.piggybank.api.users;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.piggybank.service.users.AuthenticationService;
+import com.piggybank.service.users.UserService;
 import com.piggybank.service.users.repository.PiggyBankUser;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class UsersControllerTest {
   public static final String PASSWORD = "password";
 
   @InjectMocks private UsersController sut;
-  @Mock private AuthenticationService authenticationService;
+  @Mock private UserService userService;
   private MockMvc mockMvc;
 
   @Before
@@ -53,6 +53,6 @@ public class UsersControllerTest {
 
     PiggyBankUser addedUser = forUsernameAndPassword(USERNAME, PASSWORD);
 
-    verify(authenticationService).add(addedUser);
+    verify(userService).add(addedUser);
   }
 }
