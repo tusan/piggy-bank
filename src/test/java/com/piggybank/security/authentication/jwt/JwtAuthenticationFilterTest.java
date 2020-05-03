@@ -1,10 +1,11 @@
-package com.piggybank.security.authentication;
+package com.piggybank.security.authentication.jwt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.piggybank.security.authentication.AuthenticationService;
+import com.piggybank.security.authentication.jwt.JwtAuthenticationFilter;
 import com.piggybank.security.token.TokenAuthentication;
-import com.piggybank.service.users.AuthenticationService;
-import com.piggybank.service.users.repository.PiggyBankUser;
+import com.piggybank.service.users.PiggyBankUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +29,7 @@ import java.util.Optional;
 
 import static com.piggybank.security.authentication.LoggedUserDto.forUsernameAndToken;
 import static com.piggybank.security.authentication.LoginRequestDto.forUsernameAndPassword;
-import static com.piggybank.service.users.repository.PiggyBankUser.forUsernamePasswordAndToken;
+import static com.piggybank.service.users.PiggyBankUser.forUsernamePasswordAndToken;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -59,7 +60,7 @@ public class JwtAuthenticationFilterTest {
     final ServletInputStream servletInputStream = mockRequestBody();
     when(request.getInputStream()).thenReturn(servletInputStream);
 
-    when(authenticationService.authenticate("username", "password"))
+    when(authenticationService.authorize("username", "password"))
         .thenReturn(Optional.of(PIGGY_BANK_USER));
 
     final TokenAuthentication expected = TokenAuthentication.authorizedUser(PIGGY_BANK_USER);
@@ -73,7 +74,7 @@ public class JwtAuthenticationFilterTest {
     final ServletInputStream servletInputStream = mockRequestBody();
     when(request.getInputStream()).thenReturn(servletInputStream);
 
-    when(authenticationService.authenticate("username", "password")).thenReturn(Optional.empty());
+    when(authenticationService.authorize("username", "password")).thenReturn(Optional.empty());
 
     sut.attemptAuthentication(request, response);
   }

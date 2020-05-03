@@ -1,6 +1,6 @@
 package com.piggybank.security.token;
 
-import com.piggybank.service.users.repository.PiggyBankUser;
+import com.piggybank.service.users.PiggyBankUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,9 +13,9 @@ public final class TokenAuthentication extends UsernamePasswordAuthenticationTok
   private static final GrantedAuthority USER_ROLE = new SimpleGrantedAuthority("USER");
 
   private TokenAuthentication(
-      final PiggyBankUser user,
-      final String credentials,
-      final Collection<GrantedAuthority> grantedAuthorities) {
+          final PiggyBankUser user,
+          final String credentials,
+          final Collection<GrantedAuthority> grantedAuthorities) {
     super(user, credentials, grantedAuthorities);
   }
 

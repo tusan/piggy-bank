@@ -1,4 +1,4 @@
-package com.piggybank.security.authentication;
+package com.piggybank.security.authentication.jwt;
 
 import com.piggybank.security.SecurityContextHolderFacade;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,15 +19,15 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
   private final AuthenticationManager authenticationManager;
 
   public JwtAuthorizationFilter(
-      final AuthenticationManager authenticationManager,
-      final SecurityContextHolderFacade securityContextHolderFacade) {
+          final AuthenticationManager authenticationManager,
+          final SecurityContextHolderFacade securityContextHolderFacade) {
     this.authenticationManager = authenticationManager;
     this.securityContextHolderFacade = securityContextHolderFacade;
   }
 
   @Override
   protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+          final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain)
       throws IOException, ServletException {
 
     extractBearerToken(request)

@@ -13,7 +13,7 @@ import javax.crypto.SecretKey;
 import java.sql.Date;
 import java.time.Instant;
 
-import static com.piggybank.helpers.JwtTokenTestHelper.parseJwtToken;
+import static com.piggybank.JwtTokenTestHelper.parseJwtToken;
 import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 import static io.jsonwebtoken.security.Keys.secretKeyFor;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -38,7 +38,7 @@ public class IssuerJwtTokenBuilderTest {
   @Test
   public void shouldCreateAJwtTokenWithTheGivenIssuer() {
     final String jws = sut.createNew("issuer");
-    String actual = parseJwtToken(jws, SECRET_KEY).getIssuer();
+    final String actual = parseJwtToken(jws, SECRET_KEY).getIssuer();
 
     assertEquals("issuer", actual);
   }

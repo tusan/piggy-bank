@@ -1,8 +1,7 @@
-package com.piggybank.security.authentication;
+package com.piggybank.security.authentication.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.piggybank.security.authentication.JwtLogoutHandler;
-import com.piggybank.service.users.AuthenticationService;
+import com.piggybank.security.authentication.AuthenticationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -14,8 +13,8 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static com.piggybank.ServletStreamHelper.mockServletInputStream;
 import static com.piggybank.security.authentication.LogoutDto.forUsername;
-import static com.piggybank.helpers.ServletStreamHelper.mockServletInputStream;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

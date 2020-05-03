@@ -1,8 +1,7 @@
 package com.piggybank.service.expenses;
 
 import com.google.auto.value.AutoValue;
-import com.piggybank.service.users.repository.PiggyBankUser;
-import com.piggybank.service.expenses.repository.Expense;
+import com.piggybank.service.users.PiggyBankUser;
 
 import javax.annotation.Nullable;
 import java.time.LocalDate;
@@ -31,11 +30,11 @@ public interface ExpensesService {
 
     @AutoValue.Builder
     public abstract static class Builder {
-      public abstract Builder setDateStart(final LocalDate dateStart);
+      public abstract Builder setDateStart(LocalDate dateStart);
 
-      public abstract Builder setDateEnd(final LocalDate dateEnd);
+      public abstract Builder setDateEnd(LocalDate dateEnd);
 
-      public abstract Builder setOwner(final PiggyBankUser owner);
+      public abstract Builder setOwner(PiggyBankUser owner);
 
       public abstract Query build();
     }

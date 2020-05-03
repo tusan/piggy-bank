@@ -16,7 +16,7 @@ public class IssuerJwtTokenValidatorTest {
   @Test
   public void shouldRetrieveIssuerFromAValidToken() {
     final String jws = Jwts.builder().signWith(SECURITY_KEY).setIssuer("issuer").compact();
-    String actual = sut.validateAndGetIssuer(jws);
+    final String actual = sut.validateAndGetIssuer(jws);
 
     assertEquals("issuer", actual);
   }

@@ -1,7 +1,5 @@
 package com.piggybank.service.expenses;
 
-import com.piggybank.service.expenses.repository.Expense;
-import com.piggybank.service.expenses.repository.JpaExpensesRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -2,11 +2,12 @@ package com.piggybank.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.piggybank.api.expenses.ExpenseDto;
+import com.piggybank.api.expenses.ExpenseType;
 import com.piggybank.security.authentication.LoggedUserDto;
 import com.piggybank.security.authentication.LoginRequestDto;
 import com.piggybank.security.authentication.LogoutDto;
-import com.piggybank.api.expenses.ExpenseDto;
-import com.piggybank.api.expenses.ExpenseType;
+import com.piggybank.service.users.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +26,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static com.piggybank.service.users.PiggyBankUser.forUsernameAndPassword;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -43,6 +45,8 @@ public class AuthenticationE2ETest {
 
   @Autowired private ObjectMapper objectMapper;
 
+  @Autowired private UserService userService;
+
   private static final Logger LOGGER = Logger.getLogger(AuthenticationE2ETest.class.getName());
 
   private MockMvc mvc;
@@ -50,6 +54,7 @@ public class AuthenticationE2ETest {
   @Before
   public void setup() {
     mvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
+    userService.addOrReplace(forUsernameAndPassword("username", "password"));
   }
 
   @Test
@@ -78,7 +83,7 @@ public class AuthenticationE2ETest {
     shouldBeNotAuthorized(token);
   }
 
-  private void shouldBeNotAuthorized(String token) throws Exception {
+  private void shouldBeNotAuthorized(final String token) throws Exception {
     mvc.perform(
             get("/api/v1/expenses")
                 .header("Authorization", String.format("Bearer %s", token))
@@ -87,14 +92,12 @@ public class AuthenticationE2ETest {
   }
 
   private void shouldBeNotAuthorized() throws Exception {
-    mvc.perform(
-        get("/api/v1/expenses")
-            .contentType(APPLICATION_JSON))
+    mvc.perform(get("/api/v1/expenses").contentType(APPLICATION_JSON))
         .andExpect(status().isForbidden());
   }
 
-  private List<ExpenseDto> whenRequestingAllUserExpenses(String token) throws Exception {
-    byte[] expensesResponse =
+  private List<ExpenseDto> whenRequestingAllUserExpenses(final String token) throws Exception {
+    final byte[] expensesResponse =
         mvc.perform(
                 get("/api/v1/expenses")
                     .header("Authorization", String.format("Bearer %s", token))
@@ -109,7 +112,7 @@ public class AuthenticationE2ETest {
         TypeFactory.defaultInstance().constructCollectionType(List.class, ExpenseDto.class));
   }
 
-  private List<ExpenseDto> givenAListOfExpensesForTheGivenAuthenticatedUser(String token) {
+  private List<ExpenseDto> givenAListOfExpensesForTheGivenAuthenticatedUser(final String token) {
     return RANDOM_GENERATOR
         .ints(0, 100)
         .mapToObj(
@@ -133,7 +136,7 @@ public class AuthenticationE2ETest {
                   .contentType(APPLICATION_JSON)
                   .content(objectMapper.writeValueAsBytes(expenseDto)))
           .andExpect(status().isCreated());
-    } catch (Exception e) {
+    } catch (final Exception e) {
       e.printStackTrace();
       fail(e.getMessage());
     }

@@ -11,7 +11,7 @@ public abstract class LoggedUserDto {
 
   @JsonCreator
   public static LoggedUserDto forUsernameAndToken(
-      @JsonProperty("username") final String username, @JsonProperty("token") String token) {
+          @JsonProperty("username") final String username, @JsonProperty("token") final String token) {
     return new AutoValue_LoggedUserDto(username, token);
   }
 

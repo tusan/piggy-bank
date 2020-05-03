@@ -1,8 +1,8 @@
 package com.piggybank.api.expenses;
 
-import com.piggybank.service.users.repository.PiggyBankUser;
+import com.piggybank.service.users.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
-import com.piggybank.service.expenses.repository.Expense;
+import com.piggybank.service.expenses.Expense;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
@@ -47,12 +47,10 @@ class ExpensesController {
   @SecurityRequirement(name = "bearerToken")
   public ResponseEntity<List<ExpenseDto>> expenses(
       @Parameter(description = INPUT_DATE_FORMAT)
-          @RequestParam(value = "date-start", required = false)
-          final String dateStart,
+          @RequestParam(value = "date-start", required = false) final String dateStart,
       @Parameter(description = INPUT_DATE_FORMAT)
-          @RequestParam(value = "date-end", required = false)
-          final String dateEnd,
-      @Parameter(hidden = true) final Authentication principal) {
+          @RequestParam(value = "date-end", required = false) final String dateEnd,
+      @Parameter(hidden = true) final Principal principal) {
 
     return resolveUser(principal)
         .map(buildQueryObject(dateStart, dateEnd))
@@ -77,7 +75,7 @@ class ExpensesController {
       try {
         expenseRepository.save(entity);
         return Optional.of(status(CREATED).build());
-      } catch (Exception e) {
+      } catch (final Exception e) {
         LOGGER.log(SEVERE, String.format("Error while saving entity [entity=%s]", entity), e);
         return Optional.empty();
       }
@@ -85,7 +83,7 @@ class ExpensesController {
   }
 
   private Function<PiggyBankUser, ExpensesService.Query> buildQueryObject(
-      final String dateStart, final String dateEnd) {
+          final String dateStart, final String dateEnd) {
 
     final LocalDate startDate =
         isBlank(dateStart) ? null : LocalDate.parse(dateStart, DATE_TIME_FORMATTER);
@@ -97,7 +95,7 @@ class ExpensesController {
         ExpensesService.Query.builder(owner).setDateStart(startDate).setDateEnd(endDate).build();
   }
 
-  private List<ExpenseDto> associatedExpenses(ExpensesService.Query query) {
+  private List<ExpenseDto> associatedExpenses(final ExpensesService.Query query) {
     return expenseRepository.find(query).stream()
         .map(ExpenseConverter::toDto)
         .collect(Collectors.toList());

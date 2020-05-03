@@ -1,9 +1,9 @@
 package com.piggybank.config;
 
-import com.piggybank.service.users.AuthenticationService;
-import com.piggybank.service.users.repository.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
-import com.piggybank.service.expenses.repository.Expense;
+import com.piggybank.service.expenses.Expense;
+import com.piggybank.service.users.UserService;
+import com.piggybank.service.users.PiggyBankUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -16,7 +16,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 import static com.piggybank.api.expenses.ExpenseType.BANK_ACCOUNT;
-import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAndPassword;
+import static com.piggybank.service.users.PiggyBankUser.forUsernameAndPassword;
 
 @Profile("default")
 @ConditionalOnProperty(name = "piggy_bank.features.populate_db_with_dummy_data")
@@ -24,15 +24,15 @@ import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAn
 public class PopulateLocalDatabase implements ApplicationListener<ApplicationReadyEvent> {
   private static final Logger LOGGER = Logger.getLogger(PopulateLocalDatabase.class.getName());
 
-  @Autowired private AuthenticationService authenticationService;
+  @Autowired private UserService userService;
   @Autowired private ExpensesService expensesService;
 
   @Override
-  public void onApplicationEvent(ApplicationReadyEvent event) {
+  public void onApplicationEvent(final ApplicationReadyEvent event) {
     LOGGER.info("START POPULATING DATABASE");
 
     final PiggyBankUser user = forUsernameAndPassword("username", "password");
-    authenticationService.add(user);
+    userService.addOrReplace(user);
 
     new Random()
         .ints(0, 100)
@@ -43,7 +43,7 @@ public class PopulateLocalDatabase implements ApplicationListener<ApplicationRea
     LOGGER.info("FINISHED POPULATING DATABASE");
   }
 
-  private static Expense singleExpense(PiggyBankUser owner, long id, double amount) {
+  private static Expense singleExpense(final PiggyBankUser owner, final long id, final double amount) {
     final Expense expense = new Expense();
     expense.setOwner(owner);
     expense.setId(id);

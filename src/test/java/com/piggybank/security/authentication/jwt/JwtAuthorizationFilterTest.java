@@ -1,8 +1,9 @@
-package com.piggybank.security.authentication;
+package com.piggybank.security.authentication.jwt;
 
 import com.piggybank.security.SecurityContextHolderFacade;
+import com.piggybank.security.authentication.jwt.JwtAuthorizationFilter;
 import com.piggybank.security.token.TokenAuthentication;
-import com.piggybank.service.users.repository.PiggyBankUser;
+import com.piggybank.service.users.PiggyBankUser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.piggybank.security.RequestUtils.AUTHORIZATION;
-import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAndPassword;
+import static com.piggybank.service.users.PiggyBankUser.forUsernameAndPassword;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
