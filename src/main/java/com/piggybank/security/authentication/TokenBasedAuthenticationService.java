@@ -24,7 +24,7 @@ final class TokenBasedAuthenticationService implements AuthenticationService {
   }
 
   @Override
-  public Optional<PiggyBankUser> authenticate(final String username, final String password) {
+  public Optional<PiggyBankUser> authorize(final String username, final String password) {
     return userService
         .findByUsername(username)
         .filter(user -> passwordEncoder.matches(password, user.getPassword()))

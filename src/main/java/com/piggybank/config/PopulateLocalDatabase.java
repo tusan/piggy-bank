@@ -1,7 +1,7 @@
 package com.piggybank.config;
 
 import com.piggybank.service.expenses.ExpensesService;
-import com.piggybank.service.expenses.repository.Expense;
+import com.piggybank.service.expenses.Expense;
 import com.piggybank.service.users.UserService;
 import com.piggybank.service.users.PiggyBankUser;
 import org.springframework.beans.factory.annotation.Autowired;

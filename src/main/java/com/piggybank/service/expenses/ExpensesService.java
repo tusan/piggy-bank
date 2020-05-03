@@ -2,7 +2,6 @@ package com.piggybank.service.expenses;
 
 import com.google.auto.value.AutoValue;
 import com.piggybank.service.users.PiggyBankUser;
-import com.piggybank.service.expenses.repository.Expense;
 
 import javax.annotation.Nullable;
 import java.time.LocalDate;

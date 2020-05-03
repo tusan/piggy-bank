@@ -2,7 +2,7 @@ package com.piggybank.api.expenses;
 
 import com.piggybank.service.users.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
-import com.piggybank.service.expenses.repository.Expense;
+import com.piggybank.service.expenses.Expense;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
@@ -52,7 +52,7 @@ class ExpensesController {
       @Parameter(description = INPUT_DATE_FORMAT)
           @RequestParam(value = "date-end", required = false)
           final String dateEnd,
-      @Parameter(hidden = true) final Authentication principal) {
+      @Parameter(hidden = true) final Principal principal) {
 
     return resolveUser(principal)
         .map(buildQueryObject(dateStart, dateEnd))

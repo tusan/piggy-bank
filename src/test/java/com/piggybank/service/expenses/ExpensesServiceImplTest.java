@@ -1,8 +1,6 @@
 package com.piggybank.service.expenses;
 
 import com.piggybank.api.expenses.ExpenseType;
-import com.piggybank.service.expenses.repository.Expense;
-import com.piggybank.service.expenses.repository.JpaExpensesRepository;
 import com.piggybank.service.users.PiggyBankUser;
 import org.junit.Before;
 import org.junit.Test;

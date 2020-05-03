@@ -1,4 +1,4 @@
-package com.piggybank.service.expenses.repository;
+package com.piggybank.service.expenses;
 
 import com.piggybank.api.expenses.ExpenseType;
 import com.piggybank.service.users.PiggyBankUser;

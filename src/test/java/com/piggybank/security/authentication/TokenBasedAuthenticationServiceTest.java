@@ -38,7 +38,7 @@ public class TokenBasedAuthenticationServiceTest {
     when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
     when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(testUser(TOKEN)));
 
-    Optional<PiggyBankUser> user = sut.authenticate(USERNAME, PASSWORD);
+    Optional<PiggyBankUser> user = sut.authorize(USERNAME, PASSWORD);
 
     assertTrue(user.isPresent());
     user.ifPresent(
@@ -56,7 +56,7 @@ public class TokenBasedAuthenticationServiceTest {
     when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
     when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.of(testUser(TOKEN)));
 
-    Optional<PiggyBankUser> user = sut.authenticate(USERNAME, "wrong_password");
+    Optional<PiggyBankUser> user = sut.authorize(USERNAME, "wrong_password");
 
     assertFalse(user.isPresent());
   }
@@ -65,7 +65,7 @@ public class TokenBasedAuthenticationServiceTest {
   public void shouldReturnEmptyWhenUsernameIsWrong() {
     when(userRepository.findByUsername(any(String.class))).thenReturn(Optional.empty());
 
-    Optional<PiggyBankUser> user = sut.authenticate("wrong_username", PASSWORD);
+    Optional<PiggyBankUser> user = sut.authorize("wrong_username", PASSWORD);
 
     assertFalse(user.isPresent());
   }

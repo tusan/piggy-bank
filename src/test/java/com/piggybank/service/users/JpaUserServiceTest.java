@@ -8,7 +8,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static com.piggybank.service.users.PiggyBankUser.forUsernameAndPassword;
-import static com.piggybank.service.users.PiggyBankUser.forUsernamePasswordAndToken;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

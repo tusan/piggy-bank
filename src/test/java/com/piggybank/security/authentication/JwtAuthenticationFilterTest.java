@@ -58,7 +58,7 @@ public class JwtAuthenticationFilterTest {
     final ServletInputStream servletInputStream = mockRequestBody();
     when(request.getInputStream()).thenReturn(servletInputStream);
 
-    when(authenticationService.authenticate("username", "password"))
+    when(authenticationService.authorize("username", "password"))
         .thenReturn(Optional.of(PIGGY_BANK_USER));
 
     final TokenAuthentication expected = TokenAuthentication.authorizedUser(PIGGY_BANK_USER);
@@ -72,7 +72,7 @@ public class JwtAuthenticationFilterTest {
     final ServletInputStream servletInputStream = mockRequestBody();
     when(request.getInputStream()).thenReturn(servletInputStream);
 
-    when(authenticationService.authenticate("username", "password")).thenReturn(Optional.empty());
+    when(authenticationService.authorize("username", "password")).thenReturn(Optional.empty());
 
     sut.attemptAuthentication(request, response);
   }

@@ -1,7 +1,7 @@
 package com.piggybank.api.expenses;
 
 import com.piggybank.service.users.PiggyBankUser;
-import com.piggybank.service.expenses.repository.Expense;
+import com.piggybank.service.expenses.Expense;
 
 final class ExpenseConverter {
   static Expense toEntity(final ExpenseDto expenseDto, final PiggyBankUser owner) {

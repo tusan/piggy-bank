@@ -3,7 +3,7 @@ package com.piggybank.api.expenses;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.piggybank.service.expenses.ExpensesService;
-import com.piggybank.service.expenses.repository.Expense;
+import com.piggybank.service.expenses.Expense;
 import com.piggybank.service.users.PiggyBankUser;
 import org.junit.Before;
 import org.junit.Test;

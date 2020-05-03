@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       final HttpServletRequest request, final HttpServletResponse response)
       throws AuthenticationException {
     return readDtoFromRequest(request)
-        .flatMap(r -> authenticationService.authenticate(r.username(), r.password()))
+        .flatMap(r -> authenticationService.authorize(r.username(), r.password()))
         .map(TokenAuthentication::authorizedUser)
         .orElseThrow(() -> new BadCredentialsException("Invalid User Provided"));
   }
