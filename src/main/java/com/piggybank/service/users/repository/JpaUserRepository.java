@@ -6,6 +6,4 @@ import java.util.Optional;
 
 public interface JpaUserRepository extends JpaRepository<PiggyBankUser, String> {
   Optional<PiggyBankUser> findByUsername(String username);
-
-  Optional<PiggyBankUser> findByToken(String token);
 }
