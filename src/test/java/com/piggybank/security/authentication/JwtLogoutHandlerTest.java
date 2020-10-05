@@ -17,6 +17,7 @@ import static com.piggybank.helpers.ServletStreamHelper.mockServletInputStream;
 import static com.piggybank.security.authentication.LogoutDto.forUsername;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 public class JwtLogoutHandlerTest {
   @InjectMocks private JwtLogoutHandler sut;

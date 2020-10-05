@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAndPassword;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 @ExtendWith(MockitoExtension.class)
 public class UsersControllerTest {
   public static final String USERNAME = "username";

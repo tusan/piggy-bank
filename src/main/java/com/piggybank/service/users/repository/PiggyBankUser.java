@@ -14,6 +14,7 @@ import java.util.Objects;
 public final class PiggyBankUser {
   @Id private String username;
   private String password;
+
   @Column(length = 1000)
   private String token;
 

@@ -23,7 +23,8 @@ final class JwtAuthenticationManager implements AuthenticationManager {
   }
 
   @Override
-  public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
+  public Authentication authenticate(final Authentication authentication)
+      throws AuthenticationException {
     final String token = authentication.getCredentials().toString();
     return validateAndRetrieve(token).map(TokenAuthentication::authorizedUser).orElse(null);
   }

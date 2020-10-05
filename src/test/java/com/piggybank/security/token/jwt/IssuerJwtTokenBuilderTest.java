@@ -22,13 +22,10 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class IssuerJwtTokenBuilderTest {
-  @InjectMocks private IssuerJwtTokenBuilder sut;
-
-  @Mock private InstantMarker instantMarker;
-
-  @Spy private final SecretKey SECRET_KEY = secretKeyFor(HS256);
-
   public static final Instant NOW = Instant.parse("3007-12-03T10:15:30.00Z");
+  @Spy private final SecretKey SECRET_KEY = secretKeyFor(HS256);
+  @InjectMocks private IssuerJwtTokenBuilder sut;
+  @Mock private InstantMarker instantMarker;
 
   @BeforeEach
   public void setUp() {

@@ -21,8 +21,7 @@ class UsersController {
   @PostMapping("register")
   public ResponseEntity<Void> register(@RequestBody final RegistrationDto registrationDto) {
     authenticationService.add(
-        forUsernameAndPassword(
-            registrationDto.username(), registrationDto.password()));
+        forUsernameAndPassword(registrationDto.username(), registrationDto.password()));
 
     return ResponseEntity.status(CREATED).build();
   }

@@ -22,8 +22,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   private final AuthenticationService authenticationService;
 
   public JwtAuthenticationFilter(
-      final ObjectMapper objectMapper,
-      final AuthenticationService authenticationService) {
+      final ObjectMapper objectMapper, final AuthenticationService authenticationService) {
     this.objectMapper = objectMapper;
     this.authenticationService = authenticationService;
   }

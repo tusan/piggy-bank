@@ -15,9 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 public class TokenValidatorFactoryTest {
-  @InjectMocks private TokenValidatorFactory sut;
-
   @Spy private final Key secretKey = secretKeyFor(HS256);
+  @InjectMocks private TokenValidatorFactory sut;
 
   @Test
   public void shouldReturnIssuerJwtTokenValidator() {
