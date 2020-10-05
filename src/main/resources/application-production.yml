@@ -2,10 +2,6 @@ spring:
   datasource:
     url: jdbc:postgresql://db:5432/piggy_bank
 
-piggy_bank:
-  features:
-    issuer_to_resolve_user: ${PIGGY_BANK_FEATURES_ISSUER_TO_RESOLVE_USER}
-
 security:
   keystore:
     location: ${SECURITY_KEYSTORE_LOCATION}
