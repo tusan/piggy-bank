@@ -1,7 +1,6 @@
 package com.piggybank.config;
 
 import com.piggybank.service.users.AuthenticationService;
-import com.piggybank.service.users.repository.PiggyBankUser;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
@@ -23,7 +22,7 @@ public class PopulateIntegrationTestDatabase implements ApplicationListener<Appl
   }
 
   @Override
-  public void onApplicationEvent(ApplicationReadyEvent event) {
+  public void onApplicationEvent(final ApplicationReadyEvent event) {
     LOGGER.info("START POPULATING DATABASE");
 
     authenticationService.add(forUsernameAndPassword("username", "password"));

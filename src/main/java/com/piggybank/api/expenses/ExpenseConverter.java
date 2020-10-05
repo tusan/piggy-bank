@@ -17,6 +17,7 @@ final class ExpenseConverter {
   }
 
   static ExpenseDto toDto(final Expense exp) {
+    //noinspection ConstantConditions
     return ExpenseDto.newBuilder()
         .setAmount(exp.getAmount())
         .setDate(exp.getDate())

@@ -1,5 +1,6 @@
 package com.piggybank.security.token.jwt;
 
+import com.piggybank.security.token.TokenValidator;
 import io.jsonwebtoken.Jwts;
 import org.junit.Test;
 
@@ -11,12 +12,12 @@ import static org.junit.Assert.assertEquals;
 
 public class IssuerJwtTokenValidatorTest {
   private final static Key SECURITY_KEY = secretKeyFor(HS256);
-  private final IssuerJwtTokenValidator sut = new IssuerJwtTokenValidator(SECURITY_KEY);
+  private final TokenValidator sut = new IssuerJwtTokenValidator(SECURITY_KEY);
 
   @Test
   public void shouldRetrieveIssuerFromAValidToken() {
     final String jws = Jwts.builder().signWith(SECURITY_KEY).setIssuer("issuer").compact();
-    String actual = sut.validateAndGetIssuer(jws);
+    final String actual = sut.validateAndGetIssuer(jws);
 
     assertEquals("issuer", actual);
   }

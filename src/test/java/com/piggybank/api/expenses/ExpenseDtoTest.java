@@ -32,6 +32,7 @@ public class ExpenseDtoTest {
             + "        \"description\": \"Fuel\"\n"
             + "    }";
 
+    //noinspection ConstantConditions
     assertEquals(
         ExpenseDto.newBuilder()
             .setDate(LocalDate.of(2018, NOVEMBER, 27))
@@ -78,7 +79,7 @@ public class ExpenseDtoTest {
             + "    }\n"
             + "]";
 
-    final List<ExpenseDto> expected =
+    @SuppressWarnings("ConstantConditions") final List<ExpenseDto> expected =
         Arrays.asList(
             ExpenseDto.newBuilder()
                 .setDate(LocalDate.of(2018, NOVEMBER, 27))

@@ -48,7 +48,7 @@ final class TokenBasedAuthenticationService implements AuthenticationService {
     userRepository.save(addedUser);
   }
 
-  private PiggyBankUser saveUserToken(PiggyBankUser user) {
+  private PiggyBankUser saveUserToken(final PiggyBankUser user) {
     user.setToken(tokenBuilder.createNew(user.getUsername()));
 
     userRepository.save(user);

@@ -1,7 +1,5 @@
 package com.piggybank.security;
 
-import com.google.common.base.Preconditions;
-import com.piggybank.config.Environment;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.core.io.Resource;

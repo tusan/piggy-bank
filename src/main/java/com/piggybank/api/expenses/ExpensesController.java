@@ -77,7 +77,7 @@ class ExpensesController {
       try {
         expenseRepository.save(entity);
         return Optional.of(status(CREATED).build());
-      } catch (Exception e) {
+      } catch (final Exception e) {
         LOGGER.log(SEVERE, String.format("Error while saving entity [entity=%s]", entity), e);
         return Optional.empty();
       }
@@ -97,7 +97,7 @@ class ExpensesController {
         ExpensesService.Query.builder(owner).setDateStart(startDate).setDateEnd(endDate).build();
   }
 
-  private List<ExpenseDto> associatedExpenses(ExpensesService.Query query) {
+  private List<ExpenseDto> associatedExpenses(final ExpensesService.Query query) {
     return expenseRepository.find(query).stream()
         .map(ExpenseConverter::toDto)
         .collect(Collectors.toList());

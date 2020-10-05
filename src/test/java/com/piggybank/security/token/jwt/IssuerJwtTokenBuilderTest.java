@@ -38,7 +38,7 @@ public class IssuerJwtTokenBuilderTest {
   @Test
   public void shouldCreateAJwtTokenWithTheGivenIssuer() {
     final String jws = sut.createNew("issuer");
-    String actual = parseJwtToken(jws, SECRET_KEY).getIssuer();
+    final String actual = parseJwtToken(jws, SECRET_KEY).getIssuer();
 
     assertEquals("issuer", actual);
   }

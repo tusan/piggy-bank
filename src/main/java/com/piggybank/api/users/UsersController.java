@@ -1,7 +1,6 @@
 package com.piggybank.api.users;
 
 import com.piggybank.service.users.AuthenticationService;
-import com.piggybank.service.users.repository.PiggyBankUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

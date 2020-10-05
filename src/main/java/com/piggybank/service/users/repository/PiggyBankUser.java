@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Objects;
 
+@SuppressWarnings("ClassWithTooManyDependents")
 @Entity
 @Table(name = "users")
 public final class PiggyBankUser {
@@ -37,7 +38,7 @@ public final class PiggyBankUser {
     return username;
   }
 
-  public void setUsername(String username) {
+  public void setUsername(final String username) {
     this.username = username;
   }
 
@@ -45,7 +46,7 @@ public final class PiggyBankUser {
     return password;
   }
 
-  public void setPassword(String password) {
+  public void setPassword(final String password) {
     this.password = password;
   }
 
@@ -53,7 +54,7 @@ public final class PiggyBankUser {
     return token;
   }
 
-  public void setToken(String token) {
+  public void setToken(final String token) {
     this.token = token;
   }
 
@@ -67,10 +68,10 @@ public final class PiggyBankUser {
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(final Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    PiggyBankUser piggyBankUser = (PiggyBankUser) o;
+    final PiggyBankUser piggyBankUser = (PiggyBankUser) o;
     return Objects.equals(username, piggyBankUser.username)
         && Objects.equals(password, piggyBankUser.password)
         && Objects.equals(token, piggyBankUser.token);

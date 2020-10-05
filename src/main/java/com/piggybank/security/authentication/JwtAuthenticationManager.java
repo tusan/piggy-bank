@@ -23,17 +23,17 @@ final class JwtAuthenticationManager implements AuthenticationManager {
   }
 
   @Override
-  public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+  public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
     final String token = authentication.getCredentials().toString();
     return validateAndRetrieve(token).map(TokenAuthentication::authorizedUser).orElse(null);
   }
 
-  private Optional<PiggyBankUser> validateAndRetrieve(String token) {
+  private Optional<PiggyBankUser> validateAndRetrieve(final String token) {
     return resolveUserByIssuer(tokenValidator.validateAndGetIssuer(token))
         .filter(user -> token.equals(user.getToken()));
   }
 
-  private Optional<PiggyBankUser> resolveUserByIssuer(String issuer) {
+  private Optional<PiggyBankUser> resolveUserByIssuer(final String issuer) {
     return userRepository.findByUsername(issuer);
   }
 }
