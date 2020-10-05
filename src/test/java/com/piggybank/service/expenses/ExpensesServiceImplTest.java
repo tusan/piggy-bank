@@ -4,12 +4,11 @@ import com.piggybank.api.expenses.ExpenseType;
 import com.piggybank.service.expenses.repository.Expense;
 import com.piggybank.service.expenses.repository.JpaExpensesRepository;
 import com.piggybank.service.users.repository.PiggyBankUser;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 
 import java.time.LocalDate;
@@ -21,13 +20,13 @@ import java.util.Optional;
 import static com.piggybank.api.expenses.ExpenseType.*;
 import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAndPassword;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ExpensesServiceImplTest {
   private static final PiggyBankUser LOGGED_USER = forUsernameAndPassword("username", "password");
 
@@ -61,25 +60,11 @@ public class ExpensesServiceImplTest {
     return ExpensesService.Query.builder(LOGGED_USER);
   }
 
-  @Before
-  public void setUp() {
+  @Test
+  public void shouldReturnExpensesForGivenUser() {
     when(repository.findByOwner(LOGGED_USER))
         .thenReturn(Arrays.asList(EXPENSE_JANUARY, EXPENSE_FEBRUARY, EXPENSE_MARCH));
 
-    when(repository.findByDateBetweenAndOwner(JANUARY, FEBRUARY, LOGGED_USER))
-        .thenReturn(Arrays.asList(EXPENSE_JANUARY, EXPENSE_FEBRUARY));
-
-    when(repository.findByDateGreaterThanEqualAndOwner(FEBRUARY, LOGGED_USER))
-        .thenReturn(Arrays.asList(EXPENSE_FEBRUARY, EXPENSE_MARCH));
-
-    when(repository.findByDateLessThanEqualAndOwner(FEBRUARY, LOGGED_USER))
-        .thenReturn(Arrays.asList(EXPENSE_JANUARY, EXPENSE_FEBRUARY));
-
-    when(repository.save(any())).then((Answer<Expense>) invocation -> invocation.getArgument(0));
-  }
-
-  @Test
-  public void shouldReturnExpensesForGivenUser() {
     final List<Expense> result = sut.find(baseQuery().build());
 
     verify(repository).findByOwner(LOGGED_USER);
@@ -88,6 +73,9 @@ public class ExpensesServiceImplTest {
 
   @Test
   public void shouldReturnExpensesInDateRange() {
+    when(repository.findByDateBetweenAndOwner(JANUARY, FEBRUARY, LOGGED_USER))
+        .thenReturn(Arrays.asList(EXPENSE_JANUARY, EXPENSE_FEBRUARY));
+
     final List<Expense> result =
         sut.find(baseQuery().setDateStart(JANUARY).setDateEnd(FEBRUARY).build());
 
@@ -97,6 +85,9 @@ public class ExpensesServiceImplTest {
 
   @Test
   public void shouldReturnExpensesWithDateGreaterThenEqualGivenDate() {
+    when(repository.findByDateGreaterThanEqualAndOwner(FEBRUARY, LOGGED_USER))
+        .thenReturn(Arrays.asList(EXPENSE_FEBRUARY, EXPENSE_MARCH));
+
     final List<Expense> result = sut.find(baseQuery().setDateStart(FEBRUARY).build());
 
     verify(repository).findByDateGreaterThanEqualAndOwner(FEBRUARY, LOGGED_USER);
@@ -105,6 +96,9 @@ public class ExpensesServiceImplTest {
 
   @Test
   public void shouldReturnExpensesWithDateLessThenEqualGivenDate() {
+    when(repository.findByDateLessThanEqualAndOwner(FEBRUARY, LOGGED_USER))
+        .thenReturn(Arrays.asList(EXPENSE_JANUARY, EXPENSE_FEBRUARY));
+
     final List<Expense> result = sut.find(baseQuery().setDateEnd(FEBRUARY).build());
 
     verify(repository).findByDateLessThanEqualAndOwner(FEBRUARY, LOGGED_USER);
@@ -113,6 +107,8 @@ public class ExpensesServiceImplTest {
 
   @Test
   public void shouldSaveTheExpenseAndReturnTheId() {
+    when(repository.save(any())).then((Answer<Expense>) invocation -> invocation.getArgument(0));
+
     final Optional<Long> actual = sut.save(fakeExpense(HOUSE, "description", LocalDate.now()));
 
     assertTrue(actual.isPresent());

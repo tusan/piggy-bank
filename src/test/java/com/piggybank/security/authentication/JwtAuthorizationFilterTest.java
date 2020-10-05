@@ -3,12 +3,12 @@ package com.piggybank.security.authentication;
 import com.piggybank.security.SecurityContextHolderFacade;
 import com.piggybank.security.token.TokenAuthentication;
 import com.piggybank.service.users.repository.PiggyBankUser;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 
@@ -21,8 +21,7 @@ import java.io.IOException;
 import static com.piggybank.security.RequestUtils.AUTHORIZATION;
 import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAndPassword;
 import static org.mockito.Mockito.*;
-
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class JwtAuthorizationFilterTest {
   @InjectMocks private JwtAuthorizationFilter sut;
 
@@ -40,16 +39,13 @@ public class JwtAuthorizationFilterTest {
   private static final TokenAuthentication TOKEN_AUTHENTICATION =
       TokenAuthentication.authorizedUser(USER);
 
-  @Before
-  public void setUp() {
-    when(authenticationManager.authenticate(any(Authentication.class)))
-        .thenReturn(TOKEN_AUTHENTICATION);
-    when(request.getHeader(AUTHORIZATION)).thenReturn("Bearer: token123");
-  }
-
   @Test
   public void shouldAddTheAuthenticatedUserInSessionWhenValidJwtTokenIsInRequest()
       throws IOException, ServletException {
+    when(authenticationManager.authenticate(any(Authentication.class)))
+        .thenReturn(TOKEN_AUTHENTICATION);
+    when(request.getHeader(AUTHORIZATION)).thenReturn("Bearer: token123");
+
     sut.doFilterInternal(request, response, filterChain);
 
     verify(securityContextHolderFacade).setAuthentication(TOKEN_AUTHENTICATION);
@@ -69,8 +65,6 @@ public class JwtAuthorizationFilterTest {
 
   @Test
   public void shouldNotModifySessionWhenNoUserIsResolved() throws IOException, ServletException {
-    when(authenticationManager.authenticate(any(Authentication.class))).thenReturn(null);
-
     sut.doFilterInternal(request, response, filterChain);
 
     verifyNoInteractions(securityContextHolderFacade);

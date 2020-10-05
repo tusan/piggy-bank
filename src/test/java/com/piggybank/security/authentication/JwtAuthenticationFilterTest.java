@@ -5,14 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.piggybank.security.token.TokenAuthentication;
 import com.piggybank.service.users.AuthenticationService;
 import com.piggybank.service.users.repository.PiggyBankUser;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.DelegatingServletInputStream;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -29,11 +29,12 @@ import java.util.Optional;
 import static com.piggybank.security.authentication.LoggedUserDto.forUsernameAndToken;
 import static com.piggybank.security.authentication.LoginRequestDto.forUsernameAndPassword;
 import static com.piggybank.service.users.repository.PiggyBankUser.forUsernamePasswordAndToken;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class JwtAuthenticationFilterTest {
   public static final PiggyBankUser PIGGY_BANK_USER =
       forUsernamePasswordAndToken("username", "password", "token");
@@ -49,14 +50,13 @@ public class JwtAuthenticationFilterTest {
 
   @Spy private ObjectMapper objectMapper;
 
-  @Before
-  public void setUp() {
-    when(request.getContentLength()).thenReturn(100);
-  }
+  @BeforeEach
+  public void setUp() {}
 
   @Test
   public void givenAnAuthenticationCredentialsForARealsUserShouldAuthenticate() throws Exception {
     final ServletInputStream servletInputStream = mockRequestBody();
+    when(request.getContentLength()).thenReturn(100);
     when(request.getInputStream()).thenReturn(servletInputStream);
 
     when(authenticationService.authenticate("username", "password"))
@@ -68,21 +68,16 @@ public class JwtAuthenticationFilterTest {
     assertEquals(expected, actual);
   }
 
-  @Test(expected = BadCredentialsException.class)
+  @Test
   public void shouldThrowBadCredentialExceptionForInvalidAuthentication() throws Exception {
-    final ServletInputStream servletInputStream = mockRequestBody();
-    when(request.getInputStream()).thenReturn(servletInputStream);
-
-    when(authenticationService.authenticate("username", "password")).thenReturn(Optional.empty());
-
-    sut.attemptAuthentication(request, response);
+    assertThrows(BadCredentialsException.class, () -> sut.attemptAuthentication(request, response));
   }
 
-  @Test(expected = BadCredentialsException.class)
+  @Test
   public void shouldThrowBadCredentialExceptionForMissingAuthentication() {
     when(request.getContentLength()).thenReturn(0);
 
-    sut.attemptAuthentication(request, response);
+    assertThrows(BadCredentialsException.class, () -> sut.attemptAuthentication(request, response));
   }
 
   @Test
