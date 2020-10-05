@@ -2,15 +2,15 @@ package com.piggybank.service.expenses.repository;
 
 import com.piggybank.api.expenses.ExpenseType;
 import com.piggybank.service.users.repository.PiggyBankUser;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.security.Principal;
 import java.time.LocalDate;
@@ -19,10 +19,10 @@ import java.util.List;
 
 import static com.piggybank.api.expenses.ExpenseType.*;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class ExpensesRepositoryTest {
   private static final LocalDate JANUARY = LocalDate.of(2018, Month.JANUARY, 1);
@@ -65,7 +65,7 @@ public class ExpensesRepositoryTest {
     return expense;
   }
 
-  @Before
+  @BeforeEach
   public void setUp() {
     final PiggyBankUser otherOwner = createUser(OTHER_OWNER);
 
@@ -85,7 +85,7 @@ public class ExpensesRepositoryTest {
     testEntityManager.flush();
   }
 
-  @After
+  @AfterEach
   public void tearDown() {
     testEntityManager.clear();
     testEntityManager.flush();

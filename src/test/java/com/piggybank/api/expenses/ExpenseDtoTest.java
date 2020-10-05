@@ -3,8 +3,7 @@ package com.piggybank.api.expenses;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.piggybank.api.expenses.ExpenseDto;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -13,8 +12,7 @@ import java.util.List;
 import static com.piggybank.api.expenses.ExpenseType.HOUSE;
 import static com.piggybank.api.expenses.ExpenseType.MOTORBIKE;
 import static java.time.Month.NOVEMBER;
-import static org.junit.Assert.assertEquals;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ExpenseDtoTest {
   private static final ObjectMapper mapper = new ObjectMapper();
 

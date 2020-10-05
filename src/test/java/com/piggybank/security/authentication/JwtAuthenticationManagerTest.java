@@ -3,11 +3,11 @@ package com.piggybank.security.authentication;
 import com.piggybank.security.token.TokenValidator;
 import com.piggybank.service.users.repository.JpaUserRepository;
 import com.piggybank.service.users.repository.PiggyBankUser;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
@@ -15,12 +15,11 @@ import java.util.Optional;
 import static com.piggybank.security.token.TokenAuthentication.authorizedUser;
 import static com.piggybank.security.token.TokenAuthentication.unauthorizedUser;
 import static com.piggybank.service.users.repository.PiggyBankUser.forUsernamePasswordAndToken;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class JwtAuthenticationManagerTest {
   public static final String TOKEN = "token";
   private static final PiggyBankUser USER =

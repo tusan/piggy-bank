@@ -1,13 +1,13 @@
 package com.piggybank.security.token.jwt;
 
 import com.piggybank.security.InstantMarker;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.crypto.SecretKey;
 import java.sql.Date;
@@ -17,10 +17,10 @@ import static com.piggybank.helpers.JwtTokenTestHelper.parseJwtToken;
 import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 import static io.jsonwebtoken.security.Keys.secretKeyFor;
 import static java.time.temporal.ChronoUnit.DAYS;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class IssuerJwtTokenBuilderTest {
   @InjectMocks private IssuerJwtTokenBuilder sut;
 
@@ -30,7 +30,7 @@ public class IssuerJwtTokenBuilderTest {
 
   public static final Instant NOW = Instant.parse("3007-12-03T10:15:30.00Z");
 
-  @Before
+  @BeforeEach
   public void setUp() {
     when(instantMarker.getCurrent()).thenReturn(NOW);
   }

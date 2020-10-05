@@ -19,7 +19,7 @@ ext {
     guavaVersion = "29.0-jre"
     openapiVersion = "1.4.8"
     mockitoVersion = "3.5.13"
-    junitVersion = "4.13"
+    junitVersion = "5.7.0"
     jjwtVersion = "0.11.2"
 }
 
@@ -41,14 +41,20 @@ dependencies {
     runtimeOnly "com.h2database:h2"
     runtimeOnly 'org.postgresql:postgresql'
 
-    testCompile "junit:junit:$junitVersion"
-    testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "org.mockito:mockito-junit-jupiter:$mockitoVersion"
 
-    testCompile "org.springframework.boot:spring-boot-starter-test"
-    testCompile "org.springframework.security:spring-security-test"
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
+    testCompile("org.springframework.security:spring-security-test")
 
     annotationProcessor "com.google.auto.value:auto-value:$autovalueVersion"
     compile "com.google.auto.value:auto-value-annotations:$autovalueVersion"
+}
+
+test {
+    useJUnitPlatform()
 }
 
 bootJar {
