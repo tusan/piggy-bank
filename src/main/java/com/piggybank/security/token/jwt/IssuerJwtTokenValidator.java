@@ -17,7 +17,7 @@ public final class IssuerJwtTokenValidator implements TokenValidator {
   }
 
   @Override
-  public String validateAndGetIssuer(String token) {
+  public String validateAndGetIssuer(final String token) {
     return jwtParser.parseClaimsJws(token).getBody().getIssuer();
   }
 

@@ -93,7 +93,7 @@ public class ExpensesRepositoryTest {
 
   @Test
   public void shouldCallFilterByDateStartAndDateEnd() {
-    List<Expense> result =
+    final List<Expense> result =
         sut.findByDateBetweenAndOwner(JANUARY, FEBRUARY, createUser(DEFAULT_USER));
 
     assertEquals(asList(expenseJanuary(), expenseFebruary()), result);
@@ -101,7 +101,7 @@ public class ExpensesRepositoryTest {
 
   @Test
   public void shouldCallFilterByDateStartOnly() {
-    List<Expense> result =
+    final List<Expense> result =
         sut.findByDateGreaterThanEqualAndOwner(FEBRUARY, createUser(DEFAULT_USER));
 
     assertEquals(asList(expenseFebruary(), expenseMarch()), result);

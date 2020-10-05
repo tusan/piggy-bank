@@ -9,6 +9,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -37,13 +38,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         .orElseThrow(() -> new BadCredentialsException("Invalid User Provided"));
   }
 
-  private Optional<LoginRequestDto> readDtoFromRequest(HttpServletRequest request) {
+  private Optional<LoginRequestDto> readDtoFromRequest(final ServletRequest request) {
     try {
       if (request.getContentLength() == 0) {
         return Optional.empty();
       }
       return Optional.of(objectMapper.readValue(request.getInputStream(), LoginRequestDto.class));
-    } catch (IOException e) {
+    } catch (final IOException e) {
       return Optional.empty();
     }
   }

@@ -5,6 +5,7 @@ import com.piggybank.service.users.AuthenticationService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -29,10 +30,10 @@ public class JwtLogoutHandler extends SecurityContextLogoutHandler {
     getUsername(request).map(LogoutDto::username).ifPresent(authenticationService::revoke);
   }
 
-  private Optional<LogoutDto> getUsername(HttpServletRequest request) {
+  private Optional<LogoutDto> getUsername(final ServletRequest request) {
     try {
       return Optional.of(objectMapper.readValue(request.getInputStream(), LogoutDto.class));
-    } catch (IOException e) {
+    } catch (final IOException e) {
       return Optional.empty();
     }
   }

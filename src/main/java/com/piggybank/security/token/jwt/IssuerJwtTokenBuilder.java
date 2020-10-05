@@ -21,7 +21,7 @@ public final class IssuerJwtTokenBuilder implements TokenBuilder {
   }
 
   @Override
-  public String createNew(String issuer) {
+  public String createNew(final String issuer) {
     return Jwts.builder()
         .signWith(securityKey)
         .setExpiration(Date.from(instantMarker.getCurrent().plus(1, DAYS)))
