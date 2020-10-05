@@ -1,9 +1,9 @@
 package com.piggybank.config;
 
-import com.piggybank.service.users.AuthenticationService;
-import com.piggybank.service.users.repository.PiggyBankUser;
 import com.piggybank.service.expenses.ExpensesService;
 import com.piggybank.service.expenses.repository.Expense;
+import com.piggybank.service.users.AuthenticationService;
+import com.piggybank.service.users.repository.PiggyBankUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -27,6 +27,18 @@ public class PopulateLocalDatabase implements ApplicationListener<ApplicationRea
   @Autowired private AuthenticationService authenticationService;
   @Autowired private ExpensesService expensesService;
 
+  private static Expense singleExpense(
+      final PiggyBankUser owner, final long id, final double amount) {
+    final Expense expense = new Expense();
+    expense.setOwner(owner);
+    expense.setId(id);
+    expense.setAmount(amount);
+    expense.setDate(LocalDate.now());
+    expense.setType(BANK_ACCOUNT);
+
+    return expense;
+  }
+
   @Override
   public void onApplicationEvent(final ApplicationReadyEvent event) {
     LOGGER.info("START POPULATING DATABASE");
@@ -41,16 +53,5 @@ public class PopulateLocalDatabase implements ApplicationListener<ApplicationRea
         .forEach(expensesService::save);
 
     LOGGER.info("FINISHED POPULATING DATABASE");
-  }
-
-  private static Expense singleExpense(final PiggyBankUser owner, final long id, final double amount) {
-    final Expense expense = new Expense();
-    expense.setOwner(owner);
-    expense.setId(id);
-    expense.setAmount(amount);
-    expense.setDate(LocalDate.now());
-    expense.setType(BANK_ACCOUNT);
-
-    return expense;
   }
 }

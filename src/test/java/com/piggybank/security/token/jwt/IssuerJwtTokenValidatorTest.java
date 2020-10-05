@@ -11,7 +11,7 @@ import static io.jsonwebtoken.security.Keys.secretKeyFor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class IssuerJwtTokenValidatorTest {
-  private final static Key SECURITY_KEY = secretKeyFor(HS256);
+  private static final Key SECURITY_KEY = secretKeyFor(HS256);
   private final TokenValidator sut = new IssuerJwtTokenValidator(SECURITY_KEY);
 
   @Test

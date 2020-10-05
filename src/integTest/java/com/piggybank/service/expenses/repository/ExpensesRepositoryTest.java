@@ -25,12 +25,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class ExpensesRepositoryTest {
+  public static final String DEFAULT_USER = "test_user";
+  public static final String OTHER_OWNER = "other_owner";
   private static final LocalDate JANUARY = LocalDate.of(2018, Month.JANUARY, 1);
   private static final LocalDate FEBRUARY = LocalDate.of(2018, Month.FEBRUARY, 1);
   private static final LocalDate MARCH = LocalDate.of(2018, Month.MARCH, 1);
-  public static final String DEFAULT_USER = "test_user";
-  public static final String OTHER_OWNER = "other_owner";
-
   @Autowired private TestEntityManager testEntityManager;
 
   @Autowired private JpaExpensesRepository sut;
@@ -63,6 +62,10 @@ public class ExpensesRepositoryTest {
     expense.setOwner(owner);
 
     return expense;
+  }
+
+  private static PiggyBankUser createUser(final String username) {
+    return PiggyBankUser.forUsernamePasswordAndToken(username, "password", "token");
   }
 
   @BeforeEach
@@ -125,9 +128,5 @@ public class ExpensesRepositoryTest {
   public void shouldReturnOnlyExpensesAssociatedWithLoggedUser() {
     final List<Expense> result = sut.findByOwner(createUser(DEFAULT_USER));
     assertEquals(asList(expenseJanuary(), expenseFebruary(), expenseMarch()), result);
-  }
-
-  private static PiggyBankUser createUser(final String username) {
-    return PiggyBankUser.forUsernamePasswordAndToken(username, "password", "token");
   }
 }

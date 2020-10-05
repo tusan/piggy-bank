@@ -1,5 +1,6 @@
-package com.piggybank.config;
+package com.piggybank;
 
+import com.piggybank.config.PopulateLocalDatabase;
 import com.piggybank.service.users.AuthenticationService;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -10,12 +11,11 @@ import java.util.logging.Logger;
 
 import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAndPassword;
 
-
 @Component
 @Profile("integration")
 public class PopulateIntegrationTestDatabase implements ApplicationListener<ApplicationReadyEvent> {
-  private final AuthenticationService authenticationService;
   private static final Logger LOGGER = Logger.getLogger(PopulateLocalDatabase.class.getName());
+  private final AuthenticationService authenticationService;
 
   public PopulateIntegrationTestDatabase(final AuthenticationService authenticationService) {
     this.authenticationService = authenticationService;

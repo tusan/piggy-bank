@@ -1,8 +1,8 @@
 plugins {
     id 'java'
-    id 'net.ltgt.apt-idea' version '0.21'
     id 'org.springframework.boot' version '2.3.4.RELEASE'
     id "io.spring.dependency-management" version "1.0.10.RELEASE"
+    id "nebula.integtest" version "7.0.9"
 }
 
 group 'myprojects'
@@ -37,23 +37,26 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
     implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
 
+    implementation "com.google.auto.value:auto-value-annotations:$autovalueVersion"
+
     runtimeOnly "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
     runtimeOnly "com.h2database:h2"
     runtimeOnly 'org.postgresql:postgresql'
 
-    testCompile "org.mockito:mockito-junit-jupiter:$mockitoVersion"
-
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testImplementation("org.springframework.security:spring-security-test")
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
 
-    testCompile("org.springframework.security:spring-security-test")
-
     annotationProcessor "com.google.auto.value:auto-value:$autovalueVersion"
-    compile "com.google.auto.value:auto-value-annotations:$autovalueVersion"
 }
 
 test {
+    useJUnitPlatform ()
+}
+
+integrationTest {
     useJUnitPlatform()
 }
 

@@ -16,6 +16,7 @@ import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAn
 import static com.piggybank.service.users.repository.PiggyBankUser.forUsernamePasswordAndToken;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 public class TokenBasedAuthenticationServiceTest {
   public static final String USERNAME = "username";

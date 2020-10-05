@@ -39,12 +39,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("integration")
 public class AuthenticationE2ETest {
   public static final Random RANDOM_GENERATOR = new Random();
-  @Autowired private WebApplicationContext context;
-
-  @Autowired private ObjectMapper objectMapper;
-
   private static final Logger LOGGER = Logger.getLogger(AuthenticationE2ETest.class.getName());
-
+  @Autowired private WebApplicationContext context;
+  @Autowired private ObjectMapper objectMapper;
   private MockMvc mvc;
 
   @BeforeEach
@@ -87,9 +84,7 @@ public class AuthenticationE2ETest {
   }
 
   private void shouldBeNotAuthorized() throws Exception {
-    mvc.perform(
-        get("/api/v1/expenses")
-            .contentType(APPLICATION_JSON))
+    mvc.perform(get("/api/v1/expenses").contentType(APPLICATION_JSON))
         .andExpect(status().isForbidden());
   }
 

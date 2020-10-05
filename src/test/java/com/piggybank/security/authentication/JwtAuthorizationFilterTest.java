@@ -3,7 +3,6 @@ package com.piggybank.security.authentication;
 import com.piggybank.security.SecurityContextHolderFacade;
 import com.piggybank.security.token.TokenAuthentication;
 import com.piggybank.service.users.repository.PiggyBankUser;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,23 +20,18 @@ import java.io.IOException;
 import static com.piggybank.security.RequestUtils.AUTHORIZATION;
 import static com.piggybank.service.users.repository.PiggyBankUser.forUsernameAndPassword;
 import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 public class JwtAuthorizationFilterTest {
-  @InjectMocks private JwtAuthorizationFilter sut;
-
-  @Mock private HttpServletRequest request;
-
-  @Mock private HttpServletResponse response;
-
-  @Mock private FilterChain filterChain;
-
-  @Mock private SecurityContextHolderFacade securityContextHolderFacade;
-
-  @Mock private AuthenticationManager authenticationManager;
-
   private static final PiggyBankUser USER = forUsernameAndPassword("username", "password");
   private static final TokenAuthentication TOKEN_AUTHENTICATION =
       TokenAuthentication.authorizedUser(USER);
+  @InjectMocks private JwtAuthorizationFilter sut;
+  @Mock private HttpServletRequest request;
+  @Mock private HttpServletResponse response;
+  @Mock private FilterChain filterChain;
+  @Mock private SecurityContextHolderFacade securityContextHolderFacade;
+  @Mock private AuthenticationManager authenticationManager;
 
   @Test
   public void shouldAddTheAuthenticatedUserInSessionWhenValidJwtTokenIsInRequest()

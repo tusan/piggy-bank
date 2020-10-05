@@ -15,11 +15,6 @@ spring:
 
     database-platform: org.hibernate.dialect.H2Dialect
 
-piggy_bank:
-  features:
-    issuer_to_resolve_user: true
-    populate_db_with_dummy_data: true
-
 ####### USED FOR LOCAL DEVELOPMENT ONLY ########
 security:
   keystore:

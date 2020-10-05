@@ -13,6 +13,7 @@ import static com.piggybank.api.expenses.ExpenseType.HOUSE;
 import static com.piggybank.api.expenses.ExpenseType.MOTORBIKE;
 import static java.time.Month.NOVEMBER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class ExpenseDtoTest {
   private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -77,7 +78,8 @@ public class ExpenseDtoTest {
             + "    }\n"
             + "]";
 
-    @SuppressWarnings("ConstantConditions") final List<ExpenseDto> expected =
+    @SuppressWarnings("ConstantConditions")
+    final List<ExpenseDto> expected =
         Arrays.asList(
             ExpenseDto.newBuilder()
                 .setDate(LocalDate.of(2018, NOVEMBER, 27))

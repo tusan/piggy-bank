@@ -32,7 +32,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     extractBearerToken(request)
         .flatMap(token -> Optional.of(unauthorizedUser(token)))
-        .flatMap(authentication -> Optional.ofNullable(authenticationManager.authenticate(authentication)))
+        .flatMap(
+            authentication ->
+                Optional.ofNullable(authenticationManager.authenticate(authentication)))
         .ifPresent(securityContextHolderFacade::setAuthentication);
 
     chain.doFilter(request, response);
